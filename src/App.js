@@ -1,20 +1,27 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import * as React from "react";
+import { Theme as UWPThemeProvider, getTheme } from "react-uwp/Theme";
+import ListView from "react-uwp/ListView";
+const baseStyle = {
+  margin: "10px 10px 10px 0"
+};
 
-class App extends Component {
+export class App extends React.Component {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
+      <UWPThemeProvider
+        theme={getTheme({
+          themeName: "dark", // set custom theme
+          accent: "#0078D7", // set accent color
+          useFluentDesign: true, // sure you want use new fluent design.
+          desktopBackgroundImage: "https://static-cdn.jtvnw.net/jtv_user_pictures/team-brainbytes-background_image-4baba38e0e3991c5.png" // set global desktop background image
+        })}
+      >
+        <ListView
+        style={baseStyle}
+        listSource={Array(15).fill(0).map((numb, index) => index)}
+      />
+      </UWPThemeProvider>
+    )
   }
 }
 

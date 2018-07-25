@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
 import ProgressRing from "react-uwp/ProgressRing";
 import { LOAD_DONE, LOAD_ERROR, LOAD_PENDING } from "../services/constants";
-import { Theme as UWPThemeProvider, getTheme } from "react-uwp/Theme";
 
 @observer
 export default class AuthWrapper extends Component {
@@ -37,7 +36,7 @@ export default class AuthWrapper extends Component {
   }
 
   renderLoading() {
-    return(<ProgressRing size={100} speed={6125} />);
+    return(<div>Loading</div>);
   }
 
   render() {
@@ -50,16 +49,6 @@ export default class AuthWrapper extends Component {
     } else {
       component = <div>WhY u No Work!</div>
     }
-    return (
-      <UWPThemeProvider
-        theme={getTheme({
-          themeName: "dark", // set custom theme
-          useFluentDesign: true, // sure you want use new fluent design.
-          desktopBackgroundImage: store.background
-        })}
-      >
-        {component}
-      </UWPThemeProvider>
-    );
+    return (component);
   }
 }
