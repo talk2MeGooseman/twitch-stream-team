@@ -1,6 +1,7 @@
 import axios from "axios";
 import StreamTeams from "../views/StreamTeams";
 import team from '../stubs/team.json';
+import twitchteam from '../stubs/twitchstaff.json';
 
 // const EBS_ROOT_URL = 'https://us-central1-info-extension.cloudfunctions.net';
 const EBS_ROOT_URL = 'https://localhost:8080/info-extension/us-central1';
@@ -23,7 +24,7 @@ export const getPanelInformation = async (token) => {
   // });
 
   // return response.data;
-  return team;
+  return team ;
 };
 
 /**
