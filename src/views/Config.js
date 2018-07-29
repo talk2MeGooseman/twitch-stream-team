@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { Theme as UWPThemeProvider, getTheme } from "react-uwp/Theme";
 import StreamTeams from './StreamTeams';
-import styled from "styled-components";
 import ConfigInfo from '../components/ConfigInfo';
 import { SAVE_PENDING } from "../services/constants";
 import Loader from '../components/Loader';

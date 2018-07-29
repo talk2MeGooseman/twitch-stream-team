@@ -1,7 +1,4 @@
 import axios from "axios";
-import StreamTeams from "../views/StreamTeams";
-import team from '../stubs/team.json';
-import twitchteam from '../stubs/twitchstaff.json';
 
 const EBS_ROOT_URL = 'https://us-central1-stream-team-3a526.cloudfunctions.net';
 // const EBS_ROOT_URL = 'https://localhost:8080/stream-team-3a526/us-central1';

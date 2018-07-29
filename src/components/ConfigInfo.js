@@ -16,10 +16,10 @@ const ConfigInfo = (props, context) => {
     store.name = team;
   }
 
-  let dropdownTeams = Array.from(store.teams);
+  let dropdownTeams = Array.from(store.teams || ['No Teams Found']);
 
   return <div style={{ marginLeft: "30px" }}>
-      <h1 style={theme.typographyStyles.header}>Stream Team Extension</h1>
+      <h1 style={theme.typographyStyles.header}>Stream Team</h1>
       <Separator />
       <div style={ {marginTop: '5px',...theme.typographyStyles.subTitle} }>If you are already part of a Twitch Team setup in easy!</div>
       <div style={{marginTop: '30px',...theme.typographyStyles.subTitle}}>Instructions:</div>
@@ -42,7 +42,7 @@ const ConfigInfo = (props, context) => {
           <li>Step 4: Look at the preview to see how your team looks.</li>
           <li>
             Step 5: Activate the extension in panel 1, 2 or 3 <strong>
-              <a href="https://www.twitch.tv/talk2megooseman/dashboard/extensions/manage" target="_blank">
+            <a href="https://www.twitch.tv/talk2megooseman/dashboard/extensions/manage" target="_blank" rel="noopener noreferrer">
                 here
               </a>
             </strong>

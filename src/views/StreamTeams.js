@@ -13,7 +13,7 @@ export default class StreamTeams extends Component {
       return(
         <div style={{ textAlign: 'center' }}>
           <h3>Looks like we couldnt find your Team</h3>
-          <img src={SadSpock} />
+          <img src={SadSpock} alt="Sad Spock" />
           <h3>Spock is now sad</h3>
         </div>
       );

@@ -3,15 +3,8 @@ import Image from "react-uwp/Image";
 import PropTypes from 'prop-types';
 import Textfit from 'react-textfit';
 import IconButton from "react-uwp/IconButton";
+import TransformCard from "react-uwp/TransformCard";
 const Twitch = window['Twitch'];
-
-const imageStyle = {
-  width: "100%",
-  height: "auto",
-  maxWidth: 320,
-  maxHeight: 320,
-  margin: 10
-};
 
 const container = {
   display: "flex",
@@ -70,9 +63,11 @@ const ChannelListItem = (props, context) => {
   return (
     <div key={info._id} style={container}>
       <div style={{ flex: 1 }}>
-        <a href={info.url} target="_blank">
-          <Image src={resizeImage(info.logo)} />
-        </a>
+        <TransformCard xMaxRotate={50} yMaxRotate={50} perspective={240}>
+          <a href={info.url} target="_blank">
+            <Image src={resizeImage(info.logo)} />
+          </a>
+        </TransformCard>
       </div>
       <div style={textContainer}>
         <span style={displayNameStyles}>

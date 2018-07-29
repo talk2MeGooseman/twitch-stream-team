@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
-import { LOAD_DONE, LOAD_ERROR, LOAD_PENDING } from "../services/constants";
+import { LOAD_PENDING } from "../services/constants";
 import Loader from "./Loader";
 
 @observer
