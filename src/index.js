@@ -30,6 +30,7 @@ switch (params.get('mode')) {
     viewComponent = <AuthWrapper store={store}><StreamTeams store={store} viewAnchor={viewAnchor} viewPlatform={viewPlatform} /></AuthWrapper>;
     break;
   case DASHBOARD_MODE:
+    viewComponent = <AuthWrapper store={store}><StreamTeams store={store} viewAnchor={viewAnchor} viewPlatform={viewPlatform} /></AuthWrapper>;
     break;
   default:
     viewComponent = <div>Nothing Loaded</div>;
