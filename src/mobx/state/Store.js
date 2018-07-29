@@ -10,19 +10,21 @@ import {
   getPanelInformation
 } from "../../services/Ebs";
 import {
-  LOAD_DONE, LOAD_ERROR, LOAD_PENDING
+  LOAD_DONE, LOAD_ERROR, LOAD_PENDING, SAVE_PENDING, SAVE_DONE, SAVE_ERROR
 } from "../../services/constants";
 
 export default class Store {
   @observable token;
   @observable channels;
-  @observable loadingState;
+  @observable loadingState = LOAD_PENDING;
+  @observable saveState;
   @observable name;
   @observable info;
   @observable display_name;
   @observable logo;
   @observable banner;
   @observable background;
+  @observable teams;
 
   addChannel() {
     this.saveState = '';
@@ -38,15 +40,17 @@ export default class Store {
     getPanelInformation(this.token).then(
       // inline created action
       action("fetchSuccess", result => {
-        this.channel = result.channel;
-        this.name = result.name;
-        this.info = result.info;
-        this.display_name = result.display_name;
-        this.logo = result.logo;
-        this.banner= result.banner;
-        this.background = result.background
+        let selectedTeam = result.selectedTeam;
+        this.channel = selectedTeam.channel;
+        this.name = selectedTeam.name;
+        this.info = selectedTeam.info;
+        this.display_name = selectedTeam.display_name;
+        this.logo = selectedTeam.logo;
+        this.banner= selectedTeam.banner;
+        this.background = selectedTeam.background
+        this.teams = result.teams;
 
-        this.channels = result.users.map((channel) => {
+        this.channels = selectedTeam.users.map((channel) => {
           return new ChannelModel(this, channel);
         });
 
@@ -59,13 +63,33 @@ export default class Store {
     )
   }
 
-  toJSON() {
-    let jChannels = this.channels.map((channel) => {
-      return channel.toJSON();
-    });
+  @action
+  setTeam(selected_team) {
+    this.saveState = SAVE_PENDING;
+    setPanelInformation(this.token, { selected_team }).then(
+      // inline created action
+      action("fetchSuccess", result => {
+        let selectedTeam = result.selectedTeam;
 
-    return {
-      // tabs: jTabs,
-    };
+        this.channel = selectedTeam.channel;
+        this.name = selectedTeam.name;
+        this.info = selectedTeam.info;
+        this.display_name = selectedTeam.display_name;
+        this.logo = selectedTeam.logo;
+        this.banner= selectedTeam.banner;
+        this.background = selectedTeam.background
+        this.teams = result.teams;
+
+        this.channels = selectedTeam.users.map((channel) => {
+          return new ChannelModel(this, channel);
+        });
+
+        this.saveState = SAVE_DONE;
+      }),
+      // inline created action
+      action("fetchError", error => {
+        this.saveState = SAVE_ERROR;
+      })
+    );
   }
 }

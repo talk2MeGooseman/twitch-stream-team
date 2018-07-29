@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from "prop-types";
 import ListView from "react-uwp/ListView";
-import Separator from "react-uwp/Separator";
 import ChannelListItem from './ChannelListItem';
+import { observer } from 'mobx-react';
 
 const baseStyle = {
   margin: "0 0 0 0",
@@ -11,6 +11,7 @@ const baseStyle = {
   overflowX: 'hidden',
 };
 
+@observer
 export default class ChannelList extends Component {
   static contextTypes = { theme: PropTypes.object };
 
@@ -33,15 +34,12 @@ export default class ChannelList extends Component {
       ...theme.typographyStyles.baseAlt
     };
 
-    return {
-      itemNode: (
-        <div>
-          <span style={teamStyles}>Team Members</span>
-          <span style={countStyles}>{channels.length}</span>
-        </div>
-      ),
-      disabled: true,
-    }
+    return (
+      <div>
+        <span style={teamStyles}>Team Members</span>
+        <span style={countStyles}>{channels.length}</span>
+      </div>
+    );
   }
 
   renderChannelRows = () => {
@@ -66,6 +64,7 @@ export default class ChannelList extends Component {
       <ListView
         style={baseStyle}
         listSource={this.renderChannelRows()}
+        listItemStyle={{ borderBottom: '#6441A4  solid 1px' }}
       />
     );
   }

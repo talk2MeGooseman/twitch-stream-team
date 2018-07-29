@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
-import ProgressRing from "react-uwp/ProgressRing";
 import { LOAD_DONE, LOAD_ERROR, LOAD_PENDING } from "../services/constants";
+import Loader from "./Loader";
 
 @observer
 export default class AuthWrapper extends Component {
@@ -36,7 +36,7 @@ export default class AuthWrapper extends Component {
   }
 
   renderLoading() {
-    return(<div>Loading</div>);
+    return( <Loader /> );
   }
 
   render() {
@@ -44,10 +44,8 @@ export default class AuthWrapper extends Component {
     let component;
     if (store.loadingState === LOAD_PENDING) {
       component = this.renderLoading();
-    } else if(store.loadingState === LOAD_DONE) {
-      component = this.props.children;
     } else {
-      component = <div>WhY u No Work!</div>
+      component = this.props.children;
     }
     return (component);
   }

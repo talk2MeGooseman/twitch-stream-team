@@ -218,32 +218,32 @@ module.exports = {
     new InterpolateHtmlPlugin(env.raw),
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
-        inject: true,
-        template: paths.appHtml
-      }),
-      // Generates an `viewer.html` file with the <script> injected
-      new HtmlWebpackPlugin({
-        filename: 'panel.html',
-        inject: true,
-        template: paths.appPanelHtml,
-      }),
-      new HtmlWebpackPlugin({
-        filename: 'video_component.html',
-        inject: true,
-        template: paths.appVideoComponentHtml,
-      }),
-      // Generates an `config.html` file with the <script> injected
-      new HtmlWebpackPlugin({
-        filename: 'config.html',
-        inject: true,
-        template: paths.appConfigHtml,
-      }),
-      // Generates an `live_config.html` file with the <script> injected
-      new HtmlWebpackPlugin({
-        filename: 'dashboard_config.html',
-        inject: true,
-        template: paths.appDashboardConfigHtml,
-      }),
+      inject: true,
+      template: paths.appHtml
+    }),
+    // Generates an `viewer.html` file with the <script> injected
+    new HtmlWebpackPlugin({
+      filename: 'panel.html',
+      inject: true,
+      template: paths.appPanelHtml,
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'video_component.html',
+      inject: true,
+      template: paths.appVideoComponentHtml,
+    }),
+    // Generates an `config.html` file with the <script> injected
+    new HtmlWebpackPlugin({
+      filename: 'config.html',
+      inject: true,
+      template: paths.appConfigHtml,
+    }),
+    // Generates an `live_config.html` file with the <script> injected
+    new HtmlWebpackPlugin({
+      filename: 'dashboard_config.html',
+      inject: true,
+      template: paths.appDashboardConfigHtml,
+    }),
     // Add module names to factory functions so they appear in browser profiler.
     new webpack.NamedModulesPlugin(),
     // Makes some environment variables available to the JS code, for example:

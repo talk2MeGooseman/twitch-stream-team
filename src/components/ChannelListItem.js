@@ -31,8 +31,8 @@ const textContainer = {
 
 const displayNameContainerStyles = {
   display: 'inline-block',
-  width: '92%',
-  marginLeft: '4px'
+  width: '80%',
+  marginLeft: '4px',
 };
 
 const resizeImage= (url) => {
@@ -70,7 +70,9 @@ const ChannelListItem = (props, context) => {
   return (
     <div key={info._id} style={container}>
       <div style={{ flex: 1 }}>
-        <Image src={resizeImage(info.logo)} />
+        <a href={info.url} target="_blank">
+          <Image src={resizeImage(info.logo)} />
+        </a>
       </div>
       <div style={textContainer}>
         <span style={displayNameStyles}>

@@ -3,8 +3,8 @@ import StreamTeams from "../views/StreamTeams";
 import team from '../stubs/team.json';
 import twitchteam from '../stubs/twitchstaff.json';
 
-// const EBS_ROOT_URL = 'https://us-central1-info-extension.cloudfunctions.net';
-const EBS_ROOT_URL = 'https://localhost:8080/info-extension/us-central1';
+const EBS_ROOT_URL = 'https://us-central1-stream-team-3a526.cloudfunctions.net';
+// const EBS_ROOT_URL = 'https://localhost:8080/stream-team-3a526/us-central1';
 
 /**
  * getBoardcasterGithubInfo
@@ -14,17 +14,17 @@ const EBS_ROOT_URL = 'https://localhost:8080/info-extension/us-central1';
  * @param {Object} auth 
  */
 export const getPanelInformation = async (token) => {
-  // let response = await axios({
-  //   method: 'GET',
-  //   url: `${EBS_ROOT_URL}/get_panel_information`,
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //     'x-extension-jwt': token,
-  //   }
-  // });
+  let response = await axios({
+    method: 'GET',
+    url: `${EBS_ROOT_URL}/get_panel_information`,
+    headers: {
+      'Content-Type': 'application/json',
+      'x-extension-jwt': token,
+    }
+  });
 
-  // return response.data;
-  return team ;
+  return response.data;
+  // return team ;
 };
 
 /**
