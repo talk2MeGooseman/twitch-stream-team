@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import registerServiceWorker from './registerServiceWorker';
 
 import AuthWrapper from './components/AuthWrapper'
 import {CONFIG_MODE, VIEWER_MODE, DASHBOARD_MODE} from './services/constants'
@@ -40,5 +39,4 @@ switch (params.get('mode')) {
 ReactDOM.render(
   viewComponent
   , document.getElementById('root'));
-registerServiceWorker();
 
