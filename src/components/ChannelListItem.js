@@ -4,9 +4,14 @@ import PropTypes from 'prop-types';
 import Textfit from 'react-textfit';
 import IconButton from "react-uwp/IconButton";
 import TransformCard from "react-uwp/TransformCard";
+import Icon from "react-uwp/Icon";
+import { green600 } from "react-uwp/styles/accentColors";
+import { observer } from 'mobx-react';
+
 const Twitch = window['Twitch'];
 
 const container = {
+  position: 'relative',
   display: "flex",
   flexDirection: "row",
   flexWrap: "nowrap",
@@ -40,7 +45,8 @@ const followChannel = (channel) => {
 }
 
 const ChannelListItem = (props, context) => {
-  const { channel: {info} } = props;
+  const { channel } = props;
+  const { info } = channel;
   const { theme } = context;
 
   const displayNameStyles = {
@@ -53,18 +59,39 @@ const ChannelListItem = (props, context) => {
     ...theme.typographyStyles.caption
   };
 
+  let followIconBG;
+  if(channel.followed) {
+    followIconBG = green600;
+  } else {
+    followIconBG = theme.listAccentLow;
+  } 
+
   const followButtonStyles = { 
     display: 'inline-block',
-    background: theme.listAccentLow,
+    background: followIconBG,
     color: "#fff",
     verticalAlign: 'top'
   };
+
+  const liveIconStyles = {
+    position: 'absolute',
+    fontSize: '24px',
+    color: '#ec1313',
+    bottom: '12px',
+    right: '14px',
+  };
+
+  let liveIconComp = null;
+  if (channel.isLive) {
+    liveIconComp = <Icon key="0" alt="Live" style={liveIconStyles}>Record</Icon>;
+  }
 
   return (
     <div key={info._id} style={container}>
       <div style={{ flex: 1 }}>
         <TransformCard xMaxRotate={50} yMaxRotate={50} perspective={240}>
           <a href={info.url} target="_blank">
+            { liveIconComp }
             <Image src={resizeImage(info.logo)} />
           </a>
         </TransformCard>
@@ -72,7 +99,7 @@ const ChannelListItem = (props, context) => {
       <div style={textContainer}>
         <span style={displayNameStyles}>
           <IconButton size={26} style={followButtonStyles} hoverStyle={{ background: theme.listAccentHigh }} activeStyle={{ background: theme.accent }} onClick={() => followChannel(info.name)}>
-            HeartFillLegacy
+            HeartFill
           </IconButton>
           <span style={displayNameContainerStyles}>
             <Textfit max={24} mode="single">
@@ -87,4 +114,4 @@ const ChannelListItem = (props, context) => {
 }
 
 ChannelListItem.contextTypes = { theme: PropTypes.object };
-export default ChannelListItem;
+export default observer(ChannelListItem);

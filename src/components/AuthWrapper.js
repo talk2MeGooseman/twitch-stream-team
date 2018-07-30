@@ -27,6 +27,13 @@ export default class AuthWrapper extends Component {
         this.props.store.fetchTeam();
       }
     });
+  
+    window.Twitch.ext.actions.onFollow((didFollow, channelName) => {
+      if (didFollow)
+      {
+        this.props.store.setChannelFollowed(channelName);
+      }
+    });
 
     // if (!this.props.ignoreBroadcasts) {
     //   window.Twitch.ext.listen('broadcast', (target, contentType, message) => {

@@ -21,7 +21,7 @@ const ConfigInfo = (props, context) => {
   return <div style={{ marginLeft: "30px" }}>
       <h1 style={theme.typographyStyles.header}>Stream Team</h1>
       <Separator />
-      <div style={ {marginTop: '5px',...theme.typographyStyles.subTitle} }>If you are already part of a Twitch Team setup in easy!</div>
+      <div style={ {marginTop: '5px',...theme.typographyStyles.subTitle} }>If you are already part of a Twitch Team setup is easy!</div>
       <div style={{marginTop: '30px',...theme.typographyStyles.subTitle}}>Instructions:</div>
       <div style={{marginTop: '5px',...theme.typographyStyles.baseAlt}}>
         <ul style={{listStyleType: 'none'}}>

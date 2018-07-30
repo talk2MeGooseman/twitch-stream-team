@@ -4,14 +4,13 @@ export default class ChannelModel {
   store;
   id;
   @observable info;
+  @observable isLive = false;
+  @observable followed = false;
 
   constructor(store, channel) {
     this.store = store;
+    this.id = channel._id;
     this.info = channel;
-  }
-
-  static fromJS(store, {id, title, textColor, bgColor, body}) {
-    return new ChannelModel(store, id, title, textColor, bgColor, body);
   }
 
   canDestroy() {

@@ -7,7 +7,8 @@ import ChannelModel from "../model/ChannelModel";
 import { uuid } from "../../services/Utils";
 import {
   setPanelInformation,
-  getPanelInformation
+  getPanelInformation,
+  getLiveChannels
 } from "../../services/Ebs";
 import {
   LOAD_DONE, LOAD_ERROR, LOAD_PENDING, SAVE_PENDING, SAVE_DONE, SAVE_ERROR
@@ -26,12 +27,13 @@ export default class Store {
   @observable background;
   @observable teams;
 
-  addChannel() {
-    this.saveState = '';
+  @action
+  setChannelFollowed(channelName) {
+    let followedChannel = this.channels.find((channel) => {
+      return channel.info.name === channelName;
+    });
 
-    this.channels.push(ChannelModel.fromJS(this, {
-      id: uuid(),
-    }));
+    followedChannel.followed = true;
   }
 
   @action
@@ -55,12 +57,40 @@ export default class Store {
         });
 
         this.loadingState = LOAD_DONE;
+
       }),
       // inline created action
       action("fetchError", error => {
         this.loadingState = LOAD_ERROR;
       })
-    )
+    ).then(() => {
+      this.fetchLiveChannels();
+      setInterval(this.fetchLiveChannels, 1000 * 60 * 5);
+    })
+  }
+
+  fetchLiveChannels = async () => {
+    let { data } = await getLiveChannels(this.token);
+
+    let liveChannelIDs = data.map((liveChannel) => liveChannel.user_id);
+
+    let liveChannels = [];
+    let notLiveChannels = [];
+
+    this.channels.forEach(channel => {
+      if (liveChannelIDs.includes(channel.id))
+      {
+        channel.isLive = true;
+        liveChannels.push(channel);
+      } else
+      {
+        channel.isLive = false;
+        notLiveChannels.push(channel);
+      }
+    });
+
+    // Set new channel order with live channels at the top
+    this.channels = liveChannels.concat(notLiveChannels);
   }
 
   @action
@@ -90,6 +120,26 @@ export default class Store {
       action("fetchError", error => {
         this.saveState = SAVE_ERROR;
       })
-    );
+    ).then(async () => {
+      let { data } = await getLiveChannels(this.token);
+
+      let liveChannelIDs = data.map((liveChannel) => liveChannel.user_id );
+
+      let liveChannels = [];
+      let notLiveChannels = [];
+
+      this.channels.forEach(channel => {
+        if(liveChannelIDs.includes(channel.id)) {
+          channel.isLive = true;
+          liveChannels.push(channel);
+        } else {
+          channel.isLive = false;
+          notLiveChannels.push(channel);
+        }
+      });
+
+      // Set new channel order with live channels at the top
+      this.channels = liveChannels.concat(notLiveChannels);
+    });
   }
 }
