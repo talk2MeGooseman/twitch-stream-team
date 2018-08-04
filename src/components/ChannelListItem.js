@@ -7,6 +7,7 @@ import TransformCard from "react-uwp/TransformCard";
 import Icon from "react-uwp/Icon";
 import { green600 } from "react-uwp/styles/accentColors";
 import { observer } from 'mobx-react';
+import { IoIosHeart, IoIosRadioButtonOn } from 'react-icons/io';
 
 const Twitch = window['Twitch'];
 
@@ -82,8 +83,8 @@ const ChannelListItem = (props, context) => {
   };
 
   let liveIconComp = null;
-  if (channel.isLive) {
-    liveIconComp = <Icon key="0" alt="Live" style={liveIconStyles}>Record</Icon>;
+  if (channel.isLive || true) {
+    liveIconComp = <Icon key="0" alt="Live" style={liveIconStyles}><IoIosRadioButtonOn /></Icon>;
   }
 
   return (
@@ -99,7 +100,7 @@ const ChannelListItem = (props, context) => {
       <div style={textContainer}>
         <span style={displayNameStyles}>
           <IconButton size={26} style={followButtonStyles} hoverStyle={{ background: theme.listAccentHigh }} activeStyle={{ background: theme.accent }} onClick={() => followChannel(info.name)}>
-            HeartFill
+            <IoIosHeart />
           </IconButton>
           <span style={displayNameContainerStyles}>
             <Textfit max={24} mode="single">
