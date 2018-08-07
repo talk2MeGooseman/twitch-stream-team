@@ -83,7 +83,7 @@ const ChannelListItem = (props, context) => {
   };
 
   let liveIconComp = null;
-  if (channel.isLive || true) {
+  if (channel.isLive) {
     liveIconComp = <Icon key="0" alt="Live" style={liveIconStyles}><IoIosRadioButtonOn /></Icon>;
   }
 
