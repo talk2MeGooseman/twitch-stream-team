@@ -22,6 +22,24 @@ export const getPanelInformation = async (token) => {
 };
 
 /**
+ * configGetPanelInformation 
+ * 
+ * @param {Object} token
+ */
+export const configGetPanelInformation = async (token) => {
+  let response = await axios({
+    method: 'GET',
+    url: `${EBS_ROOT_URL}/config_get_panel_information`,
+    headers: {
+      'Content-Type': 'application/json',
+      'x-extension-jwt': token,
+    }
+  });
+
+  return response.data;
+};
+
+/**
  * setPanelInformation 
  *
  * @param {Object} data
@@ -33,6 +51,31 @@ export const setPanelInformation = async (token, data) => {
     response = await axios({
       method: 'POST',
       url: `${EBS_ROOT_URL}/set_panel_information`,
+      data: data,
+      headers: {
+        'Content-Type': 'application/json',
+        'x-extension-jwt': token,
+      }
+    });
+  } catch (error) {
+    throw Error(error);
+  }
+
+  return response.data;
+};
+
+/**
+ * setCustomTeam
+ *
+ * @param {Object} data
+ * @param {token} token
+ */
+export const  setCustomTeamInformation = async (token, data) => {
+  let response;
+  try {
+    response = await axios({
+      method: 'POST',
+      url: `${EBS_ROOT_URL}/set_custom_team`,
       data: data,
       headers: {
         'Content-Type': 'application/json',

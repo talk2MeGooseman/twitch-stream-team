@@ -13,12 +13,8 @@ export default class ChannelModel {
     this.info = channel;
   }
 
-  canDestroy() {
-    return this.store.channel.length > 1;
-  }
-
   destroy() {
-    this.store.channel.remove(this);
+    // this.store.channel.remove(this);
   }
 
   toJSON() {

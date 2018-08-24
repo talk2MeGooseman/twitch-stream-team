@@ -24,3 +24,5 @@ export const ACTIVE_STEP_3 = 2;
 export const ACTIVE_STEP_4 = 3;
 export const TABS_HEIGHT = 70;
 export const CONFIG_PREVIEW_HEIGHT = 415;
+
+export const CUSTOM_TEAM_TYPE = 'custom';

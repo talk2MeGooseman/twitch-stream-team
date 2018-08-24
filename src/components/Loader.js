@@ -23,8 +23,7 @@ const animation = keyframes`
 const LoaderStyled = styled.div`
     width: 40px;
     height: 40px;
-    background-color: #6441A4;
-  
+    background-color: ${props => props.color ? props.color : '#6441A4' };
     margin: 100px auto;
     -webkit-animation: ${webkitAnimation} 1.2s infinite ease-in-out;
     animation: ${animation} 1.2s infinite ease-in-out;
@@ -36,8 +35,8 @@ const LoaderStyled = styled.div`
  * Component that displays an animated loading square
  * @returns {Object} JSX
  */
-const Loader = () => (
-    <LoaderStyled />
+const Loader = (props) => (
+    <LoaderStyled color={props.color} />
 );
 
  export default Loader;

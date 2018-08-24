@@ -108,7 +108,7 @@ const ChannelListItem = (props, context) => {
             </Textfit>
           </span>
         </span>
-        <span style={subTextStyles}>{info.status}</span>
+        <span style={subTextStyles}>{info.status || info.bio}</span>
       </div>
     </div>
   );

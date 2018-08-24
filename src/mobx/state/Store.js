@@ -1,39 +1,57 @@
 import {
   observable,
-  computed,
   action,
 } from "mobx"
-import ChannelModel from "../model/ChannelModel";
-import { uuid } from "../../services/Utils";
 import {
-  setPanelInformation,
   getPanelInformation,
-  getLiveChannels
+  getLiveChannels,
+  configGetPanelInformation,
 } from "../../services/Ebs";
 import {
-  LOAD_DONE, LOAD_ERROR, LOAD_PENDING, SAVE_PENDING, SAVE_DONE, SAVE_ERROR
+  LOAD_DONE, LOAD_ERROR, LOAD_PENDING, CUSTOM_TEAM_TYPE
 } from "../../services/constants";
+import TwitchTeamModel from "../model/TwitchTeamModel";
+import CustomTeamModel from "../model/CustomTeamModel";
 
 export default class Store {
   @observable token;
-  @observable channels;
   @observable loadingState = LOAD_PENDING;
-  @observable saveState;
-  @observable name;
-  @observable info;
-  @observable display_name;
-  @observable logo;
-  @observable banner;
-  @observable background;
-  @observable teams;
+  @observable teamType;
+  @observable twitchTeam;
+  @observable customTeam;
+
+  toJSON = () => {
+    return {
+      selected_team: this.selected_team,
+      customName: this.customName,
+      customChannels: this.customChannels,
+    };
+  }
 
   @action
-  setChannelFollowed(channelName) {
-    let followedChannel = this.channels.find((channel) => {
-      return channel.info.name === channelName;
-    });
+  fetchConfig() {
+    this.loadingState = LOAD_PENDING;
+    configGetPanelInformation(this.token).then(
+      // inline created action
+      action("fetchSuccess", result => {
+        let { customTeam, selectedTeam, teamType, teams } = result;
 
-    followedChannel.followed = true;
+        this.teamType = teamType;
+        this.twitchTeam = new TwitchTeamModel(this, teams, selectedTeam);
+        this.customTeam = new CustomTeamModel(this, customTeam);
+
+        this.loadingState = LOAD_DONE;
+
+        // Fetch the live channels
+        this.fetchLiveChannels();
+      }),
+      // inline created action
+      action("fetchError", error => {
+        this.twitchTeam = new TwitchTeamModel(this);
+        this.customTeam = new CustomTeamModel(this);
+        this.loadingState = LOAD_ERROR;
+      })
+    );
   }
 
   @action
@@ -42,45 +60,43 @@ export default class Store {
     getPanelInformation(this.token).then(
       // inline created action
       action("fetchSuccess", result => {
-        let selectedTeam = result.selectedTeam;
-        this.channel = selectedTeam.channel;
-        this.name = selectedTeam.name;
-        this.info = selectedTeam.info;
-        this.display_name = selectedTeam.display_name;
-        this.logo = selectedTeam.logo;
-        this.banner= selectedTeam.banner;
-        this.background = selectedTeam.background
-        this.teams = result.teams;
+        let { customTeam, selectedTeam, teamType, teams } = result;
 
-        this.channels = selectedTeam.users.map((channel) => {
-          return new ChannelModel(this, channel);
-        });
+        this.teamType = teamType;
+        this.twitchTeam = new TwitchTeamModel(this, teams, selectedTeam);
+        this.customTeam = new CustomTeamModel(this, customTeam);
 
         this.loadingState = LOAD_DONE;
 
+        // Fetch the live channels
+        this.fetchLiveChannels();
+        setInterval(this.fetchLiveChannels, 1000 * 60 * 5);
       }),
       // inline created action
       action("fetchError", error => {
         this.loadingState = LOAD_ERROR;
       })
-    ).then(() => {
-      this.fetchLiveChannels();
-      setInterval(this.fetchLiveChannels, 1000 * 60 * 5);
-    })
+    );
   }
 
   fetchLiveChannels = async () => {
     let { data } = await getLiveChannels(this.token);
-
-    let liveChannelIDs = data.map((liveChannel) => liveChannel.user_id);
-
     let liveChannels = [];
     let notLiveChannels = [];
 
-    this.channels.forEach(channel => {
-      if (liveChannelIDs.includes(channel.id))
+    let team;
+    if (this.teamType === CUSTOM_TEAM_TYPE) {
+      team = this.customTeam;
+    } else {
+      team = this.twitchTeam;
+    }
+
+    team.channels.forEach(channel => {
+      let foundChannel = data.find((liveChannel) => { return liveChannel.user_id === channel.id });
+      if (foundChannel)
       {
         channel.isLive = true;
+        channel.info.status = foundChannel.title;
         liveChannels.push(channel);
       } else
       {
@@ -90,56 +106,6 @@ export default class Store {
     });
 
     // Set new channel order with live channels at the top
-    this.channels = liveChannels.concat(notLiveChannels);
-  }
-
-  @action
-  setTeam(selected_team) {
-    this.saveState = SAVE_PENDING;
-    setPanelInformation(this.token, { selected_team }).then(
-      // inline created action
-      action("fetchSuccess", result => {
-        let selectedTeam = result.selectedTeam;
-
-        this.channel = selectedTeam.channel;
-        this.name = selectedTeam.name;
-        this.info = selectedTeam.info;
-        this.display_name = selectedTeam.display_name;
-        this.logo = selectedTeam.logo;
-        this.banner= selectedTeam.banner;
-        this.background = selectedTeam.background
-        this.teams = result.teams;
-
-        this.channels = selectedTeam.users.map((channel) => {
-          return new ChannelModel(this, channel);
-        });
-
-        this.saveState = SAVE_DONE;
-      }),
-      // inline created action
-      action("fetchError", error => {
-        this.saveState = SAVE_ERROR;
-      })
-    ).then(async () => {
-      let { data } = await getLiveChannels(this.token);
-
-      let liveChannelIDs = data.map((liveChannel) => liveChannel.user_id );
-
-      let liveChannels = [];
-      let notLiveChannels = [];
-
-      this.channels.forEach(channel => {
-        if(liveChannelIDs.includes(channel.id)) {
-          channel.isLive = true;
-          liveChannels.push(channel);
-        } else {
-          channel.isLive = false;
-          notLiveChannels.push(channel);
-        }
-      });
-
-      // Set new channel order with live channels at the top
-      this.channels = liveChannels.concat(notLiveChannels);
-    });
+    team.channels = liveChannels.concat(notLiveChannels);
   }
 }

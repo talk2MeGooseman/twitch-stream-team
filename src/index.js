@@ -20,10 +20,12 @@ const viewAnchor = params.get('anchor');
 // Platform: Tells if the extension is loaded on "web" or "mobile"
 const viewPlatform = params.get('platform');
 
+const mode = params.get('mode');
+
 // Check which mode were in to know which component to render
-switch (params.get('mode')) {
+switch (mode) {
   case CONFIG_MODE:
-    viewComponent = <AuthWrapper store={store}><Config store={store} viewAnchor={viewAnchor} viewPlatform={viewPlatform} /></AuthWrapper>;
+    viewComponent = <AuthWrapper mode={mode} store={store}><Config store={store} viewAnchor={viewAnchor} viewPlatform={viewPlatform} /></AuthWrapper>;
     break;
   case VIEWER_MODE:
     viewComponent = <AuthWrapper store={store}><StreamTeams store={store} viewAnchor={viewAnchor} viewPlatform={viewPlatform} /></AuthWrapper>;

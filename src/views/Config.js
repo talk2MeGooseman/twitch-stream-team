@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
-import { observer } from 'mobx-react';
 import { Theme as UWPThemeProvider, getTheme } from "react-uwp/Theme";
-import StreamTeams from './StreamTeams';
 import ConfigInfo from '../components/ConfigInfo';
-import { SAVE_PENDING } from "../services/constants";
-import Loader from '../components/Loader';
+import PanelPreview from '../components/PanelPreview';
 
 const containerStyles = { 
   width: '300px',
@@ -15,20 +12,7 @@ const containerStyles = {
   position: 'relative',
 }
 
-@observer
 export default class Config extends Component {
-
-  renderPreview = () => {
-    const { store, viewAnchor, viewPlatform } = this.props;
-
-    if (store.saveState === SAVE_PENDING)
-    {
-      return <Loader />;
-    } else
-    {
-      return <StreamTeams store={store} viewAnchor={viewAnchor} viewPlatform={viewPlatform} />;
-    }
-  }
 
   render(){
     const { store } = this.props;
@@ -47,7 +31,7 @@ export default class Config extends Component {
         <div style={{ flex: 1}}>
           <h2>Panel Preview</h2>
           <div style={containerStyles}>
-            {this.renderPreview()}
+            <PanelPreview {...this.props} />
           </div>
         </div>
       </UWPThemeProvider>

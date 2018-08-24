@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
-import { LOAD_PENDING } from "../services/constants";
+import { LOAD_PENDING, CONFIG_MODE } from "../services/constants";
 import Loader from "./Loader";
 
 @observer
@@ -24,7 +24,11 @@ export default class AuthWrapper extends Component {
       this.props.store.token = auth.token;
 
       if (shouldFetch) {
-        this.props.store.fetchTeam();
+        if (this.props.mode === CONFIG_MODE ) {
+          this.props.store.fetchConfig();
+        } else {
+          this.props.store.fetchTeam();
+        }
       }
     });
   
