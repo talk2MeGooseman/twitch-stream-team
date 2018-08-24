@@ -17,8 +17,8 @@ export default class Store {
   @observable token;
   @observable loadingState = LOAD_PENDING;
   @observable teamType;
-  @observable twitchTeam;
-  @observable customTeam;
+  @observable twitchTeam = {};
+  @observable customTeam = {};
 
   toJSON = () => {
     return {

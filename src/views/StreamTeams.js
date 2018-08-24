@@ -18,7 +18,7 @@ export default class StreamTeams extends Component {
       team = store.twitchTeam;
     }
 
-    if (team.saveState === SAVE_PENDING) {
+    if (store.saveState === SAVE_PENDING || team.saveState === SAVE_PENDING ) {
       return (
         <Loader color='white' />
       );

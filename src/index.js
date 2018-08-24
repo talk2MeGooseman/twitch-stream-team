@@ -4,7 +4,7 @@ import './index.css';
 
 import AuthWrapper from './components/AuthWrapper'
 import {CONFIG_MODE, VIEWER_MODE, DASHBOARD_MODE} from './services/constants'
-import StreamTeams from './views/StreamTeams';
+import StreamTeamTheme from './views/StreamTeamTheme';
 import Store from './mobx/state/Store';
 import Config from './views/Config';
 
@@ -28,10 +28,10 @@ switch (mode) {
     viewComponent = <AuthWrapper mode={mode} store={store}><Config store={store} viewAnchor={viewAnchor} viewPlatform={viewPlatform} /></AuthWrapper>;
     break;
   case VIEWER_MODE:
-    viewComponent = <AuthWrapper store={store}><StreamTeams store={store} viewAnchor={viewAnchor} viewPlatform={viewPlatform} /></AuthWrapper>;
+    viewComponent = <AuthWrapper mode={mode} store={store}><StreamTeamTheme store={store} viewAnchor={viewAnchor} viewPlatform={viewPlatform} /></AuthWrapper>;
     break;
   case DASHBOARD_MODE:
-    viewComponent = <AuthWrapper store={store}><StreamTeams store={store} viewAnchor={viewAnchor} viewPlatform={viewPlatform} /></AuthWrapper>;
+    viewComponent = <AuthWrapper mode={mode} store={store}><StreamTeamTheme store={store} viewAnchor={viewAnchor} viewPlatform={viewPlatform} /></AuthWrapper>;
     break;
   default:
     viewComponent = <div>Nothing Loaded</div>;
