@@ -37,7 +37,7 @@ export default class Store {
         let { customTeam, selectedTeam, teamType, teams } = result;
 
         this.teamType = teamType;
-        this.twitchTeam = new TwitchTeamModel(this, teams, selectedTeam);
+        this.twitchTeam = new TwitchTeamModel(this, selectedTeam, teams);
         this.customTeam = new CustomTeamModel(this, customTeam);
 
         this.loadingState = LOAD_DONE;
@@ -60,17 +60,19 @@ export default class Store {
     getPanelInformation(this.token).then(
       // inline created action
       action("fetchSuccess", result => {
-        let { customTeam, selectedTeam, teamType, teams } = result;
+        let { selectedTeam, teamType } = result;
 
         this.teamType = teamType;
-        this.twitchTeam = new TwitchTeamModel(this, teams, selectedTeam);
-        this.customTeam = new CustomTeamModel(this, customTeam);
+        if (this.teamType === CUSTOM_TEAM_TYPE) {
+          this.customTeam = new CustomTeamModel(this, selectedTeam);
+        } else {
+          this.twitchTeam = new TwitchTeamModel(this, selectedTeam);
+        }
 
         this.loadingState = LOAD_DONE;
 
-        // Fetch the live channels
+        // Fetch the live channels for inital render, this will get updated by a pubsub message
         this.fetchLiveChannels();
-        setInterval(this.fetchLiveChannels, 1000 * 60 * 5);
       }),
       // inline created action
       action("fetchError", error => {
@@ -81,6 +83,10 @@ export default class Store {
 
   fetchLiveChannels = async () => {
     let { data } = await getLiveChannels(this.token);
+    this.updateLiveChannels(data);
+  }
+
+  updateLiveChannels = (liveChannelIds) => {
     let liveChannels = [];
     let notLiveChannels = [];
 
@@ -92,11 +98,10 @@ export default class Store {
     }
 
     team.channels.forEach(channel => {
-      let foundChannel = data.find((liveChannel) => { return liveChannel.user_id === channel.id });
+      let foundChannel = liveChannelIds.find((id) => { return id === channel.id });
       if (foundChannel)
       {
         channel.isLive = true;
-        channel.info.status = foundChannel.title;
         liveChannels.push(channel);
       } else
       {

@@ -21,7 +21,7 @@ export default class TwitchTeamModel {
   @observable banner;
   @observable teams;
 
-  constructor(parentStore, teams, selectedTeamData) {
+  constructor(parentStore, selectedTeamData, teams) {
     this.teams = teams;
 
     if (!selectedTeamData) {
