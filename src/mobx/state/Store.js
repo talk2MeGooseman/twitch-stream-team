@@ -81,6 +81,17 @@ export default class Store {
     );
   }
 
+  setChannelFollowed(channelName) {
+    let team;
+    if (this.teamType === CUSTOM_TEAM_TYPE) {
+      team = this.customTeam;
+    } else {
+      team = this.twitchTeam;
+    }
+
+    team.setChannelFollowed(channelName);
+  }
+
   fetchLiveChannels = async () => {
     let { data } = await getLiveChannels(this.token);
     this.updateLiveChannels(data);
