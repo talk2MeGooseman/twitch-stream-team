@@ -6,9 +6,15 @@ import ListView from "react-uwp/ListView";
 import { observer } from "mobx-react";
 import Icon from "react-uwp/Icon";
 import { CUSTOM_TEAM_TYPE } from "../services/constants";
+import { IoIosTrash } from 'react-icons/io';
 
 const paddingStyle = {
   margin: "10px 0"
+};
+
+const trashStyle = {
+  fontSize: '18px',
+  pointerEvents: 'none'
 };
 
 const TwitchTeamFlow = (props, context) => {
@@ -49,11 +55,18 @@ const TwitchTeamFlow = (props, context) => {
 
   let onRemoveChannel = (event) => {
     let channel = event.target.getAttribute('data-channel')
-    customTeam.removeChannel(channel);
+    if (channel) {
+      customTeam.removeChannel(channel);
+    }
   }
 
   let customTeamItems = customTeam.selectedChannels.map(channel => (
-    <div key={channel.name}>{channel} <Icon onClick={onRemoveChannel} data-channel={channel}>Delete</Icon></div>
+    <div key={channel.name}>
+      {channel}{" "}
+      <Icon onClick={onRemoveChannel} data-channel={channel}>
+        <IoIosTrash style={trashStyle} />
+      </Icon>
+    </div>
   ));
 
   if (!customTeamItems.length) {

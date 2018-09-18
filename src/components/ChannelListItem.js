@@ -28,6 +28,14 @@ const textContainer = {
   whiteSpace: 'nowrap'
 };
 
+const liveIconStyles = {
+  position: 'absolute',
+  fontSize: '24px',
+  color: '#ec1313',
+  bottom: '18px',
+  right: '18px',
+};
+
 const displayNameContainerStyles = {
   display: 'inline-block',
   width: '80%',
@@ -45,10 +53,15 @@ const followChannel = (channel) => {
   Twitch.ext.actions.followChannel(channel);
 }
 
+const buildTwitchUrl = (channelName) => {
+  return `https://www.twitch.tv/${channelName}`;
+}
+
 const ChannelListItem = (props, context) => {
   const { channel } = props;
   const { info } = channel;
   const { theme } = context;
+  let followIconHoverColor = theme.listAccentHigh;
 
   const displayNameStyles = {
     color: theme.baseHigh,
@@ -62,7 +75,8 @@ const ChannelListItem = (props, context) => {
 
   let followIconBG;
   if(channel.followed) {
-    followIconBG = green600;
+    followIconBG = followIconHoverColor = green600;
+
   } else {
     followIconBG = theme.listAccentLow;
   } 
@@ -74,24 +88,16 @@ const ChannelListItem = (props, context) => {
     verticalAlign: 'top'
   };
 
-  const liveIconStyles = {
-    position: 'absolute',
-    fontSize: '24px',
-    color: '#ec1313',
-    bottom: '12px',
-    right: '14px',
-  };
-
   let liveIconComp = null;
   if (channel.isLive) {
-    liveIconComp = <Icon key="0" alt="Live" style={liveIconStyles}><IoIosRadioButtonOn /></Icon>;
+    liveIconComp = <div class="pulse" style={liveIconStyles}></div>;
   }
 
   return (
     <div key={info._id} style={container}>
       <div style={{ flex: 1 }}>
         <TransformCard xMaxRotate={50} yMaxRotate={50} perspective={240}>
-          <a href={`https://twitch.tv/${info.display_name}`} target="_blank">
+          <a href={buildTwitchUrl(info.name)} target="_blank">
             { liveIconComp }
             <Image src={resizeImage(info.logo)} />
           </a>
@@ -99,7 +105,7 @@ const ChannelListItem = (props, context) => {
       </div>
       <div style={textContainer}>
         <span style={displayNameStyles}>
-          <IconButton size={26} style={followButtonStyles} hoverStyle={{ background: theme.listAccentHigh }} activeStyle={{ background: theme.accent }} onClick={() => followChannel(info.name)}>
+          <IconButton size={26} style={followButtonStyles} hoverStyle={{ background: followIconHoverColor }} activeStyle={{ background: theme.accent }} onClick={() => followChannel(info.name)}>
             <IoIosHeart />
           </IconButton>
           <span style={displayNameContainerStyles}>

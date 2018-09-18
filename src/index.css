@@ -3,3 +3,41 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+
+
+.pulse {
+  display: block;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #ff0000;
+  cursor: pointer;
+  box-shadow: 0 0 0 rgba(255,0,0, 0.4);
+  animation: pulse 2s infinite;
+}
+
+@-webkit-keyframes pulse {
+  0% {
+    -webkit-box-shadow: 0 0 0 0 rgba(255,0,0, 0.6);
+  }
+  70% {
+      -webkit-box-shadow: 0 0 0 15px rgba(204,169,44, 0);
+  }
+  100% {
+      -webkit-box-shadow: 0 0 0 0 rgba(255,0,0, 0);
+  }
+}
+@keyframes pulse {
+  0% {
+    -moz-box-shadow: 0 0 0 0 rgba(255,0,0, 0.6);
+    box-shadow: 0 0 0 0 rgba(255,0,0, 0.6);
+  }
+  70% {
+      -moz-box-shadow: 0 0 0 15px rgba(255,0,0, 0);
+      box-shadow: 0 0 0 15px rgba(255,0,0, 0);
+  }
+  100% {
+      -moz-box-shadow: 0 0 0 0 rgba(255,0,0, 0);
+      box-shadow: 0 0 0 0 rgba(255,0,0, 0);
+  }
+}
