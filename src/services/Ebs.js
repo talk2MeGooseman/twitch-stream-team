@@ -88,26 +88,3 @@ export const  setCustomTeamInformation = async (token, data) => {
 
   return response.data;
 };
-
-/**
- * getLiveChannels
- *
- * @param {token} token
- */
-export const getLiveChannels = async (token) => {
-  let response;
-  try {
-    response = await axios({
-      method: 'GET',
-      url: `${EBS_ROOT_URL}/get_live_channels`,
-      headers: {
-        'Content-Type': 'application/json',
-        'x-extension-jwt': token,
-      }
-    });
-  } catch (error) {
-    throw Error(error);
-  }
-
-  return response.data;
-};

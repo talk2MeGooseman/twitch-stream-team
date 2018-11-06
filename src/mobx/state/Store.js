@@ -4,7 +4,6 @@ import {
 } from "mobx"
 import {
   getPanelInformation,
-  getLiveChannels,
   configGetPanelInformation,
 } from "../../services/Ebs";
 import {
@@ -12,6 +11,7 @@ import {
 } from "../../services/constants";
 import TwitchTeamModel from "../model/TwitchTeamModel";
 import CustomTeamModel from "../model/CustomTeamModel";
+import { getLiveChannels } from "../../services/TwitchAPI";
 
 export default class Store {
   @observable token;
@@ -43,7 +43,7 @@ export default class Store {
         this.loadingState = LOAD_DONE;
 
         // Fetch the live channels
-        this.fetchLiveChannels();
+        // this.fetchLiveChannels();
       }),
       // inline created action
       action("fetchError", error => {
@@ -69,8 +69,8 @@ export default class Store {
         this.loadingState = LOAD_DONE;
 
         // Fetch the live channels
-        this.fetchLiveChannels();
-        setInterval(this.fetchLiveChannels, 1000 * 60 * 5);
+        // this.fetchLiveChannels();
+        // setInterval(this.fetchLiveChannels, 1000 * 60 * 5);
       }),
       // inline created action
       action("fetchError", error => {
@@ -80,7 +80,6 @@ export default class Store {
   }
 
   fetchLiveChannels = async () => {
-    let { data } = await getLiveChannels(this.token);
     let liveChannels = [];
     let notLiveChannels = [];
 
@@ -89,6 +88,14 @@ export default class Store {
       team = this.customTeam;
     } else {
       team = this.twitchTeam;
+    }
+
+    let data;
+    try {
+      let responeBody = await getLiveChannels(team.channels)
+      data = responeBody.data;
+    } catch (error) {
+      return;
     }
 
     team.channels.forEach(channel => {

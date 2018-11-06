@@ -96,7 +96,7 @@ export default class CustomTeamModel {
 
         this.saveState = SAVE_DONE;
         this.parentStore.teamType = CUSTOM_TEAM_TYPE;
-        this.parentStore.fetchLiveChannels();
+        // this.parentStore.fetchLiveChannels();
       }), // inline created action
       action("setTeamError", error => {
         this.saveState = SAVE_ERROR;

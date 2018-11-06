@@ -80,7 +80,7 @@ export default class TwitchTeamModel {
         this.saveState = SAVE_ERROR;
       })
     ).then(async () => {
-      this.parentStore.fetchLiveChannels();
+      // this.parentStore.fetchLiveChannels();
     });
   }
 }

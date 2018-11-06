@@ -91,7 +91,7 @@ const ChannelListItem = (props, context) => {
     <div key={info._id} style={container}>
       <div style={{ flex: 1 }}>
         <TransformCard xMaxRotate={50} yMaxRotate={50} perspective={240}>
-          <a href={info.url} target="_blank">
+          <a href={`https://twitch.tv/${info.display_name}`} target="_blank">
             { liveIconComp }
             <Image src={resizeImage(info.logo)} />
           </a>
