@@ -1,0 +1,97 @@
+{
+  "allowHttpBackend": false,
+  "backendCommand": "",
+  "backendFolderName": "",
+  "extensionViews": [
+    {
+      "id": "1",
+      "label": "",
+      "channelId": "120750024",
+      "displayChannelName": "talk2megooseman",
+      "type": "panel",
+      "features": {
+        "isChatEnabled": false
+      },
+      "linked": false,
+      "linkedUserId": "",
+      "mode": "viewer",
+      "isPopout": false,
+      "role": "Broadcaster",
+      "x": 0,
+      "y": 0,
+      "orientation": "Portrait",
+      "frameSize": {
+        "width": 640,
+        "height": 480
+      }
+    }
+  ],
+  "manifest": {
+    "anchor": "panel",
+    "assetUrls": [],
+    "authorName": "talk2megooseman",
+    "bitsEnabled": false,
+    "canInstall": true,
+    "configUrl": "http://localhost:8080/config.html",
+    "configurationLocation": "custom",
+    "description": "Stream Team extension is to show your viewers what team you're on and who is part of your team inside your panels. It will automatically pick the team you are apart of and allow you to pick another team if you have joined more then one.\r\n\r\nNot part of a team? No problem! Stream team now included the ability to build your own team and show them off on your channel.\r\n\r\nViewers can easily check out the other people on your team and follow them by clicking the heart icon.\r\nFeatures:\r\n(1) Display your Twitch Team or build your own Custom Team\r\n(2) Click on the banner to open a window to see the team \r\n(3) Click on channels profile icon to open window to view channel \r\n(4) Click on the heart icon to follow the channel\r\n(5) Live channels move to the top of the list\r\nThis extension was built as part of the Twitch Extension Jam and I plan to include a couple more features in the near future.  #TEJ2018",
+    "eulaTosUrl": "",
+    "hasChatSupport": false,
+    "iconUrl": "https://media.forgecdn.net/avatars/163/917/636684323127379687.jpeg",
+    "iconUrls": {
+      "100x100": "https://media.forgecdn.net/avatars/163/917/636684323127379687.jpeg",
+      "24x24": "https://media.forgecdn.net/avatars/163/920/636684328313065702.jpeg",
+      "300x200": "https://media.forgecdn.net/avatars/163/921/636684329967878890.png"
+    },
+    "id": "d4t75sazjvk9cc84h30mgkyg7evbvz",
+    "installationCount": -42,
+    "liveConfigUrl": "http://localhost:8080/dashboard_config.html",
+    "name": "Stream Team",
+    "panelHeight": 500,
+    "privacyPolicyUrl": "",
+    "requestIdentityLink": false,
+    "requiredBroadcasterAbilities": [],
+    "screenshotUrls": [
+      "https://media.forgecdn.net/attachments/233/805/twitch-screenshot.png"
+    ],
+    "sku": "",
+    "state": "Testing",
+    "subscriptionsSupportLevel": "none",
+    "summary": "Show off your team in your panels the way it was meant to be seen! And allow viewers to easily follow other people on your team.",
+    "supportEmail": "help@gooseman.codes",
+    "vendorCode": "",
+    "version": "1.1.0",
+    "viewerUrl": "http://localhost:8080/panel.html",
+    "viewerUrls": {
+      "mobile": "http://localhost:8080/panel.html",
+      "panel": "http://localhost:8080/panel.html"
+    },
+    "views": {
+      "mobile": {
+        "viewerUrl": "http://localhost:8080/panel.html"
+      },
+      "panel": {
+        "viewerUrl": "http://localhost:8080/panel.html",
+        "height": 500,
+        "canLinkExternalContent": true
+      },
+      "config": {
+        "viewerUrl": "http://localhost:8080/config.html",
+        "canLinkExternalContent": true
+      },
+      "liveConfig": {
+        "viewerUrl": "http://localhost:8080/dashboard_config.html",
+        "canLinkExternalContent": true
+      }
+    },
+    "whitelistedConfigUrls": [
+      "https://www.twitch.tv/*"
+    ],
+    "whitelistedPanelUrls": [
+      "https://www.twitch.tv/*"
+    ]
+  },
+  "frontendCommand": "",
+  "frontendFolderName": "",
+  "name": "Stream Teams"
+}

@@ -56,11 +56,7 @@ const TwitchTeamFlow = (props, context) => {
           </li>
           <li>Step 4: Look at the preview to see how your team looks.</li>
           <li>
-            Step 5: Activate the extension in panel 1, 2 or 3 <strong>
-              <a href="https://www.twitch.tv/talk2megooseman/dashboard/extensions/manage" target="_blank" rel="noopener noreferrer">
-                here
-              </a>
-            </strong>
+            Step 5: Activate the extension in panel 1, 2 or 3
           </li>
           <li>Step 6: Tell your chat about the extension!</li>
           <li>

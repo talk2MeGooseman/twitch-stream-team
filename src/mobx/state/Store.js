@@ -43,7 +43,7 @@ export default class Store {
         this.loadingState = LOAD_DONE;
 
         // Fetch the live channels
-        // this.fetchLiveChannels();
+        this.fetchLiveChannels();
       }),
       // inline created action
       action("fetchError", error => {
@@ -69,8 +69,8 @@ export default class Store {
         this.loadingState = LOAD_DONE;
 
         // Fetch the live channels
-        // this.fetchLiveChannels();
-        // setInterval(this.fetchLiveChannels, 1000 * 60 * 5);
+        this.fetchLiveChannels();
+        setInterval(this.fetchLiveChannels, 1000 * 60 * 5);
       }),
       // inline created action
       action("fetchError", error => {
@@ -92,9 +92,12 @@ export default class Store {
 
     let data;
     try {
-      let responeBody = await getLiveChannels(team.channels)
-      data = responeBody.data;
+      data = await getLiveChannels(team.channels)
     } catch (error) {
+      return;
+    }
+
+    if(!data) {
       return;
     }
 
