@@ -51,12 +51,15 @@
     "webpack": "3.8.1",
     "webpack-dev-server": "2.9.4",
     "webpack-manifest-plugin": "1.3.2",
-    "whatwg-fetch": "2.0.3"
+    "whatwg-fetch": "2.0.3",
+    "snyk": "^1.161.1"
   },
   "scripts": {
     "start": "PORT=8080 HTTPS=true node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js --env=jsdom"
+    "test": "node scripts/test.js --env=jsdom",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "jest": {
     "collectCoverageFrom": [
@@ -106,5 +109,6 @@
   "devDependencies": {
     "babel-plugin-transform-decorators-legacy": "^1.3.5",
     "mobx-react-devtools": "^6.0.2"
-  }
+  },
+  "snyk": true
 }
