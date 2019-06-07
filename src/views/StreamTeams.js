@@ -9,22 +9,15 @@ import { observer } from "mobx-react";
 @observer
 export default class StreamTeams extends Component {
   render(){
-    const { store } = this.props;
-    let team;
+    const { store: team } = this.props;
 
-    if ( store.teamType === CUSTOM_TEAM_TYPE ) {
-      team = store.customTeam;
-    } else {
-      team = store.twitchTeam;
-    }
-
-    if (store.saveState === SAVE_PENDING || team.saveState === SAVE_PENDING ) {
+    if (team && team.saveState === SAVE_PENDING ) {
       return (
         <Loader color='white' />
       );
     }
 
-    if (team.loadingState === LOAD_ERROR || !team.channels) {
+    if (!team || team.loadingState === LOAD_ERROR || team && !team.channels) {
       return(
         <div style={{ textAlign: 'center' }}>
           <h3>Looks like we couldnt find your Team</h3>

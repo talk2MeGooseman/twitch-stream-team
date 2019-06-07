@@ -1,11 +1,11 @@
 import axios from "axios";
 
 const EBS_ROOT_URL = 'https://us-central1-stream-team-3a526.cloudfunctions.net';
-// const EBS_ROOT_URL = 'https://localhost:8080/stream-team-3a526/us-central1';
+// const EBS_ROOT_URL = 'http://localhost:8080/stream-team-3a526/us-central1';
 
 /**
- * getPanelInformation 
- * 
+ * getPanelInformation
+ *
  * @param {Object} token
  */
 export const getPanelInformation = async (token) => {
@@ -22,8 +22,8 @@ export const getPanelInformation = async (token) => {
 };
 
 /**
- * configGetPanelInformation 
- * 
+ * configGetPanelInformation
+ *
  * @param {Object} token
  */
 export const configGetPanelInformation = async (token) => {
@@ -40,7 +40,7 @@ export const configGetPanelInformation = async (token) => {
 };
 
 /**
- * setPanelInformation 
+ * setPanelInformation
  *
  * @param {Object} data
  * @param {token} token

@@ -6,7 +6,6 @@ export default class StreamTeamTheme extends Component {
   render(){
     const { store } = this.props;
 
-
     return(
       <UWPThemeProvider
         style={
@@ -17,7 +16,7 @@ export default class StreamTeamTheme extends Component {
           accent: "#0078D7"
         })}
       >
-        <StreamTeams store={store} />
+        <StreamTeams store={store.selectedTeam()} />
       </UWPThemeProvider>
     );
   }

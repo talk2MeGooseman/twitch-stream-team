@@ -3,59 +3,63 @@ import {
   action,
 } from "mobx"
 import ChannelModel from "../model/ChannelModel";
+import BaseTeamModel from "./BaseTeamModel";
 import {
   setPanelInformation,
 } from "../../services/Ebs";
 import {
   LOAD_PENDING, SAVE_PENDING, SAVE_DONE, SAVE_ERROR
 } from "../../services/constants";
+import { requestTeamInfo } from "../../services/TwitchAPI";
 
-export default class TwitchTeamModel {
-  @observable channels;
-  @observable loadingState = LOAD_PENDING;
-  @observable saveState;
-  @observable name;
-  @observable info;
-  @observable display_name;
-  @observable logo;
-  @observable banner;
+// Bit 1 - Lurking_kat
+
+export default class TwitchTeamModel extends BaseTeamModel {
   @observable teams;
 
-  constructor(parentStore, teams, selectedTeamData) {
-    this.teams = teams;
-
-    if (!selectedTeamData) {
-      return;
-    }
-    this.parentStore = parentStore;
-    this.name = selectedTeamData.name;
-    this.display_name = selectedTeamData.display_name;
-    this.logo = selectedTeamData.logo;
-    this.banner = selectedTeamData.banner;
-
-    this.channels = selectedTeamData.users.map((channel) => {
-      return new ChannelModel(this, channel);
-    });
+  /**
+   * Creates an instance of TwitchTeamModel.
+   * @param {*} parentStore - Mobx Store
+   * @param {string} selectedTeam Name of Twitch Team
+   * @memberof TwitchTeamModel
+   */
+  constructor(parentStore, selectedTeam) {
+    super(parentStore)
+    this.name = selectedTeam;
   }
 
+  /**
+   * Initializes team information from Twitch Team API
+   * Endpoint
+   *
+   * @returns void
+   * @memberof TwitchTeamModel
+   */
   @action
-  setName(name) {
-    this.name = name;
+  initTeamInfo() {
+    return requestTeamInfo(this.name).then((data) => {
+      this.buildChannels(data.users);
+
+      this.info = data.info;
+      this.display_name = data.display_name;
+      this.logo = data.logo;
+      this.banner = data.banner;
+      this.id = data.id;
+
+      this.loadingState = SAVE_DONE;
+    })
   }
 
-  @action
-  setChannelFollowed(channelName) {
-    let followedChannel = this.channels.find((channel) => {
-      return channel.info.name === channelName;
-    });
-
-    followedChannel.followed = true;
-  }
-
+  /**
+   * Sets the passed in team in the backend
+   *
+   * @param {string} selected_team
+   * @memberof TwitchTeamModel
+   */
   @action
   setTeam(selected_team) {
     this.saveState = SAVE_PENDING;
-    setPanelInformation(this.parentStore.token, { selected_team }).then(
+    return setPanelInformation(this.parentStore.token, { selected_team }).then(
       // inline created action
       action("fetchSuccess", result => {
         let selectedTeam = result.selectedTeam;
@@ -79,8 +83,6 @@ export default class TwitchTeamModel {
       action("fetchError", error => {
         this.saveState = SAVE_ERROR;
       })
-    ).then(async () => {
-      // this.parentStore.fetchLiveChannels();
-    });
+    )
   }
 }

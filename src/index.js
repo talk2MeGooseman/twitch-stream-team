@@ -8,6 +8,8 @@ import StreamTeamTheme from './views/StreamTeamTheme';
 import Store from './mobx/state/Store';
 import Config from './views/Config';
 
+// Bits 100 - csharpfritz
+
 // Get the params from the url
 const params = new URLSearchParams(window.location.search)
 let viewComponent;

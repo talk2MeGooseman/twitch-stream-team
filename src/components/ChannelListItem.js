@@ -59,7 +59,6 @@ const buildTwitchUrl = (channelName) => {
 
 const ChannelListItem = (props, context) => {
   const { channel } = props;
-  const { info } = channel;
   const { theme } = context;
   let followIconHoverColor = theme.listAccentHigh;
 
@@ -94,27 +93,27 @@ const ChannelListItem = (props, context) => {
   }
 
   return (
-    <div key={info._id} style={container}>
+    <div key={channel.id} style={container}>
       <div style={{ flex: 1 }}>
         <TransformCard xMaxRotate={50} yMaxRotate={50} perspective={240}>
-          <a href={buildTwitchUrl(info.name)} target="_blank">
+          <a href={buildTwitchUrl(channel.name)} target="_blank">
             { liveIconComp }
-            <Image src={resizeImage(info.logo)} />
+            <Image src={resizeImage(channel.profile_image)} />
           </a>
         </TransformCard>
       </div>
       <div style={textContainer}>
         <span style={displayNameStyles}>
-          <IconButton size={26} style={followButtonStyles} hoverStyle={{ background: followIconHoverColor }} activeStyle={{ background: theme.accent }} onClick={() => followChannel(info.name)}>
+          <IconButton size={26} style={followButtonStyles} hoverStyle={{ background: followIconHoverColor }} activeStyle={{ background: theme.accent }} onClick={() => followChannel(channel.name)}>
             <IoIosHeart />
           </IconButton>
           <span style={displayNameContainerStyles}>
             <Textfit max={24} mode="single">
-              {info.display_name}
+              {channel.name}
             </Textfit>
           </span>
         </span>
-        <span style={subTextStyles}>{info.status || info.bio}</span>
+        <span style={subTextStyles}>{channel.description}</span>
       </div>
     </div>
   );

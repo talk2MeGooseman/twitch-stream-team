@@ -2,62 +2,58 @@ import {
   observable,
   action,
 } from "mobx"
-import ChannelModel from "../model/ChannelModel";
+import { requestChannelsById, requestChannelsByName } from "../../services/TwitchAPI";
+import BaseTeamModel from './BaseTeamModel';
 import {
   setCustomTeamInformation
 } from "../../services/Ebs";
 import {
   LOAD_PENDING, SAVE_PENDING, SAVE_DONE, SAVE_ERROR, CUSTOM_TEAM_TYPE
 } from "../../services/constants";
+import { debug } from "util";
 
-export default class CustomTeamModel {
-  @observable channels;
-  @observable selectedChannels = [];
-  @observable loadingState = LOAD_PENDING;
-  @observable saveState;
-  @observable name;
-  @observable info;
-  @observable display_name;
-  @observable logo;
-  @observable banner;
+export default class CustomTeamModel extends BaseTeamModel {
 
   constructor(parentStore, data) {
-    this.parentStore = parentStore;
-    if (data) {
-      this.setData(data);
-    }
+    super(parentStore)
+    this.rawData = data;
   }
 
-  setData(data) {
-    this.channel = data.channel;
-    this.name = data.name;
-    this.customName = data.name;
-    this.display_name = data.display_name;
-    this.logo = data.logo;
-    this.banner = data.banner;
+  @action
+  initTeamInfo() {
+    const data = this.rawData;
 
-    this.selectedChannels = [];
-    this.channels = data.users.map((channel) => {
-      this.selectedChannels.push(channel.name);
-      return new ChannelModel(this, channel);
-    });
-  } 
+    return new Promise( (resolve) => {
+      if (data.users) {
+        requestChannelsById(data.users).then((c) => {
+          this.buildChannels(c);
+        })
+      }
+
+      this.channel = data.channel;
+      this.name = data.name;
+      this.customName = data.name;
+      this.display_name = data.display_name;
+      this.logo = data.logo;
+      this.banner = data.banner;
+
+      this.loadingState = SAVE_DONE;
+      resolve();
+    })
+  }
 
   @action
   addChannel(channelName) {
-    // Add to selectedChannels array and potentially do some validation checks
-    this.selectedChannels.push(channelName);
+    requestChannelsByName([channelName]).then((data) => {
+      // Add to channels array and potentially do some validation checks
+      this.addChannels(data);
+    })
   }
 
   @action
   removeChannel(channelName) {
-    let index = this.selectedChannels.indexOf(channelName);
-    this.selectedChannels.splice(index, 1);
-  }
-
-  @action
-  setName(name) {
-    this.name = name;
+    let index = this.channels.indexOf(channelName);
+    this.channels.splice(index, 1);
   }
 
   @action
@@ -71,19 +67,9 @@ export default class CustomTeamModel {
   }
 
   @action
-  setChannelFollowed(channelName) {
-    let followedChannel = this.channels.find((channel) => {
-      return channel.info.name === channelName;
-    });
-
-    followedChannel.followed = true;
-  }
-
-
-  @action
   setTeam() {
-    if (!this.name || !this.name.length || !this.selectedChannels || !this.selectedChannels.length) {
-      this.saveState =SAVE_DONE;
+    if (!this.name || !this.name.length || !this.channels || !this.channels.length) {
+      this.saveState = SAVE_DONE;
       return;
     }
 
@@ -92,11 +78,11 @@ export default class CustomTeamModel {
       action("setTeamSuccess", result => {
         let {customTeam} = result;
 
-        this.setData(customTeam);
+        this.rawData = customTeam;
+        this.initTeamInfo();
 
         this.saveState = SAVE_DONE;
         this.parentStore.teamType = CUSTOM_TEAM_TYPE;
-        // this.parentStore.fetchLiveChannels();
       }), // inline created action
       action("setTeamError", error => {
         this.saveState = SAVE_ERROR;
@@ -104,9 +90,11 @@ export default class CustomTeamModel {
   }
 
   toJSON() {
+    debugger;
+
     return {
       customName: this.name,
-      customChannels: this.selectedChannels,
+      customChannels: this.channels.map((c) => c.toJSON()),
       banner: this.banner,
       logo: this.logo,
     };

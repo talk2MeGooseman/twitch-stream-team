@@ -17,10 +17,12 @@ const trashStyle = {
   pointerEvents: 'none'
 };
 
-const TwitchTeamFlow = (props, context) => {
+const CustomTeamFlow = (props, context) => {
+
   let { store } = props;
   let { customTeam } = store;
   let { theme } = context;
+
   let channelTextBoxRef = React.createRef();
   let teamNameTextBoxRef = React.createRef();
   let logoTextBoxRef = React.createRef();
@@ -60,9 +62,9 @@ const TwitchTeamFlow = (props, context) => {
     }
   }
 
-  let customTeamItems = customTeam.selectedChannels.map(channel => (
+  let customTeamItems = customTeam.channels.map(channel => (
     <div key={channel.name}>
-      {channel}{" "}
+      {channel.name}{" "}
       <Icon onClick={onRemoveChannel} data-channel={channel}>
         <IoIosTrash style={trashStyle} />
       </Icon>
@@ -118,5 +120,5 @@ const TwitchTeamFlow = (props, context) => {
     </React.Fragment>;
 };
 
-TwitchTeamFlow.contextTypes = { theme: PropTypes.object };
-export default observer(TwitchTeamFlow);
+CustomTeamFlow.contextTypes = { theme: PropTypes.object };
+export default observer(CustomTeamFlow);
