@@ -139,11 +139,10 @@ export default class Store {
     }
 
     team.channels.forEach(channel => {
-      let foundChannel = data.find((liveChannel) => { return liveChannel.user_id === channel.id });
+      let foundChannel = liveChannelIds.find((id) => { return id === channel.id });
       if (foundChannel)
       {
         channel.isLive = true;
-        channel.info.status = foundChannel.title;
         liveChannels.push(channel);
       } else
       {

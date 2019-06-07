@@ -39,11 +39,10 @@ export default class AuthWrapper extends Component {
       }
     });
 
-    // if (!this.props.ignoreBroadcasts) {
-    //   window.Twitch.ext.listen('broadcast', (target, contentType, message) => {
-    //     this.props.tabsStore.updateTabs();
-    //   });
-    // }
+    window.Twitch.ext.listen('broadcast', (target, contentType, message) => {
+      let messageJson = JSON.parse(message);
+      this.props.store.updateLiveChannels(messageJson.data);
+    });
   }
 
   renderLoading() {
