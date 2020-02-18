@@ -3,7 +3,7 @@ import { Theme as UWPThemeProvider, getTheme } from "react-uwp/Theme";
 import ConfigInfo from '../components/ConfigInfo';
 import PanelPreview from '../components/PanelPreview';
 
-const containerStyles = { 
+const containerStyles = {
   width: '300px',
   height: '500px',
   overflowX: 'hidden',
@@ -38,4 +38,5 @@ export default class Config extends Component {
     );
   }
 }
+
 

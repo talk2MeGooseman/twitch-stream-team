@@ -26,3 +26,4 @@ export const TABS_HEIGHT = 70;
 export const CONFIG_PREVIEW_HEIGHT = 415;
 
 export const CUSTOM_TEAM_TYPE = 'custom';
+export const TWITCH_TEAM_TYPE = 'twitch';

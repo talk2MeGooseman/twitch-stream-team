@@ -13,6 +13,9 @@ const marginStyle = {
   margin: "10px 0"
 };
 
+// Bits 300 rw_grim
+// MajorThorn 200 MajorThorn
+
 const TwitchTeamFlow = (props, context) => {
   let { store } = props;
   let { twitchTeam } = store;

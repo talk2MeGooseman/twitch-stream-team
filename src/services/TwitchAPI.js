@@ -9,7 +9,7 @@ const BATCH_SIZE = 100;
 // Sub - indifferentghost
 
 async function getStreams(channels) {
-  const params = buildChannelParams(channels);
+  const params = buildChannelParams(channels, 'user_id');
 
   let response = await axios({
     method: 'GET',
@@ -40,18 +40,18 @@ async function getUsers(channels, key = 'id') {
   return response.data.data;
 }
 
-function buildChannelParams(channels, key) {
+function buildChannelParams(channels, key='id') {
   var params = new URLSearchParams();
   channels.forEach(channel => {
     // have to do check for _id in case were dealing with
     params.append(key, channel._id || channel.id || channel);
   });
-
   return params;
 }
 
 async function batchRequests(channels, request) {
   let channelList = [];
+
   for (var i = 0; i < channels.length; i += BATCH_SIZE) {
     const channelSlice = channels.slice(i, i + BATCH_SIZE);
     let data = await request(channelSlice);
@@ -62,8 +62,8 @@ async function batchRequests(channels, request) {
 }
 
 export const requestLiveChannels = async channels => {
-  return await batchRequests(channels, async (c) => {
-    return await getStreams(c)
+  return await batchRequests(channels, async (channelsBatch) => {
+    return await getStreams(channelsBatch)
   });
 };
 
@@ -80,7 +80,6 @@ export const requestChannelsByName = async channels => {
 };
 
 export async function requestTeamInfo(team_name) {
-  debugger;
   let response;
   try {
     response = await axios({
@@ -95,3 +94,4 @@ export async function requestTeamInfo(team_name) {
 
   return response.data;
 }
+

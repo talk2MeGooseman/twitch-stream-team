@@ -8,7 +8,7 @@ import {
   setPanelInformation,
 } from "../../services/Ebs";
 import {
-  LOAD_PENDING, SAVE_PENDING, SAVE_DONE, SAVE_ERROR
+  LOAD_PENDING, SAVE_PENDING, SAVE_DONE, SAVE_ERROR, TWITCH_TEAM_TYPE, LOAD_DONE
 } from "../../services/constants";
 import { requestTeamInfo } from "../../services/TwitchAPI";
 
@@ -25,7 +25,11 @@ export default class TwitchTeamModel extends BaseTeamModel {
    */
   constructor(parentStore, selectedTeam) {
     super(parentStore)
-    this.name = selectedTeam;
+    if (selectedTeam && selectedTeam.name) {
+      this.name = selectedTeam.name;
+    } else {
+      this.name = selectedTeam;
+    }
   }
 
   /**
@@ -36,18 +40,19 @@ export default class TwitchTeamModel extends BaseTeamModel {
    * @memberof TwitchTeamModel
    */
   @action
-  initTeamInfo() {
-    return requestTeamInfo(this.name).then((data) => {
-      this.buildChannels(data.users);
+  async initTeamInfo() {
+    if (!this.name) {
+      return;
+    }
 
-      this.info = data.info;
-      this.display_name = data.display_name;
-      this.logo = data.logo;
-      this.banner = data.banner;
-      this.id = data.id;
+    const data = await requestTeamInfo(this.name);
+    this.buildChannels(data.users);
 
-      this.loadingState = SAVE_DONE;
-    })
+    this.info = data.info;
+    this.display_name = data.display_name;
+    this.logo = data.logo;
+    this.banner = data.banner;
+    this.id = data.id;
   }
 
   /**
@@ -58,26 +63,16 @@ export default class TwitchTeamModel extends BaseTeamModel {
    */
   @action
   setTeam(selected_team) {
-    this.saveState = SAVE_PENDING;
+    this.parentStore.saveState = SAVE_PENDING;
     return setPanelInformation(this.parentStore.token, { selected_team }).then(
       // inline created action
       action("fetchSuccess", result => {
-        let selectedTeam = result.selectedTeam;
-
-        this.channel = selectedTeam.channel;
-        this.name = selectedTeam.name;
-        this.info = selectedTeam.info;
-        this.display_name = selectedTeam.display_name;
-        this.logo = selectedTeam.logo;
-        this.banner= selectedTeam.banner;
-        this.background = selectedTeam.background
-        this.parentStore.teamType = result.team_type;
-
-        this.channels = selectedTeam.users.map((channel) => {
-          return new ChannelModel(this, channel);
-        });
-
-        this.saveState = SAVE_DONE;
+        this.name = result.selectedTeam;
+        this.initTeamInfo();
+        this.parentStore.teamType = TWITCH_TEAM_TYPE;
+        this.parentStore.saveState = SAVE_DONE;
+        this.parentStore.team = this;
+        this.parentStore.fetchLiveChannels();
       }),
       // inline created action
       action("fetchError", error => {

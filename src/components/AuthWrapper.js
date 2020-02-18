@@ -31,7 +31,7 @@ export default class AuthWrapper extends Component {
         }
       }
     });
-  
+
     window.Twitch.ext.actions.onFollow((didFollow, channelName) => {
       if (didFollow)
       {
@@ -53,7 +53,7 @@ export default class AuthWrapper extends Component {
     const { store } = this.props;
     let component;
 
-    if ((store.loadingState === LOAD_PENDING) || (store.team && store.team.loadingState === LOAD_PENDING)) {
+    if (store.loadingState === LOAD_PENDING) {
       component = this.renderLoading();
     } else {
       component = this.props.children;

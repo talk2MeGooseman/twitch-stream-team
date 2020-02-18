@@ -1,24 +1,28 @@
-import {
-  observable,
-  action,
-} from "mobx"
+import { observable, action } from 'mobx';
 import {
   getPanelInformation,
   configGetPanelInformation,
-} from "../../services/Ebs";
+} from '../../services/Ebs';
 import {
-  LOAD_DONE, LOAD_ERROR, LOAD_PENDING, CUSTOM_TEAM_TYPE
-} from "../../services/constants";
-import TwitchTeamModel from "../model/TwitchTeamModel";
-import CustomTeamModel from "../model/CustomTeamModel";
-import BaseTeamModel from "../model/BaseTeamModel";
-import { requestLiveChannels } from "../../services/TwitchAPI";
+  LOAD_DONE,
+  LOAD_ERROR,
+  LOAD_PENDING,
+  CUSTOM_TEAM_TYPE,
+  SAVE_DONE,
+} from '../../services/constants';
+import TwitchTeamModel from '../model/TwitchTeamModel';
+import CustomTeamModel from '../model/CustomTeamModel';
+import BaseTeamModel from '../model/BaseTeamModel';
+import { requestLiveChannels } from '../../services/TwitchAPI';
+
+// Gift Sub from PakmanJr - csharpfritz
 
 export default class Store {
   /** @type {string} */
   @observable token;
   /** @type {LOAD_DONE|LOAD_ERROR|LOAD_PENDING} */
   @observable loadingState = LOAD_PENDING;
+  @observable saveState = SAVE_DONE;
   /** @type {'twitch'|CUSTOM_TEAM_TYPE} */
   @observable teamType;
   /** @type {TwitchTeamModel} */
@@ -34,43 +38,41 @@ export default class Store {
       customName: this.customName,
       customChannels: this.customChannels,
     };
-  }
+  };
 
   @action
   fetchConfig() {
     this.loadingState = LOAD_PENDING;
     configGetPanelInformation(this.token).then(
       // inline created action
-      action("fetchSuccess", result => {
+      action('fetchSuccess', async result => {
         let { customTeam, selectedTeam, teamType, teams } = result;
 
         this.teamType = teamType;
 
-        this.twitchTeam = new TwitchTeamModel(this, selectedTeam);
+        this.twitchTeam = new TwitchTeamModel(
+          this,
+          selectedTeam
+        );
         this.twitchTeam.teams = teams;
 
         this.customTeam = new CustomTeamModel(this, customTeam);
 
-        if (this.teamType === CUSTOM_TEAM_TYPE)
-        {
+        if (this.teamType === CUSTOM_TEAM_TYPE) {
           this.team = this.customTeam;
-        }
-        else
-        {
+        } else {
           this.team = this.twitchTeam;
         }
 
-        this.twitchTeam.initTeamInfo().then(() => {
-          // Fetch the live channels
-          this.customTeam.initTeamInfo().then(() => {
-            this.loadingState = LOAD_DONE;
-            this.fetchLiveChannels();
-          })
-        })
+        await this.twitchTeam.initTeamInfo();
+        await this.customTeam.initTeamInfo();
 
+        this.loadingState = LOAD_DONE;
+        // Fetch the live channels
+        this.fetchLiveChannels();
       }),
       // inline created action
-      action("fetchError", error => {
+      action('fetchError', error => {
         this.twitchTeam = new TwitchTeamModel(this);
         this.customTeam = new CustomTeamModel(this);
         this.twitchTeam.loadingState = LOAD_ERROR;
@@ -86,27 +88,23 @@ export default class Store {
 
     getPanelInformation(this.token).then(
       // inline created action
-      action("fetchSuccess", result => {
-        let { selectedTeam, teamType } = result;
+      action('fetchSuccess', async (result) => {
+        let { twitchTeam, teamType, customTeam } = result;
 
         this.teamType = teamType;
-        if (this.teamType === CUSTOM_TEAM_TYPE)
-        {
-          this.team = new CustomTeamModel(this, selectedTeam);
-        }
-        else
-        {
-          this.team = new TwitchTeamModel(this, selectedTeam);
+        if (this.teamType === CUSTOM_TEAM_TYPE) {
+          this.team = new CustomTeamModel(this, customTeam);
+        } else {
+          this.team = new TwitchTeamModel(this, twitchTeam);
         }
 
-        this.team.initTeamInfo().then(() => {
-          this.fetchLiveChannels();
-          setInterval(this.fetchLiveChannels, 1000 * 60 * 5);
-          this.loadingState = LOAD_DONE;
-        })
+        await this.team.initTeamInfo();
+        this.fetchLiveChannels();
+        setInterval(this.fetchLiveChannels, 1000 * 60 * 5);
+        this.loadingState = LOAD_DONE;
       }),
       // inline created action
-      action("fetchError", error => {
+      action('fetchError', error => {
         this.loadingState = LOAD_ERROR;
       })
     );
@@ -129,23 +127,22 @@ export default class Store {
     let data;
     try {
       data = await requestLiveChannels(team.channels);
-      console.log(data)
     } catch (error) {
       return;
     }
 
-    if(!data) {
+    if (!data) {
       return;
     }
 
     team.channels.forEach(channel => {
-      let foundChannel = liveChannelIds.find((id) => { return id === channel.id });
-      if (foundChannel)
-      {
+      let foundChannel = data.find(c => {
+        return c.user_id === channel.id;
+      });
+      if (foundChannel) {
         channel.isLive = true;
         liveChannels.push(channel);
-      } else
-      {
+      } else {
         channel.isLive = false;
         notLiveChannels.push(channel);
       }
@@ -153,7 +150,7 @@ export default class Store {
 
     // Set new channel order with live channels at the top
     team.channels = liveChannels.concat(notLiveChannels);
-  }
+  };
 
   selectedTeam() {
     return this.team;

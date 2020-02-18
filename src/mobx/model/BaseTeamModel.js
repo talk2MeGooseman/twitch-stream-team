@@ -10,7 +10,7 @@ import {
 export default class BaseTeamModel {
   @observable channels = [];
   @observable loadingState = LOAD_PENDING;
-  @observable saveState;
+  @observable saveState = SAVE_DONE;
   @observable name;
   @observable info;
   @observable display_name;
@@ -78,4 +78,3 @@ export default class BaseTeamModel {
     console.error('Override')
   }
 }
-

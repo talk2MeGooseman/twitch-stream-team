@@ -1,7 +1,8 @@
 import axios from "axios";
 
-const EBS_ROOT_URL = 'https://us-central1-stream-team-3a526.cloudfunctions.net';
-// const EBS_ROOT_URL = 'http://localhost:8080/stream-team-3a526/us-central1';
+// const EBS_ROOT_URL = 'https://us-central1-stream-team-3a526.cloudfunctions.net';
+const EBS_ROOT_URL = "https://stream-team-app.azurewebsites.net/api";
+// const EBS_ROOT_URL = 'http://localhost:7071/api';
 
 /**
  * getPanelInformation
@@ -11,7 +12,7 @@ const EBS_ROOT_URL = 'https://us-central1-stream-team-3a526.cloudfunctions.net';
 export const getPanelInformation = async (token) => {
   let response = await axios({
     method: 'GET',
-    url: `${EBS_ROOT_URL}/get_panel_information`,
+    url: `${EBS_ROOT_URL}/GetDisplayInfo`,
     headers: {
       'Content-Type': 'application/json',
       'x-extension-jwt': token,
@@ -29,11 +30,8 @@ export const getPanelInformation = async (token) => {
 export const configGetPanelInformation = async (token) => {
   let response = await axios({
     method: 'GET',
-    url: `${EBS_ROOT_URL}/config_get_panel_information`,
-    headers: {
-      'Content-Type': 'application/json',
-      'x-extension-jwt': token,
-    }
+    url: `${EBS_ROOT_URL}/GetSettings`,
+    headers: buildHeaders(token)
   });
 
   return response.data;
@@ -50,12 +48,9 @@ export const setPanelInformation = async (token, data) => {
   try {
     response = await axios({
       method: 'POST',
-      url: `${EBS_ROOT_URL}/set_panel_information`,
+      url: `${EBS_ROOT_URL}/SetTwitchTeam`,
       data: data,
-      headers: {
-        'Content-Type': 'application/json',
-        'x-extension-jwt': token,
-      }
+      headers: buildHeaders(token)
     });
   } catch (error) {
     throw Error(error);
@@ -75,12 +70,9 @@ export const  setCustomTeamInformation = async (token, data) => {
   try {
     response = await axios({
       method: 'POST',
-      url: `${EBS_ROOT_URL}/set_custom_team`,
+      url: `${EBS_ROOT_URL}/SetCustomTeam`,
       data: data,
-      headers: {
-        'Content-Type': 'application/json',
-        'x-extension-jwt': token,
-      }
+      headers: buildHeaders(token)
     });
   } catch (error) {
     throw Error(error);
@@ -88,3 +80,10 @@ export const  setCustomTeamInformation = async (token, data) => {
 
   return response.data;
 };
+
+function buildHeaders(token) {
+  return {
+    'Content-Type': 'application/json',
+    'x-extension-jwt': token,
+  };
+}

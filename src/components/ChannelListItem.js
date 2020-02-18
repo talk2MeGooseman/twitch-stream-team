@@ -78,9 +78,9 @@ const ChannelListItem = (props, context) => {
 
   } else {
     followIconBG = theme.listAccentLow;
-  } 
+  }
 
-  const followButtonStyles = { 
+  const followButtonStyles = {
     display: 'inline-block',
     background: followIconBG,
     color: "#fff",
