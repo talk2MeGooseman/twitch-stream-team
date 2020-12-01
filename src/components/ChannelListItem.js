@@ -8,6 +8,7 @@ import Icon from "react-uwp/Icon";
 import { green600 } from "react-uwp/styles/accentColors";
 import { observer } from 'mobx-react';
 import { IoIosHeart, IoIosRadioButtonOn } from 'react-icons/io';
+import ChannelModel from "../mobx/model/ChannelModel";
 
 const Twitch = window['Twitch'];
 
@@ -57,9 +58,7 @@ const buildTwitchUrl = (channelName) => {
   return `https://www.twitch.tv/${channelName}`;
 }
 
-const ChannelListItem = (props, context) => {
-  const { channel } = props;
-  const { theme } = context;
+const ChannelListItem = ({ channel }, { theme }) => {
   let followIconHoverColor = theme.listAccentHigh;
 
   const displayNameStyles = {
@@ -67,6 +66,7 @@ const ChannelListItem = (props, context) => {
     marginBottom: '5px',
     ...theme.typographyStyles.title
   };
+
   const subTextStyles = {
     color: theme.baseMediumHigh,
     ...theme.typographyStyles.caption
@@ -75,7 +75,6 @@ const ChannelListItem = (props, context) => {
   let followIconBG;
   if(channel.followed) {
     followIconBG = followIconHoverColor = green600;
-
   } else {
     followIconBG = theme.listAccentLow;
   }
@@ -87,17 +86,12 @@ const ChannelListItem = (props, context) => {
     verticalAlign: 'top'
   };
 
-  let liveIconComp = null;
-  if (channel.isLive) {
-    liveIconComp = <div class="pulse" style={liveIconStyles}></div>;
-  }
-
   return (
     <div key={channel.id} style={container}>
       <div style={{ flex: 1 }}>
         <TransformCard xMaxRotate={50} yMaxRotate={50} perspective={240}>
           <a href={buildTwitchUrl(channel.name)} target="_blank">
-            { liveIconComp }
+            { channel.isLive && <div class="pulse" style={liveIconStyles}></div> }
             <Image src={resizeImage(channel.profile_image)} />
           </a>
         </TransformCard>
@@ -120,4 +114,7 @@ const ChannelListItem = (props, context) => {
 }
 
 ChannelListItem.contextTypes = { theme: PropTypes.object };
+ChannelListItem.propTypes = {
+  channel: PropTypes.any,
+};
 export default observer(ChannelListItem);

@@ -62,7 +62,7 @@ export default class CustomTeamModel extends BaseTeamModel {
 
   @action
   removeChannel(channelName) {
-    let index = this.channels.indexOf(channelName);
+    let index = this.channels.findIndex((channel) => channel.name === channelName);
     this.channels.splice(index, 1);
   }
 

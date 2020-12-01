@@ -17,18 +17,15 @@ const trashStyle = {
   pointerEvents: 'none'
 };
 
-const CustomTeamFlow = (props, context) => {
-
-  let { store } = props;
-  let { customTeam } = store;
-  let { theme } = context;
+const CustomTeamFlow = ({ store }, { theme }) => {
+  let { customTeam, teamType } = store;
 
   let channelTextBoxRef = React.createRef();
   let teamNameTextBoxRef = React.createRef();
   let logoTextBoxRef = React.createRef();
   let bannerTextBoxRef = React.createRef();
 
-  let disableSetTeamButton = store.teamType === CUSTOM_TEAM_TYPE;
+  let disableSetTeamButton = teamType === CUSTOM_TEAM_TYPE;
 
   let onChannelEnter = (event) => {
     let channel = channelTextBoxRef.current.getValue()
@@ -65,7 +62,7 @@ const CustomTeamFlow = (props, context) => {
   let customTeamItems = customTeam.channels.map(channel => (
     <div key={channel.name}>
       {channel.name}{" "}
-      <Icon onClick={onRemoveChannel} data-channel={channel}>
+      <Icon onClick={onRemoveChannel} data-testid="trash-can" data-channel={channel.name}>
         <IoIosTrash style={trashStyle} />
       </Icon>
     </div>
