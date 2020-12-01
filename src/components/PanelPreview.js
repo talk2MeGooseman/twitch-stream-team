@@ -7,13 +7,17 @@ import StreamTeamTheme from '../views/StreamTeamTheme';
 const PanelPreview = (props) => {
   const { store, viewAnchor, viewPlatform } = props;
 
-  if (store.saveState === SAVE_PENDING)
-  {
+    if (store.saveState === SAVE_PENDING) {
     return <Loader />;
-  } else
-  {
-    return <StreamTeamTheme store={store} viewAnchor={viewAnchor} viewPlatform={viewPlatform} />;
-  }
+    } else {
+    return (
+            <StreamTeamTheme
+                store={store}
+                viewAnchor={viewAnchor}
+                viewPlatform={viewPlatform}
+            />
+        );
+    }
 };
 
 export default observer(PanelPreview);

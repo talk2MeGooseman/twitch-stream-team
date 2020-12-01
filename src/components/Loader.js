@@ -21,22 +21,20 @@ const animation = keyframes`
 `;
 
 const LoaderStyled = styled.div`
-    width: 40px;
-    height: 40px;
-    background-color: ${props => props.color ? props.color : '#6441A4' };
-    margin: 100px auto;
-    -webkit-animation: ${webkitAnimation} 1.2s infinite ease-in-out;
-    animation: ${animation} 1.2s infinite ease-in-out;
+  width: 40px;
+  height: 40px;
+  background-color: ${(props) => (props.color ? props.color : '#6441A4')};
+  margin: 100px auto;
+  -webkit-animation: ${webkitAnimation} 1.2s infinite ease-in-out;
+  animation: ${animation} 1.2s infinite ease-in-out;
 `;
 
 /**
  * Loader
- * 
+ *
  * Component that displays an animated loading square
  * @returns {Object} JSX
  */
-const Loader = (props) => (
-    <LoaderStyled color={props.color} />
-);
+const Loader = (props) => <LoaderStyled color={props.color} />
 
- export default Loader;
+export default Loader;

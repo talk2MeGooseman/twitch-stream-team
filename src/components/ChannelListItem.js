@@ -26,7 +26,7 @@ const textContainer = {
   display: 'flex',
   flexDirection: "column",
   overflow: 'hidden',
-  whiteSpace: 'nowrap'
+  whiteSpace: 'nowrap',
 };
 
 const liveIconStyles = {
@@ -43,47 +43,47 @@ const displayNameContainerStyles = {
   marginLeft: '4px',
 };
 
-const resizeImage= (url) => {
+const resizeImage = (url) => {
   if (!url) {
     return "https://static-cdn.jtvnw.net/jtv_user_pictures/xarth/404_user_50x50.png";
   }
-  return url.replace('-300x300.', '-50x50.')
+  return url.replace('-300x300.', '-50x50.');
 }
 
 const followChannel = (channel) => {
   Twitch.ext.actions.followChannel(channel);
-}
+};
 
 const buildTwitchUrl = (channelName) => {
   return `https://www.twitch.tv/${channelName}`;
-}
+};
 
 const ChannelListItem = ({ channel }, { theme }) => {
   let followIconHoverColor = theme.listAccentHigh;
 
-  const displayNameStyles = {
+    const displayNameStyles = {
     color: theme.baseHigh,
     marginBottom: '5px',
-    ...theme.typographyStyles.title
+    ...theme.typographyStyles.title,
   };
 
   const subTextStyles = {
     color: theme.baseMediumHigh,
-    ...theme.typographyStyles.caption
+    ...theme.typographyStyles.caption,
   };
 
   let followIconBG;
-  if(channel.followed) {
+    if (channel.followed) {
     followIconBG = followIconHoverColor = green600;
-  } else {
+    } else {
     followIconBG = theme.listAccentLow;
-  }
+    }
 
   const followButtonStyles = {
     display: 'inline-block',
     background: followIconBG,
     color: "#fff",
-    verticalAlign: 'top'
+    verticalAlign: 'top',
   };
 
   return (
@@ -91,14 +91,22 @@ const ChannelListItem = ({ channel }, { theme }) => {
       <div style={{ flex: 1 }}>
         <TransformCard xMaxRotate={50} yMaxRotate={50} perspective={240}>
           <a href={buildTwitchUrl(channel.name)} target="_blank">
-            { channel.isLive && <div class="pulse" style={liveIconStyles}></div> }
+            {channel.isLive && (
+                            <div className="pulse" style={liveIconStyles}></div>
+                        )}
             <Image src={resizeImage(channel.profile_image)} />
           </a>
         </TransformCard>
       </div>
       <div style={textContainer}>
         <span style={displayNameStyles}>
-          <IconButton size={26} style={followButtonStyles} hoverStyle={{ background: followIconHoverColor }} activeStyle={{ background: theme.accent }} onClick={() => followChannel(channel.name)}>
+          <IconButton
+                        size={26}
+                        style={followButtonStyles}
+                        hoverStyle={{ background: followIconHoverColor }}
+                        activeStyle={{ background: theme.accent }}
+                        onClick={() => followChannel(channel.name)}
+                    >
             <IoIosHeart />
           </IconButton>
           <span style={displayNameContainerStyles}>

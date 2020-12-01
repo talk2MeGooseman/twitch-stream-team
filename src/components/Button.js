@@ -3,8 +3,6 @@ import UWPButton from "react-uwp/Button";
 
 export default class Button extends React.Component {
   render() {
-    return (
-      <UWPButton tooltip="Mini Tooltip" />
-    )
-  }
+    return <UWPButton tooltip="Mini Tooltip" />
+    }
 }

@@ -14,13 +14,13 @@ export const getPanelInformation = async (token) => {
     method: 'GET',
     url: `${EBS_ROOT_URL}/GetDisplayInfo`,
     headers: {
-      'Content-Type': 'application/json',
-      'x-extension-jwt': token,
-    }
+      "Content-Type": "application/json",
+      "x-extension-jwt": token,
+    },
   });
 
-  return response.data;
-};
+    return response.data;
+}
 
 /**
  * configGetPanelInformation
@@ -31,11 +31,11 @@ export const configGetPanelInformation = async (token) => {
   let response = await axios({
     method: 'GET',
     url: `${EBS_ROOT_URL}/GetSettings`,
-    headers: buildHeaders(token)
+    headers: buildHeaders(token),
   });
 
-  return response.data;
-};
+    return response.data;
+}
 
 /**
  * setPanelInformation
@@ -45,19 +45,19 @@ export const configGetPanelInformation = async (token) => {
  */
 export const setPanelInformation = async (token, data) => {
   let response;
-  try {
+    try {
     response = await axios({
       method: 'POST',
       url: `${EBS_ROOT_URL}/SetTwitchTeam`,
       data: data,
-      headers: buildHeaders(token)
+      headers: buildHeaders(token),
     });
-  } catch (error) {
+    } catch (error) {
     throw Error(error);
-  }
+    }
 
   return response.data;
-};
+}
 
 /**
  * setCustomTeam
@@ -65,25 +65,25 @@ export const setPanelInformation = async (token, data) => {
  * @param {Object} data
  * @param {token} token
  */
-export const  setCustomTeamInformation = async (token, data) => {
+export const setCustomTeamInformation = async (token, data) => {
   let response;
-  try {
+    try {
     response = await axios({
       method: 'POST',
       url: `${EBS_ROOT_URL}/SetCustomTeam`,
       data: data,
-      headers: buildHeaders(token)
+      headers: buildHeaders(token),
     });
-  } catch (error) {
+    } catch (error) {
     throw Error(error);
-  }
+    }
 
   return response.data;
-};
+}
 
 function buildHeaders(token) {
   return {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
     'x-extension-jwt': token,
-  };
+  }
 }

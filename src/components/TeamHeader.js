@@ -19,33 +19,39 @@ const logoStyles = {
 
 const TeamHeader = (props, context) => {
   const { store } = props;
-  const { theme } = context;
+    const { theme } = context;
 
-  const renderBanner = () => {
+    const renderBanner = () => {
     if (store.banner) {
-      return (
-        <Image
-          style={imageBannerStyle}
-          src={store.banner}
-        />
-      );
-    } else {
-      let style = { paddingLeft: '60px', color: context.theme.baseHigh,  background: theme.acrylicTexture40.background, ...theme.typographyStyles.header }
-      return (
+      return <Image style={imageBannerStyle} src={store.banner} />
+        } else {
+      let style = {
+                paddingLeft: '60px',
+                color: context.theme.baseHigh,
+                background: theme.acrylicTexture40.background,
+                ...theme.typographyStyles.header,
+            };
+            return (
         <h1 style={style}>
-          <Textfit max={24} mode="single">{store.display_name}</Textfit>
+          <Textfit max={24} mode="single">
+                        {store.display_name}
+                    </Textfit>
         </h1>
       );
     }
   }
 
-  return(
-    <a style={{ textDecoration: 'none' }} href={`https://www.twitch.tv/team/${store.name}`} target="_blank">
+  return (
+    <a
+            style={{ textDecoration: 'none' }}
+            href={`https://www.twitch.tv/team/${store.name}`}
+            target="_blank"
+        >
       <Image src={store.logo} style={logoStyles} />
       {renderBanner()}
     </a>
   );
-}
+};
 
 TeamHeader.contextTypes = { theme: PropTypes.object };
 export default observer(TeamHeader);

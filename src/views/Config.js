@@ -13,22 +13,21 @@ const containerStyles = {
 }
 
 export default class Config extends Component {
-
-  render(){
+    render() {
     const { store } = this.props;
 
-    return(
+        return (
       <UWPThemeProvider
-        style={ {height: '100vh', display: 'flex'} }
+        style={{ height: '100vh', display: 'flex' }}
         theme={getTheme({
           useFluentDesign: true, // sure you want use new fluent design.
-          accent: "#0078D7"
+          accent: "#0078D7",
         })}
       >
         <div style={{ flex: 1 }}>
           <ConfigInfo store={store} />
         </div>
-        <div style={{ flex: 1}}>
+        <div style={{ flex: 1 }}>
           <h2>Panel Preview</h2>
           <div style={containerStyles}>
             <PanelPreview {...this.props} />
@@ -38,5 +37,3 @@ export default class Config extends Component {
     );
   }
 }
-
-
