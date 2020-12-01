@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import { Theme as UWPThemeProvider, getTheme } from "react-uwp/Theme";
-import ConfigInfo from '../components/ConfigInfo';
-import PanelPreview from '../components/PanelPreview';
+import React, { Component } from 'react'
+import { Theme as UWPThemeProvider, getTheme } from 'react-uwp/Theme'
+import ConfigInfo from '../components/ConfigInfo'
+import PanelPreview from '../components/PanelPreview'
 
 const containerStyles = {
   width: '300px',
@@ -13,15 +13,15 @@ const containerStyles = {
 }
 
 export default class Config extends Component {
-    render() {
-    const { store } = this.props;
+  render() {
+    const { store } = this.props
 
-        return (
+    return (
       <UWPThemeProvider
         style={{ height: '100vh', display: 'flex' }}
         theme={getTheme({
           useFluentDesign: true, // sure you want use new fluent design.
-          accent: "#0078D7",
+          accent: '#0078D7',
         })}
       >
         <div style={{ flex: 1 }}>
@@ -34,6 +34,6 @@ export default class Config extends Component {
           </div>
         </div>
       </UWPThemeProvider>
-    );
+    )
   }
 }

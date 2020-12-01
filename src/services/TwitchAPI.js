@@ -1,96 +1,96 @@
-import axios from 'axios';
+import axios from 'axios'
 
-const BASE_URL = 'https://api.twitch.tv/helix/';
-const CLIENT_ID = 'd4t75sazjvk9cc84h30mgkyg7evbvz';
+const BASE_URL = 'https://api.twitch.tv/helix/'
+const CLIENT_ID = 'd4t75sazjvk9cc84h30mgkyg7evbvz'
 
-const BATCH_SIZE = 100;
+const BATCH_SIZE = 100
 
 // Bits 500 - MajorThorn
 // Sub - indifferentghost
 
 async function getStreams(channels) {
-  const params = buildChannelParams(channels, 'user_id');
+  const params = buildChannelParams(channels, 'user_id')
 
-  let response = await axios({
+  const response = await axios({
     method: 'GET',
     baseURL: BASE_URL,
     url: `/streams?first=100&${params.toString()}`,
     headers: {
-      "Content-Type": "application/json",
-      "Client-ID": CLIENT_ID,
+      'Content-Type': 'application/json',
+      'Client-ID': CLIENT_ID,
     },
-  });
+  })
 
-    return response.data.data;
+  return response.data.data
 }
 
 async function getUsers(channels, key = 'id') {
-  const params = buildChannelParams(channels, key);
+  const params = buildChannelParams(channels, key)
 
-    let response = await axios({
+  const response = await axios({
     method: 'GET',
     baseURL: BASE_URL,
     url: `/users?${params.toString()}`,
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       'Client-ID': CLIENT_ID,
     },
-  });
+  })
 
-    return response.data.data;
+  return response.data.data
 }
 
 function buildChannelParams(channels, key = 'id') {
-  var params = new URLSearchParams();
-    channels.forEach((channel) => {
+  const params = new URLSearchParams()
+  channels.forEach((channel) => {
     // have to do check for _id in case were dealing with
-    params.append(key, channel._id || channel.id || channel);
-    })
-    return params
+    params.append(key, channel._id || channel.id || channel)
+  })
+  return params
 }
 
 async function batchRequests(channels, request) {
-  let channelList = [];
+  let channelList = []
 
-    for (var i = 0; i < channels.length; i += BATCH_SIZE) {
-    const channelSlice = channels.slice(i, i + BATCH_SIZE);
-        let data = await request(channelSlice);
-        channelList = channelList.concat(data);
-    }
+  for (let i = 0; i < channels.length; i += BATCH_SIZE) {
+    const channelSlice = channels.slice(i, i + BATCH_SIZE)
+    const data = await request(channelSlice)
+    channelList = channelList.concat(data)
+  }
 
-  return channelList;
+  return channelList
 }
 
 export const requestLiveChannels = async (channels) => {
   return await batchRequests(channels, async (channelsBatch) => {
     return await getStreams(channelsBatch)
-    })
+  })
 }
 
 export const requestChannelsById = async (channels) => {
   return await batchRequests(channels, async (c) => {
-    return await getUsers(c, 'id');
-  });
+    return await getUsers(c, 'id')
+  })
 }
 
 export const requestChannelsByName = async (channels) => {
   return await batchRequests(channels, async (c) => {
-    return await getUsers(c, 'login');
-  });
+    return await getUsers(c, 'login')
+  })
 }
 
 export async function requestTeamInfo(team_name) {
-  let response;
-    try {
+  let response
+  try {
     response = await axios({
       method: 'GET',
       url: `https://api.twitch.tv/kraken/teams/${team_name}`,
       headers: {
-        "Client-id": CLIENT_ID,
+        'Client-id': CLIENT_ID,
         Accept: 'application/vnd.twitchtv.v5+json',
       },
-    });
-    } catch (error) {}
+    })
+  } catch (error) {}
 
-  return response.data;
+  return response.data
 }

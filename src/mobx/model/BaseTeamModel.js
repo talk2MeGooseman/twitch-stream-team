@@ -1,25 +1,25 @@
+import { observable, action } from 'mobx'
+import ChannelModel from '../model/ChannelModel'
 import {
-  observable,
-  action,
-} from "mobx"
-import ChannelModel from "../model/ChannelModel";
-import {
-  LOAD_PENDING, SAVE_PENDING, SAVE_DONE, SAVE_ERROR
-} from "../../services/constants";
+  LOAD_PENDING,
+  SAVE_PENDING,
+  SAVE_DONE,
+  SAVE_ERROR,
+} from '../../services/constants'
 
 export default class BaseTeamModel {
-  @observable channels = [];
-  @observable loadingState = LOAD_PENDING;
-  @observable saveState = SAVE_DONE;
-  @observable name;
-  @observable info;
-  @observable display_name;
-  @observable logo;
-  @observable banner;
-  @observable id;
+  @observable channels = []
+  @observable loadingState = LOAD_PENDING
+  @observable saveState = SAVE_DONE
+  @observable name
+  @observable info
+  @observable display_name
+  @observable logo
+  @observable banner
+  @observable id
 
   constructor(parentStore) {
-    this.parentStore = parentStore;
+    this.parentStore = parentStore
   }
 
   /**
@@ -31,40 +31,40 @@ export default class BaseTeamModel {
    */
   @action
   initTeamInfo() {
-    console.error('Override');
+    console.error('Override')
   }
 
   @action
   buildChannels(users) {
-    this.channels = [];
+    this.channels = []
 
     users.forEach((channel) => {
       if (channel) {
-        this.channels.push(new ChannelModel(this, channel));
+        this.channels.push(new ChannelModel(this, channel))
       }
-    });
+    })
   }
 
   addChannels(users) {
     users.forEach((channel) => {
       if (channel) {
-        this.channels.push(new ChannelModel(this, channel));
+        this.channels.push(new ChannelModel(this, channel))
       }
-    });
+    })
   }
 
   @action
   setName(name) {
-    this.name = name;
+    this.name = name
   }
 
   @action
   setChannelFollowed(channelName) {
     let followedChannel = this.channels.find((channel) => {
-      return channel.info.name === channelName;
-    });
+      return channel.info.name === channelName
+    })
 
-    followedChannel.followed = true;
+    followedChannel.followed = true
   }
 
   /**

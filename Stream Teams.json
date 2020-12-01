@@ -85,12 +85,8 @@
         "canLinkExternalContent": true
       }
     },
-    "whitelistedConfigUrls": [
-      "https://www.twitch.tv/*"
-    ],
-    "whitelistedPanelUrls": [
-      "https://www.twitch.tv/*"
-    ]
+    "whitelistedConfigUrls": ["https://www.twitch.tv/*"],
+    "whitelistedPanelUrls": ["https://www.twitch.tv/*"]
   },
   "frontendCommand": "",
   "frontendFolderName": "",

@@ -48,6 +48,7 @@
   "scripts": {
     "start": "PORT=8080 HTTPS=false node scripts/start.js",
     "build": "node scripts/build.js",
+    "format": "prettier --write \"**/*.{js,jsx,json,md}\"",
     "test": "node scripts/test.js --env=jsdom",
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix"
@@ -105,11 +106,15 @@
     "eslint": "7.14.0",
     "eslint-config-prettier": "^6.15.0",
     "eslint-config-react-app": "^6.0.0",
+    "eslint-config-standard": "^16.0.2",
     "eslint-loader": "4.0.2",
     "eslint-plugin-import": "2.22.1",
     "eslint-plugin-jsx-a11y": "6.4.1",
+    "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-react": "^7.21.5",
+    "eslint-plugin-standard": "^5.0.0",
     "jest": "26.6.3",
     "jest-canvas-mock": "^2.3.0",
     "mobx-react-devtools": "^6.0.2",

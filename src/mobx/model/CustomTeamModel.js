@@ -1,47 +1,47 @@
-import { observable, action } from 'mobx';
+import { observable, action } from 'mobx'
 import {
   requestChannelsById,
   requestChannelsByName,
-} from '../../services/TwitchAPI';
-import BaseTeamModel from './BaseTeamModel';
-import { setCustomTeamInformation } from '../../services/Ebs';
+} from '../../services/TwitchAPI'
+import BaseTeamModel from './BaseTeamModel'
+import { setCustomTeamInformation } from '../../services/Ebs'
 import {
   LOAD_PENDING,
   SAVE_PENDING,
   SAVE_DONE,
   SAVE_ERROR,
   CUSTOM_TEAM_TYPE,
-} from '../../services/constants';
-import { debug } from 'util';
+} from '../../services/constants'
+import { debug } from 'util'
 
 export default class CustomTeamModel extends BaseTeamModel {
   constructor(parentStore, data) {
-    super(parentStore);
-    this.rawData = data;
+    super(parentStore)
+    this.rawData = data
   }
 
   @action
   async initTeamInfo() {
-    const data = this.rawData;
+    const data = this.rawData
 
     if (!data) {
-      this.loadingState = SAVE_DONE;
-      return;
+      this.loadingState = SAVE_DONE
+      return
     }
 
     if (data.users) {
-      requestChannelsById(data.users).then(c => {
-        this.buildChannels(c);
-      });
+      requestChannelsById(data.users).then((c) => {
+        this.buildChannels(c)
+      })
     }
 
-    this.name = data.name;
-    this.customName = data.name;
-    this.display_name = data.display_name;
-    this.logo = data.logo;
-    this.banner = data.banner;
+    this.name = data.name
+    this.customName = data.name
+    this.display_name = data.display_name
+    this.logo = data.logo
+    this.banner = data.banner
 
-    this.loadingState = SAVE_DONE;
+    this.loadingState = SAVE_DONE
   }
 
   /**
@@ -52,28 +52,30 @@ export default class CustomTeamModel extends BaseTeamModel {
    */
   @action
   addChannel(channelName) {
-    channelName = channelName.trim();
+    channelName = channelName.trim()
 
-    requestChannelsByName([channelName]).then(data => {
+    requestChannelsByName([channelName]).then((data) => {
       // Add to channels array and potentially do some validation checks
-      this.addChannels(data);
-    });
+      this.addChannels(data)
+    })
   }
 
   @action
   removeChannel(channelName) {
-    let index = this.channels.findIndex((channel) => channel.name === channelName);
-    this.channels.splice(index, 1);
+    let index = this.channels.findIndex(
+      (channel) => channel.name === channelName
+    )
+    this.channels.splice(index, 1)
   }
 
   @action
   setLogo(text) {
-    this.logo = text;
+    this.logo = text
   }
 
   @action
   setBanner(text) {
-    this.banner = text;
+    this.banner = text
   }
 
   @action
@@ -84,35 +86,36 @@ export default class CustomTeamModel extends BaseTeamModel {
       !this.channels ||
       !this.channels.length
     ) {
-      this.parentStore.saveState = SAVE_DONE;
-      return;
+      this.parentStore.saveState = SAVE_DONE
+      return
     }
 
-    this.parentStore.saveState = SAVE_PENDING;
-    setCustomTeamInformation(this.parentStore.token, this.toJSON()).then(// inline created action
-      action("setTeamSuccess", result => {
-        let {customTeam} = result;
+    this.parentStore.saveState = SAVE_PENDING
+    setCustomTeamInformation(this.parentStore.token, this.toJSON()).then(
+      // inline created action
+      action('setTeamSuccess', (result) => {
+        let { customTeam } = result
 
-        this.rawData = customTeam;
-        this.initTeamInfo();
+        this.rawData = customTeam
+        this.initTeamInfo()
 
-        this.parentStore.teamType = CUSTOM_TEAM_TYPE;
-        this.parentStore.saveState = SAVE_DONE;
-        this.parentStore.team = this;
-        this.parentStore.fetchLiveChannels();
+        this.parentStore.teamType = CUSTOM_TEAM_TYPE
+        this.parentStore.saveState = SAVE_DONE
+        this.parentStore.team = this
+        this.parentStore.fetchLiveChannels()
       }), // inline created action
-      action('setTeamError', error => {
-        this.parentStore.saveState = SAVE_ERROR;
+      action('setTeamError', (error) => {
+        this.parentStore.saveState = SAVE_ERROR
       })
-    );
+    )
   }
 
   toJSON() {
     return {
       customName: this.name,
-      customChannels: this.channels.map(c => c.toJSON()),
+      customChannels: this.channels.map((c) => c.toJSON()),
       banner: this.banner,
       logo: this.logo,
-    };
+    }
   }
 }

@@ -1,21 +1,21 @@
+import { observable, action } from 'mobx'
+import ChannelModel from '../model/ChannelModel'
+import BaseTeamModel from './BaseTeamModel'
+import { setPanelInformation } from '../../services/Ebs'
 import {
-  observable,
-  action,
-} from "mobx"
-import ChannelModel from "../model/ChannelModel";
-import BaseTeamModel from "./BaseTeamModel";
-import {
-  setPanelInformation,
-} from "../../services/Ebs";
-import {
-  LOAD_PENDING, SAVE_PENDING, SAVE_DONE, SAVE_ERROR, TWITCH_TEAM_TYPE, LOAD_DONE
-} from "../../services/constants";
-import { requestTeamInfo } from "../../services/TwitchAPI";
+  LOAD_PENDING,
+  SAVE_PENDING,
+  SAVE_DONE,
+  SAVE_ERROR,
+  TWITCH_TEAM_TYPE,
+  LOAD_DONE,
+} from '../../services/constants'
+import { requestTeamInfo } from '../../services/TwitchAPI'
 
 // Bit 1 - Lurking_kat
 
 export default class TwitchTeamModel extends BaseTeamModel {
-  @observable teams;
+  @observable teams
 
   /**
    * Creates an instance of TwitchTeamModel.
@@ -26,9 +26,9 @@ export default class TwitchTeamModel extends BaseTeamModel {
   constructor(parentStore, selectedTeam) {
     super(parentStore)
     if (selectedTeam && selectedTeam.name) {
-      this.name = selectedTeam.name;
+      this.name = selectedTeam.name
     } else {
-      this.name = selectedTeam;
+      this.name = selectedTeam
     }
   }
 
@@ -42,17 +42,17 @@ export default class TwitchTeamModel extends BaseTeamModel {
   @action
   async initTeamInfo() {
     if (!this.name) {
-      return;
+      return
     }
 
-    const data = await requestTeamInfo(this.name);
-    this.buildChannels(data.users);
+    const data = await requestTeamInfo(this.name)
+    this.buildChannels(data.users)
 
-    this.info = data.info;
-    this.display_name = data.display_name;
-    this.logo = data.logo;
-    this.banner = data.banner;
-    this.id = data.id;
+    this.info = data.info
+    this.display_name = data.display_name
+    this.logo = data.logo
+    this.banner = data.banner
+    this.id = data.id
   }
 
   /**
@@ -63,20 +63,20 @@ export default class TwitchTeamModel extends BaseTeamModel {
    */
   @action
   setTeam(selected_team) {
-    this.parentStore.saveState = SAVE_PENDING;
+    this.parentStore.saveState = SAVE_PENDING
     return setPanelInformation(this.parentStore.token, { selected_team }).then(
       // inline created action
-      action("fetchSuccess", result => {
-        this.name = result.selectedTeam;
-        this.initTeamInfo();
-        this.parentStore.teamType = TWITCH_TEAM_TYPE;
-        this.parentStore.saveState = SAVE_DONE;
-        this.parentStore.team = this;
-        this.parentStore.fetchLiveChannels();
+      action('fetchSuccess', (result) => {
+        this.name = result.selectedTeam
+        this.initTeamInfo()
+        this.parentStore.teamType = TWITCH_TEAM_TYPE
+        this.parentStore.saveState = SAVE_DONE
+        this.parentStore.team = this
+        this.parentStore.fetchLiveChannels()
       }),
       // inline created action
-      action("fetchError", error => {
-        this.saveState = SAVE_ERROR;
+      action('fetchError', (error) => {
+        this.saveState = SAVE_ERROR
       })
     )
   }

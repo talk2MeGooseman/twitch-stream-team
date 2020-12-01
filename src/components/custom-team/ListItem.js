@@ -1,12 +1,12 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Icon from "react-uwp/Icon";
-import { IoIosTrash } from 'react-icons/io';
+import React from 'react'
+import PropTypes from 'prop-types'
+import Icon from 'react-uwp/Icon'
+import { IoIosTrash } from 'react-icons/io'
 
 const trashStyle = {
   fontSize: '18px',
   pointerEvents: 'none',
-};
+}
 
 const ListItem = ({ channel, onClick }) => (
   <div key={channel.name}>
@@ -15,11 +15,11 @@ const ListItem = ({ channel, onClick }) => (
       <IoIosTrash style={trashStyle} />
     </Icon>
   </div>
-);
+)
 
 ListItem.propType = {
   channel: PropTypes.object,
   onClick: PropTypes.func,
-};
+}
 
-export default ListItem;
+export default ListItem

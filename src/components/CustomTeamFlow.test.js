@@ -1,10 +1,10 @@
-import React from 'react';
-import { fireEvent, render, within } from '@testing-library/react';
-import CustomTeamFlow from './CustomTeamFlow';
-import { Theme as UWPThemeProvider, getTheme } from "react-uwp/Theme";
-import CustomTeamModel from '../mobx/model/CustomTeamModel';
-import { CUSTOM_TEAM_TYPE } from '../services/constants';
-import userEvent from '@testing-library/user-event';
+import React from 'react'
+import { fireEvent, render, within } from '@testing-library/react'
+import CustomTeamFlow from './CustomTeamFlow'
+import { Theme as UWPThemeProvider, getTheme } from 'react-uwp/Theme'
+import CustomTeamModel from '../mobx/model/CustomTeamModel'
+import { CUSTOM_TEAM_TYPE } from '../services/constants'
+import userEvent from '@testing-library/user-event'
 
 const team = {
   name: 'custom_team',
@@ -23,13 +23,13 @@ const team = {
       logo: 'https://picture.here',
     },
   ],
-};
+}
 
 async function createCustomTeam() {
-  const customTeam = new CustomTeamModel(null, team);
-    await customTeam.initTeamInfo();
-    customTeam.buildChannels(team.users);
-    return customTeam;
+  const customTeam = new CustomTeamModel(null, team)
+  await customTeam.initTeamInfo()
+  customTeam.buildChannels(team.users)
+  return customTeam
 }
 
 const withTheme = (component) => (
@@ -41,45 +41,45 @@ const withTheme = (component) => (
       desktopBackgroundImage:
         'https://static-cdn.jtvnw.net/jtv_user_pictures/team-brainbytes-background_image-4baba38e0e3991c5.png', // set global desktop background image
     })}
-    >
+  >
     {component}
   </UWPThemeProvider>
-);
+)
 
 describe('CustomTeamFlow', () => {
-  beforeEach(() => {});
+  beforeEach(() => {})
 
-    it("displays all existing team members", async () => {
-    const customTeam = await createCustomTeam();
-        const store = {
+  it('displays all existing team members', async () => {
+    const customTeam = await createCustomTeam()
+    const store = {
       customTeam,
       teamType: CUSTOM_TEAM_TYPE,
     }
 
     const { queryByText } = render(withTheme(<CustomTeamFlow store={store} />))
 
-        expect(queryByText('Talk2MeGooseman')).toBeTruthy()
-    expect(queryByText("JensDuck")).toBeTruthy();
-  });
+    expect(queryByText('Talk2MeGooseman')).toBeTruthy()
+    expect(queryByText('JensDuck')).toBeTruthy()
+  })
 
-    it('properly deletes team member from the list', async () => {
-    const customTeam = await createCustomTeam();
-        const store = {
+  it('properly deletes team member from the list', async () => {
+    const customTeam = await createCustomTeam()
+    const store = {
       customTeam,
       teamType: CUSTOM_TEAM_TYPE,
-    };
+    }
 
     const { queryByText, debug, getByText } = render(
-            withTheme(<CustomTeamFlow store={store} />)
-        );
+      withTheme(<CustomTeamFlow store={store} />)
+    )
 
-        expect(queryByText('JensDuck')).toBeTruthy()
-        const userRow = getByText('Talk2MeGooseman');
-        const trashContainer = within(userRow).getByTestId('trash-can');
+    expect(queryByText('JensDuck')).toBeTruthy()
+    const userRow = getByText('Talk2MeGooseman')
+    const trashContainer = within(userRow).getByTestId('trash-can')
 
-    userEvent.click(trashContainer);
+    userEvent.click(trashContainer)
 
-        expect(queryByText("JensDuck")).toBeTruthy();
-    expect(queryByText("Talk2MeGooseman")).not.toBeTruthy();
-  });
-});
+    expect(queryByText('JensDuck')).toBeTruthy()
+    expect(queryByText('Talk2MeGooseman')).not.toBeTruthy()
+  })
+})

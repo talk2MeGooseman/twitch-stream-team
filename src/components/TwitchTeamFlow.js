@@ -1,50 +1,50 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import DropDownMenu from "react-uwp/DropDownMenu";
-import Button from "react-uwp/Button";
-import { CUSTOM_TEAM_TYPE } from "../services/constants";
-import { observer } from "mobx-react";
+import React from 'react'
+import PropTypes from 'prop-types'
+import DropDownMenu from 'react-uwp/DropDownMenu'
+import Button from 'react-uwp/Button'
+import { CUSTOM_TEAM_TYPE } from '../services/constants'
+import { observer } from 'mobx-react'
 
 const baseStyle = {
-  margin: "10px 20px 10px 10px",
-};
+  margin: '10px 20px 10px 10px',
+}
 
 const marginStyle = {
-  margin: "10px 0",
-};
+  margin: '10px 0',
+}
 
 // Bits 300 rw_grim
 // MajorThorn 200 MajorThorn
 
 const TwitchTeamFlow = (props, context) => {
-  let { store } = props;
-    let { twitchTeam } = store;
-    let { theme } = context;
+  const { store } = props
+  const { twitchTeam } = store
+  const { theme } = context
 
-    let onChange = (team) => {
+  const onChange = (team) => {
     twitchTeam.setTeam(team)
-        twitchTeam.name = team
-    };
+    twitchTeam.name = team
+  }
 
-  let onSetTwitchTeam = () => {
+  const onSetTwitchTeam = () => {
     twitchTeam.setTeam(twitchTeam.name)
-    };
+  }
 
-    let dropdownTeams = ['No Teams Found'];
+  let dropdownTeams = ['No Teams Found']
   if (twitchTeam.teams && twitchTeam.teams.length > 0) {
-    dropdownTeams = Array.from(twitchTeam.teams);
-    }
+    dropdownTeams = Array.from(twitchTeam.teams)
+  }
 
-  let disableSetTeamButton = store.teamType !== CUSTOM_TEAM_TYPE;
+  const disableSetTeamButton = store.teamType !== CUSTOM_TEAM_TYPE
 
-    return (
+  return (
     <React.Fragment>
       <div style={{ marginTop: '5px', ...theme.typographyStyles.subTitle }}>
         If you are already part of a Twitch Team setup is easy!
-            </div>
+      </div>
       <div style={{ marginTop: '30px', ...theme.typographyStyles.subTitle }}>
         Instructions:
-            </div>
+      </div>
       <div style={{ marginTop: '5px', ...theme.typographyStyles.baseAlt }}>
         <ul style={{ listStyleType: 'none' }}>
           <li>Step 1: Install the extension (which you have already done!)</li>
@@ -56,7 +56,7 @@ const TwitchTeamFlow = (props, context) => {
               values={dropdownTeams}
               defaultValue={twitchTeam.name}
               onChangeValue={onChange}
-              background={"black"}
+              background={'black'}
               itemWidth={200}
             />
           </li>
@@ -67,19 +67,19 @@ const TwitchTeamFlow = (props, context) => {
             Step 7: Display your Twitch Team in the panel
             <br />
             <Button
-                            style={marginStyle}
-                            onClick={onSetTwitchTeam}
-                            background={theme.accent}
-                            disabled={disableSetTeamButton}
-                        >
+              style={marginStyle}
+              onClick={onSetTwitchTeam}
+              background={theme.accent}
+              disabled={disableSetTeamButton}
+            >
               Set your Twitch Team as your Panel Team
             </Button>
           </li>
         </ul>
       </div>
     </React.Fragment>
-  );
-};
+  )
+}
 
-TwitchTeamFlow.contextTypes = { theme: PropTypes.object };
-export default observer(TwitchTeamFlow);
+TwitchTeamFlow.contextTypes = { theme: PropTypes.object }
+export default observer(TwitchTeamFlow)
