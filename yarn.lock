@@ -9236,9 +9236,10 @@ url-parse@^1.1.8, url-parse@~1.4.0:
     querystringify "^2.0.0"
     requires-port "^1.0.0"
 
-url-search-params-polyfill@^4.0.1:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/url-search-params-polyfill/-/url-search-params-polyfill-4.0.1.tgz#4eda68a5689eda19aff2287e65d98d6fb5f6bc11"
+url-search-params-polyfill@^8.1.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/url-search-params-polyfill/-/url-search-params-polyfill-8.1.0.tgz#5c15b69687165bfd4f6c7d8a161d70d85385885b"
+  integrity sha512-MRG3vzXyG20BJ2fox50/9ZRoe+2h3RM7DIudVD2u/GY9MtayO1Dkrna76IUOak+uoUPVWbyR0pHCzxctP/eDYQ==
 
 url@^0.11.0:
   version "0.11.0"
