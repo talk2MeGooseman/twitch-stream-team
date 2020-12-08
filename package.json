@@ -96,9 +96,6 @@
       "transform-decorators-legacy"
     ]
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
   "devDependencies": {
     "@testing-library/react": "^11.2.2",
     "@testing-library/user-event": "^12.3.0",

@@ -6,11 +6,12 @@
   "extends": [
     "plugin:react/recommended",
     "standard",
-    "plugin:prettier/recommended"
+    "plugin:prettier/recommended",
+    "transform-decorators-legacy"
   ],
   "parserOptions": {
     "ecmaFeatures": {
-      "jsx": true
+      "jsx": true,
     },
     "ecmaVersion": 12,
     "sourceType": "module"

@@ -47,4 +47,7 @@ const ConfigInfo = (props, context) => {
 }
 
 ConfigInfo.contextTypes = { theme: PropTypes.object }
+ConfigInfo.propTypes = {
+  store: PropTypes.object,
+}
 export default ConfigInfo
