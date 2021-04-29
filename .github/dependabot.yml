@@ -1,0 +1,30 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: whatwg-fetch
+    versions:
+    - 3.5.0
+    - 3.6.1
+  - dependency-name: urijs
+    versions:
+    - 1.19.5
+  - dependency-name: node-notifier
+    versions:
+    - 8.0.1
+  - dependency-name: html-webpack-plugin
+    versions:
+    - 3.2.0
+  - dependency-name: url-search-params-polyfill
+    versions:
+    - 8.1.0
+  - dependency-name: elliptic
+    versions:
+    - 6.5.3
+  - dependency-name: react-dev-utils
+    versions:
+    - 10.2.0
