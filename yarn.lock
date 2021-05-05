@@ -3103,9 +3103,10 @@ dotenv-expand@4.2.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/dotenv-expand/-/dotenv-expand-4.2.0.tgz#def1f1ca5d6059d24a766e587942c21106ce1275"
 
-dotenv@4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-4.0.0.tgz#864ef1379aced55ce6f95debecdce179f7a0cd1d"
+dotenv@8.5.0:
+  version "8.5.0"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-8.5.0.tgz#8169c05469a60ccd9e8bd81056438db46312a021"
+  integrity sha512-vRlOiNG7p4iPlnX4wgjPbmhnHDOoUH+TgbGOC09de/lwz/Iv1OK1Gj2qC3+cW2V32uN4KFU6mTLyYsvSAHHMCw==
 
 duplexer3@^0.1.4:
   version "0.1.4"
