@@ -13,6 +13,7 @@ import {
   CUSTOM_TEAM_TYPE,
 } from '../../services/constants'
 import { debug } from 'util'
+import { isValidImage } from '../../services/Utils'
 
 export default class CustomTeamModel extends BaseTeamModel {
   constructor(parentStore, data) {
@@ -38,8 +39,18 @@ export default class CustomTeamModel extends BaseTeamModel {
     this.name = data.name
     this.customName = data.name
     this.display_name = data.display_name
-    this.logo = data.logo
-    this.banner = data.banner
+
+    if (data.logo && await isValidImage(data.logo)) {
+      this.logo = data.logo
+    } else {
+      this.logo = null
+    }
+
+    if (data.banner && await isValidImage(data.banner)) {
+      this.banner = data.banner
+    } else {
+      this.banner = null
+    }
 
     this.loadingState = SAVE_DONE
   }
@@ -69,13 +80,21 @@ export default class CustomTeamModel extends BaseTeamModel {
   }
 
   @action
-  setLogo(text) {
-    this.logo = text
+  async setLogo(text) {
+    if (await isValidImage(text)) {
+      this.logo = text
+    } else {
+      this.logo = null
+    }
   }
 
   @action
-  setBanner(text) {
-    this.banner = text
+  async setBanner(text) {
+    if (await isValidImage(text)) {
+      this.banner = text
+    } else {
+      this.banner = null
+    }
   }
 
   @action

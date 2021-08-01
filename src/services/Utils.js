@@ -1,3 +1,5 @@
+import { validateImage } from "image-validator";
+
 export function uuid() {
   /* jshint bitwise:false */
   /* jshint no-mixed-operators:false */
@@ -13,4 +15,13 @@ export function uuid() {
   }
 
   return uuid
+}
+
+const allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+export const isValidImage = async (url) => {
+  if (!allowedExtensions.exec(url)) {
+    return false;
+  }
+
+  return await validateImage(url)
 }
