@@ -111,28 +111,7 @@ const CustomTeamFlow = ({ store }, { theme }) => {
             />
           </li>
           <li>
-            Step 3: Set your banner and logo
-            <br />
-            <br />
-            Logo:{' '}
-            <TextBox
-              ref={logoTextBoxRef}
-              style={paddingStyle}
-              placeholder="Team Logo Image URL"
-              defaultValue={customTeam.logo}
-              onChangeValue={onLogoChange}
-            />
-            Banner:{' '}
-            <TextBox
-              ref={bannerTextBoxRef}
-              style={paddingStyle}
-              placeholder="Team Banner Image URL"
-              defaultValue={customTeam.banner}
-              onChangeValue={onBannerChange}
-            />
-          </li>
-          <li>
-            Step 4: Save your Custom Team
+            Step 3: Save your Custom Team
             <br />
             <Button
               style={paddingStyle}
@@ -143,7 +122,7 @@ const CustomTeamFlow = ({ store }, { theme }) => {
             </Button>
           </li>
           <li>
-            Step 5: Display your Custom Team in the panel
+            Step 4: Display your Custom Team in the panel
             <br />
             <Button
               style={paddingStyle}

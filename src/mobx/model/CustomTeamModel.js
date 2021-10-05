@@ -40,17 +40,8 @@ export default class CustomTeamModel extends BaseTeamModel {
     this.customName = data.name
     this.display_name = data.display_name
 
-    if (data.logo && await isValidImage(data.logo)) {
-      this.logo = data.logo
-    } else {
-      this.logo = null
-    }
-
-    if (data.banner && await isValidImage(data.banner)) {
-      this.banner = data.banner
-    } else {
-      this.banner = null
-    }
+    this.logo = null
+    this.banner = null
 
     this.loadingState = SAVE_DONE
   }
