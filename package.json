@@ -24,6 +24,7 @@
     "image-validator": "^1.2.0",
     "mobx": "^4.3.0",
     "mobx-react": "^5.2.3",
+    "node-pre-gyp": "^0.17.0",
     "object-assign": "4.1.1",
     "postcss-flexbugs-fixes": "3.2.0",
     "postcss-loader": "2.0.8",

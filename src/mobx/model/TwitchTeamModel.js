@@ -10,7 +10,7 @@ import {
   TWITCH_TEAM_TYPE,
   LOAD_DONE,
 } from '../../services/constants'
-import { requestTeamInfo } from '../../services/TwitchAPI'
+import { requestTeamInfo, requestChannelsById } from '../../services/TwitchAPI'
 
 // Bit 1 - Lurking_kat
 
@@ -45,14 +45,16 @@ export default class TwitchTeamModel extends BaseTeamModel {
       return
     }
 
-    const data = await requestTeamInfo(this.name)
-    this.buildChannels(data.users)
+    const { data: [team] } = await requestTeamInfo(this.name)
 
-    this.info = data.info
-    this.display_name = data.display_name
-    this.logo = data.logo
-    this.banner = data.banner
-    this.id = data.id
+    const channels = await requestChannelsById(team.users)
+    this.buildChannels(channels)
+
+    this.info = team.info
+    this.display_name = team.team_display_name
+    this.logo = team.thumbnail_url
+    this.banner = team.banner
+    this.id = team.id
   }
 
   /**

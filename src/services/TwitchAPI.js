@@ -44,7 +44,7 @@ function buildChannelParams(channels, key = 'id') {
   const params = new URLSearchParams()
   channels.forEach((channel) => {
     // have to do check for _id in case were dealing with
-    params.append(key, channel._id || channel.id || channel)
+    params.append(key, channel.user_id || channel._id || channel.id || channel)
   })
   return params
 }
@@ -79,15 +79,15 @@ export const requestChannelsByName = async (channels) => {
   })
 }
 
-export async function requestTeamInfo(team_name) {
+export async function requestTeamInfo(teamName) {
   let response
   try {
     response = await axios({
       method: 'GET',
-      url: `https://api.twitch.tv/kraken/teams/${team_name}`,
+      baseURL: BASE_URL,
+      url: `/teams?name=${teamName}`,
       headers: {
         'Client-id': CLIENT_ID,
-        Accept: 'application/vnd.twitchtv.v5+json',
       },
     })
   } catch (error) {}

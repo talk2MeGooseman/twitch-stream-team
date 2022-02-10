@@ -9,12 +9,12 @@ export default class ChannelModel {
 
   constructor(store, channel) {
     this.store = store
-    this.id = channel._id || channel.id
+    this.id = channel._id || channel.id || channel.user_id
     this.info = channel
   }
 
   get name() {
-    return this.info.display_name
+    return this.info.display_name || this.info.user_name
   }
 
   get description() {

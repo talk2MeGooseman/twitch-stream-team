@@ -138,6 +138,7 @@ export default class Store {
       })
       if (foundChannel) {
         channel.isLive = true
+        channel.info.status = [foundChannel.game_name, foundChannel.title].join(": ")
         liveChannels.push(channel)
       } else {
         channel.isLive = false
