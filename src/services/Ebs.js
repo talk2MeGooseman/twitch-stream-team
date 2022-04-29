@@ -1,8 +1,8 @@
 import axios from 'axios'
 
 // const EBS_ROOT_URL = 'https://us-central1-stream-team-3a526.cloudfunctions.net';
-const EBS_ROOT_URL = 'https://stream-team-app.azurewebsites.net/api'
-// const EBS_ROOT_URL = 'http://localhost:7071/api';
+const EBS_ROOT_URL = 'https://guzman.codes/legacy/stream-teams';
+// const EBS_ROOT_URL = 'http://localhost:4000/legacy/stream-teams';
 
 /**
  * getPanelInformation
