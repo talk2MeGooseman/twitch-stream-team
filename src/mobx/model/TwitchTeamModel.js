@@ -1,16 +1,14 @@
-import { observable, action } from 'mobx'
-import ChannelModel from '../model/ChannelModel'
-import BaseTeamModel from './BaseTeamModel'
-import { setPanelInformation } from '../../services/Ebs'
+import { action,observable } from 'mobx'
+
 import {
-  LOAD_PENDING,
-  SAVE_PENDING,
   SAVE_DONE,
   SAVE_ERROR,
+  SAVE_PENDING,
   TWITCH_TEAM_TYPE,
-  LOAD_DONE,
 } from '../../services/constants'
-import { requestTeamInfo, requestChannelsById } from '../../services/TwitchAPI'
+import { setPanelInformation } from '../../services/Ebs'
+import { requestChannelsById,requestTeamInfo } from '../../services/TwitchAPI'
+import BaseTeamModel from './BaseTeamModel'
 
 // Bit 1 - Lurking_kat
 
@@ -25,11 +23,7 @@ export default class TwitchTeamModel extends BaseTeamModel {
    */
   constructor(parentStore, selectedTeam) {
     super(parentStore)
-    if (selectedTeam && selectedTeam.name) {
-      this.name = selectedTeam.name
-    } else {
-      this.name = selectedTeam
-    }
+    this.name = selectedTeam && selectedTeam.name ? selectedTeam.name : selectedTeam
   }
 
   /**
@@ -60,13 +54,13 @@ export default class TwitchTeamModel extends BaseTeamModel {
   /**
    * Sets the passed in team in the backend
    *
-   * @param {string} selected_team
+   * @param {string} selectedTeam
    * @memberof TwitchTeamModel
    */
   @action
-  setTeam(selected_team) {
+  setTeam(selectedTeam) {
     this.parentStore.saveState = SAVE_PENDING
-    return setPanelInformation(this.parentStore.token, { selected_team }).then(
+    return setPanelInformation(this.parentStore.token, { selectedTeam }).then(
       // inline created action
       action('fetchSuccess', (result) => {
         this.name = result.selectedTeam
@@ -77,7 +71,7 @@ export default class TwitchTeamModel extends BaseTeamModel {
         this.parentStore.fetchLiveChannels()
       }),
       // inline created action
-      action('fetchError', (error) => {
+      action('fetchError', () => {
         this.saveState = SAVE_ERROR
       })
     )

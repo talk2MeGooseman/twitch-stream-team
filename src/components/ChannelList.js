@@ -1,8 +1,9 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import ListView from 'react-uwp/ListView'
-import ChannelListItem from './ChannelListItem'
 import { observer } from 'mobx-react'
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
+import ListView from 'react-uwp/ListView'
+
+import ChannelListItem from './ChannelListItem'
 
 const baseStyle = {
   margin: '0 0 0 0',
@@ -13,10 +14,9 @@ const baseStyle = {
 
 @observer
 export default class ChannelList extends Component {
-  static contextTypes = { theme: PropTypes.object }
 
   renderTeamCount = () => {
-    const { channels } = this.props.store
+    const { store: { channels } } = this.props
     const { theme } = this.context
 
     const teamStyles = {
@@ -43,8 +43,8 @@ export default class ChannelList extends Component {
   }
 
   renderChannelRows = () => {
-    const { channels } = this.props.store
-    let channelComponents = []
+    const { store: {channels} } = this.props
+    const channelComponents = []
 
     channelComponents.push(this.renderTeamCount())
 
@@ -67,3 +67,5 @@ export default class ChannelList extends Component {
     )
   }
 }
+
+ChannelList.contextTypes = { theme: PropTypes.object }

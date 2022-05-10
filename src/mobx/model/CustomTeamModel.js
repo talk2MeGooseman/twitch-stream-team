@@ -1,19 +1,18 @@
-import { observable, action } from 'mobx'
+import { action } from 'mobx'
+import { andThen, map, pipe } from 'ramda'
+
+import {
+  CUSTOM_TEAM_TYPE,
+  SAVE_DONE,
+  SAVE_ERROR,
+  SAVE_PENDING,
+} from '../../services/constants'
+import { setCustomTeamInformation } from '../../services/Ebs'
 import {
   requestChannelsById,
   requestChannelsByName,
 } from '../../services/TwitchAPI'
 import BaseTeamModel from './BaseTeamModel'
-import { setCustomTeamInformation } from '../../services/Ebs'
-import {
-  LOAD_PENDING,
-  SAVE_PENDING,
-  SAVE_DONE,
-  SAVE_ERROR,
-  CUSTOM_TEAM_TYPE,
-} from '../../services/constants'
-import { debug } from 'util'
-import { isValidImage } from '../../services/Utils'
 
 export default class CustomTeamModel extends BaseTeamModel {
   constructor(parentStore, data) {
@@ -30,18 +29,16 @@ export default class CustomTeamModel extends BaseTeamModel {
       return
     }
 
-    if (data.users) {
-      requestChannelsById(data.users).then((c) => {
-        this.buildChannels(c)
-      })
+    if (data.customTeamMembers) {
+      pipe(
+        map((member) => member.channelId),
+        requestChannelsById,
+        andThen((channels) => this.buildChannels(channels))
+      )(data.customTeamMembers)
     }
 
     this.name = data.name
     this.customName = data.name
-    this.display_name = data.display_name
-
-    this.logo = null
-    this.banner = null
 
     this.loadingState = SAVE_DONE
   }
@@ -56,45 +53,39 @@ export default class CustomTeamModel extends BaseTeamModel {
   addChannel(channelName) {
     channelName = channelName.trim()
 
-    requestChannelsByName([channelName]).then((data) => {
+    requestChannelsByName([channelName]).then((data) =>
       // Add to channels array and potentially do some validation checks
-      this.addChannels(data)
+       this.addChannels(data)
+    ).catch(() => {
+      // Do nothing
     })
   }
 
   @action
   removeChannel(channelName) {
-    let index = this.channels.findIndex(
+    const index = this.channels.findIndex(
       (channel) => channel.name === channelName
     )
     this.channels.splice(index, 1)
   }
 
   @action
-  async setLogo(text) {
-    if (await isValidImage(text)) {
-      this.logo = text
-    } else {
-      this.logo = null
-    }
+  async setLogo() {
+    this.logo =  null
   }
 
   @action
-  async setBanner(text) {
-    if (await isValidImage(text)) {
-      this.banner = text
-    } else {
-      this.banner = null
-    }
+  async setBanner() {
+    this.banner =  null
   }
 
   @action
   setTeam() {
     if (
       !this.name ||
-      !this.name.length ||
+      this.name.length === 0 ||
       !this.channels ||
-      !this.channels.length
+      this.channels.length === 0
     ) {
       this.parentStore.saveState = SAVE_DONE
       return
@@ -104,7 +95,7 @@ export default class CustomTeamModel extends BaseTeamModel {
     setCustomTeamInformation(this.parentStore.token, this.toJSON()).then(
       // inline created action
       action('setTeamSuccess', (result) => {
-        let { customTeam } = result
+        const { customTeam } = result
 
         this.rawData = customTeam
         this.initTeamInfo()
@@ -114,10 +105,12 @@ export default class CustomTeamModel extends BaseTeamModel {
         this.parentStore.team = this
         this.parentStore.fetchLiveChannels()
       }), // inline created action
-      action('setTeamError', (error) => {
+      action('setTeamError', () => {
         this.parentStore.saveState = SAVE_ERROR
       })
-    )
+    ).catch(() => {
+      // Do nothing
+    })
   }
 
   toJSON() {

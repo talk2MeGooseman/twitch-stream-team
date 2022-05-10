@@ -1,9 +1,11 @@
-import { validateImage } from "image-validator";
+/* eslint-disable eslint-comments/disable-enable-pair */
+/* eslint-disable no-plusplus */
+/* eslint-disable unicorn/prefer-math-trunc */
+/* eslint-disable no-shadow */
+/* eslint-disable no-bitwise */
 
 export function uuid() {
-  /* jshint bitwise:false */
-  /* jshint no-mixed-operators:false */
-  let i, random
+  let i; let random
   let uuid = ''
 
   for (i = 0; i < 32; i++) {
@@ -15,13 +17,4 @@ export function uuid() {
   }
 
   return uuid
-}
-
-const allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
-export const isValidImage = async (url) => {
-  if (!allowedExtensions.exec(url)) {
-    return false;
-  }
-
-  return await validateImage(url)
 }

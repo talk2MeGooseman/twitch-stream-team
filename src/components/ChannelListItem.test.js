@@ -1,8 +1,10 @@
+import { render } from '@testing-library/react'
 import React from 'react'
-import { fireEvent, render } from '@testing-library/react'
-import ChannelListItem from './ChannelListItem'
-import { Theme as UWPThemeProvider, getTheme } from 'react-uwp/Theme'
+import { getTheme, Theme as UWPThemeProvider } from 'react-uwp/Theme'
+
 import ChannelModel from '../mobx/model/ChannelModel'
+import ChannelListItem from './ChannelListItem'
+
 
 describe('ChannelListItem', () => {
   it('Renders successfully', () => {
@@ -13,13 +15,14 @@ describe('ChannelListItem', () => {
       logo: 'https://picture.here',
     })
 
-    const { queryByText, debug } = render(
+    const { queryByText } = render(
       <UWPThemeProvider
         theme={getTheme({
           themeName: 'dark', // set custom theme
           accent: '#0078D7', // set accent color
           useFluentDesign: true, // sure you want use new fluent design.
           desktopBackgroundImage:
+            // eslint-disable-next-line no-secrets/no-secrets
             'https://static-cdn.jtvnw.net/jtv_user_pictures/team-brainbytes-background_image-4baba38e0e3991c5.png', // set global desktop background image
         })}
       >

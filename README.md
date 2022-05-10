@@ -406,6 +406,7 @@ export default Button // Don’t forget to use export default!
 
 ```js
 import React, { Component } from 'react'
+
 import Button from './Button' // Import a component from another file
 
 class DangerButton extends Component {
@@ -456,7 +457,7 @@ class App extends Component {
       .then(({ moduleA }) => {
         // Use moduleA
       })
-      .catch((err) => {
+      .catch((error) => {
         // Handle failure
       })
   }
@@ -498,8 +499,9 @@ This project setup uses [Webpack](https://webpack.js.org/) for handling all asse
 ### `Button.js`
 
 ```js
-import React, { Component } from 'react'
 import './Button.css' // Tell Webpack that Button.js uses these styles
+
+import React, { Component } from 'react'
 
 class Button extends Component {
   render() {
@@ -654,6 +656,7 @@ Here is an example:
 
 ```js
 import React from 'react'
+
 import logo from './logo.png' // Tell Webpack this JS file uses this image
 
 console.log(logo) // /logo.84287d09.png
@@ -754,7 +757,7 @@ When you include a script in the HTML file that defines global variables and try
 You can avoid this by reading the global variable explicitly from the `window` object, for example:
 
 ```js
-const $ = window.$
+const {$} = window
 ```
 
 This makes it obvious you are using a global variable intentionally rather than because of a typo.
@@ -789,7 +792,7 @@ import 'bootstrap/dist/css/bootstrap-theme.css'
 Import required React Bootstrap components within `src/App.js` file or your custom component files:
 
 ```js
-import { Navbar, Jumbotron, Button } from 'react-bootstrap'
+import { Button,Jumbotron, Navbar } from 'react-bootstrap'
 ```
 
 Now you are ready to use the imported React Bootstrap components within your component hierarchy defined in the render method. Here is an example [`App.js`](https://gist.githubusercontent.com/gaearon/85d8c067f6af1e56277c82d19fd4da7b/raw/6158dd991b67284e9fc8d70b9d973efe87659d72/App.js) redone using React Bootstrap.
@@ -1323,8 +1326,8 @@ Jest provides a built-in `expect()` global function for making assertions. A bas
 import sum from './sum'
 
 it('sums numbers', () => {
-  expect(sum(1, 2)).toEqual(3)
-  expect(sum(2, 2)).toEqual(4)
+  expect(sum(1, 2)).toBe(3)
+  expect(sum(2, 2)).toBe(4)
 })
 ```
 
@@ -1340,6 +1343,7 @@ Different projects choose different testing tradeoffs based on how often compone
 ```js
 import React from 'react'
 import ReactDOM from 'react-dom'
+
 import App from './App'
 
 it('renders without crashing', () => {
@@ -1382,8 +1386,9 @@ configure({ adapter: new Adapter() })
 Now you can write a smoke test with it:
 
 ```js
-import React from 'react'
 import { shallow } from 'enzyme'
+import React from 'react'
+
 import App from './App'
 
 it('renders without crashing', () => {
@@ -1398,15 +1403,16 @@ You can read the [Enzyme documentation](http://airbnb.io/enzyme/) for more testi
 Here is an example from Enzyme documentation that asserts specific output, rewritten to use Jest matchers:
 
 ```js
-import React from 'react'
 import { shallow } from 'enzyme'
+import React from 'react'
+
 import App from './App'
 
 it('renders welcome message', () => {
   const wrapper = shallow(<App />)
   const welcome = <h2>Welcome to React</h2>
   // expect(wrapper.contains(welcome)).to.equal(true);
-  expect(wrapper.contains(welcome)).toEqual(true)
+  expect(wrapper.contains(welcome)).toBe(true)
 })
 ```
 
@@ -1444,8 +1450,8 @@ We recommend that you use `expect()` for assertions and `jest.fn()` for spies. I
 However, if you are used to other libraries, such as [Chai](http://chaijs.com/) and [Sinon](http://sinonjs.org/), or if you have existing code using them that you’d like to port over, you can import them normally like this:
 
 ```js
-import sinon from 'sinon'
 import { expect } from 'chai'
+import sinon from 'sinon'
 ```
 
 and then use them in your tests like you normally do.
@@ -2425,16 +2431,18 @@ To add a specific Moment.js locale to your bundle, you need to import it explici
 For example:
 
 ```js
-import moment from 'moment'
 import 'moment/locale/fr'
+
+import moment from 'moment'
 ```
 
 If import multiple locales this way, you can later switch between them by calling `moment.locale()` with the locale name:
 
 ```js
-import moment from 'moment'
 import 'moment/locale/fr'
 import 'moment/locale/es'
+
+import moment from 'moment'
 
 // ...
 

@@ -1,8 +1,35 @@
+import { createClient } from '@urql/core'
 import axios from 'axios'
 
+import {ChannelTeamQuery} from './graphql'
+
 // const EBS_ROOT_URL = 'https://us-central1-stream-team-3a526.cloudfunctions.net';
-const EBS_ROOT_URL = 'https://guzman.codes/legacy/stream-teams';
+const EBS_ROOT_URL = 'https://guzman.codes/legacy/stream-teams'
 // const EBS_ROOT_URL = 'http://localhost:4000/legacy/stream-teams';
+
+
+export const initClient = (token) => createClient({
+  url: 'https://guzman.codes/api',
+  fetchOptions: () => ({
+    headers: { 'x-extension-jwt': token },
+  }),
+})
+
+function buildHeaders(token) {
+  return {
+    'Content-Type': 'application/json',
+    'x-extension-jwt': token,
+  }
+}
+
+export const getGqlPanelInformation = async (client) => {
+  const response = await client
+  .query(ChannelTeamQuery, { id: 'test' })
+  .toPromise()
+
+
+  return response.data
+}
 
 /**
  * getPanelInformation
@@ -49,11 +76,11 @@ export const setPanelInformation = async (token, data) => {
     response = await axios({
       method: 'POST',
       url: `${EBS_ROOT_URL}/SetTwitchTeam`,
-      data: data,
+      data,
       headers: buildHeaders(token),
     })
   } catch (error) {
-    throw Error(error)
+    throw new Error(error)
   }
 
   return response.data
@@ -71,19 +98,12 @@ export const setCustomTeamInformation = async (token, data) => {
     response = await axios({
       method: 'POST',
       url: `${EBS_ROOT_URL}/SetCustomTeam`,
-      data: data,
+      data,
       headers: buildHeaders(token),
     })
   } catch (error) {
-    throw Error(error)
+    throw new Error(error)
   }
 
   return response.data
-}
-
-function buildHeaders(token) {
-  return {
-    'Content-Type': 'application/json',
-    'x-extension-jwt': token,
-  }
 }

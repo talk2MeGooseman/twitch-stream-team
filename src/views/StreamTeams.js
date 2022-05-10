@@ -1,17 +1,17 @@
-import React, { Component } from 'react'
+import { observer } from 'mobx-react'
+import React, { PureComponent } from 'react'
+
 import ChannelList from '../components/ChannelList'
+import Loader from '../components/Loader'
 import TeamHeader from '../components/TeamHeader'
+import SadSpock from '../sad-spock.svg'
 import {
   LOAD_ERROR,
-  CUSTOM_TEAM_TYPE,
   SAVE_PENDING,
 } from '../services/constants'
-import SadSpock from '../sad-spock.svg'
-import Loader from '../components/Loader'
-import { observer } from 'mobx-react'
 
 @observer
-export default class StreamTeams extends Component {
+export default class StreamTeams extends PureComponent {
   render() {
     const { store: team } = this.props
 
@@ -33,10 +33,10 @@ export default class StreamTeams extends Component {
     }
 
     return (
-      <React.Fragment>
+      <>
         <TeamHeader store={team} />
         <ChannelList store={team} />
-      </React.Fragment>
+      </>
     )
   }
 }

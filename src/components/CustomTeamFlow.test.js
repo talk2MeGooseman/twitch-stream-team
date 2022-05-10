@@ -1,10 +1,11 @@
+import { render, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import React from 'react'
-import { fireEvent, render, within } from '@testing-library/react'
-import CustomTeamFlow from './CustomTeamFlow'
-import { Theme as UWPThemeProvider, getTheme } from 'react-uwp/Theme'
+import { getTheme,Theme as UWPThemeProvider } from 'react-uwp/Theme'
+
 import CustomTeamModel from '../mobx/model/CustomTeamModel'
 import { CUSTOM_TEAM_TYPE } from '../services/constants'
-import userEvent from '@testing-library/user-event'
+import CustomTeamFlow from './CustomTeamFlow'
 
 const team = {
   name: 'custom_team',
@@ -39,6 +40,7 @@ const withTheme = (component) => (
       accent: '#0078D7', // set accent color
       useFluentDesign: true, // sure you want use new fluent design.
       desktopBackgroundImage:
+        // eslint-disable-next-line no-secrets/no-secrets
         'https://static-cdn.jtvnw.net/jtv_user_pictures/team-brainbytes-background_image-4baba38e0e3991c5.png', // set global desktop background image
     })}
   >
@@ -69,7 +71,7 @@ describe('CustomTeamFlow', () => {
       teamType: CUSTOM_TEAM_TYPE,
     }
 
-    const { queryByText, debug, getByText } = render(
+    const { queryByText, getByText } = render(
       withTheme(<CustomTeamFlow store={store} />)
     )
 

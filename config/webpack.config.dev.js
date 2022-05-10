@@ -1,4 +1,4 @@
-'use strict'
+
 
 const autoprefixer = require('autoprefixer')
 const path = require('path')
@@ -11,6 +11,7 @@ const eslintFormatter = require('react-dev-utils/eslintFormatter')
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
 const getClientEnvironment = require('./env')
 const paths = require('./paths')
+const ESLintPlugin = require('eslint-webpack-plugin')
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
@@ -62,7 +63,7 @@ module.exports = {
     // There are also additional JS chunk files if you use code splitting.
     chunkFilename: 'static/js/[name].chunk.js',
     // This is the URL that app is served from. We use "/" in development.
-    publicPath: publicPath,
+    publicPath,
     // Point sourcemap entries to original disk location (format as URL on Windows)
     devtoolModuleFilenameTemplate: (info) =>
       path.resolve(info.absoluteResourcePath).replace(/\\/g, '/'),
@@ -95,6 +96,7 @@ module.exports = {
       // please link the files into your node_modules/ and let module-resolution kick in.
       // Make sure your source files are compiled, as they will not be processed in any way.
       new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson]),
+      new ESLintPlugin()
     ],
   },
   module: {
@@ -115,7 +117,6 @@ module.exports = {
               formatter: eslintFormatter,
               eslintPath: require.resolve('eslint'),
             },
-            loader: require.resolve('eslint-loader'),
           },
         ],
         include: paths.appSrc,
@@ -132,7 +133,7 @@ module.exports = {
             test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
             loader: require.resolve('url-loader'),
             options: {
-              limit: 10000,
+              limit: 10_000,
               name: 'static/media/[name].[hash:8].[ext]',
             },
           },

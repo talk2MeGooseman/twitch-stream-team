@@ -1,12 +1,13 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import TextBox from 'react-uwp/TextBox'
-import Button from 'react-uwp/Button'
-import ListView from 'react-uwp/ListView'
 import { observer } from 'mobx-react'
-import Icon from 'react-uwp/Icon'
-import { CUSTOM_TEAM_TYPE } from '../services/constants'
+import PropTypes from 'prop-types'
+import React from 'react'
 import { IoIosTrash } from 'react-icons/io'
+import Button from 'react-uwp/Button'
+import Icon from 'react-uwp/Icon'
+import ListView from 'react-uwp/ListView'
+import TextBox from 'react-uwp/TextBox'
+
+import { CUSTOM_TEAM_TYPE } from '../services/constants'
 
 const paddingStyle = {
   margin: '10px 0',
@@ -18,48 +19,38 @@ const trashStyle = {
 }
 
 const CustomTeamFlow = ({ store }, { theme }) => {
-  let { customTeam, teamType } = store
+  const { customTeam, teamType } = store
 
-  let channelTextBoxRef = React.createRef()
-  let teamNameTextBoxRef = React.createRef()
-  let logoTextBoxRef = React.createRef()
-  let bannerTextBoxRef = React.createRef()
+  const channelTextBoxRef = React.createRef()
+  const teamNameTextBoxRef = React.createRef()
 
-  let disableSetTeamButton = teamType === CUSTOM_TEAM_TYPE
+  const disableSetTeamButton = teamType === CUSTOM_TEAM_TYPE
 
-  let onChannelEnter = (event) => {
-    let channel = channelTextBoxRef.current.getValue()
-    if (!channel || !channel.length) {
+  const onChannelEnter = () => {
+    const channel = channelTextBoxRef.current.getValue()
+    if (!channel || channel.length === 0) {
       return
     }
     customTeam.addChannel(channel)
     channelTextBoxRef.current.setValue('')
   }
 
-  let onTeamNameChange = (event) => {
+  const onTeamNameChange = () => {
     customTeam.setName(teamNameTextBoxRef.current.getValue())
   }
 
-  let onBannerChange = (event) => {
-    customTeam.setBanner(bannerTextBoxRef.current.getValue())
-  }
-
-  let onLogoChange = (event) => {
-    customTeam.setLogo(logoTextBoxRef.current.getValue())
-  }
-
-  let onSave = (event) => {
+  const onSave = () => {
     customTeam.setTeam()
   }
 
-  let onRemoveChannel = (event) => {
-    let channel = event.target.getAttribute('data-channel')
+  const onRemoveChannel = (event) => {
+    const {channel} = event.target.dataset
     if (channel) {
       customTeam.removeChannel(channel)
     }
   }
 
-  let customTeamItems = customTeam.channels.map((channel) => (
+  const customTeamItems = customTeam.channels.map((channel) => (
     <div key={channel.name}>
       {channel.name}{' '}
       <Icon
@@ -72,12 +63,12 @@ const CustomTeamFlow = ({ store }, { theme }) => {
     </div>
   ))
 
-  if (!customTeamItems.length) {
+  if (customTeamItems.length === 0) {
     customTeamItems.push(<div>No Team Members</div>)
   }
 
   return (
-    <React.Fragment>
+    <>
       <div style={{ marginTop: '5px', ...theme.typographyStyles.subTitle }}>
         Instructions:
       </div>
@@ -135,7 +126,7 @@ const CustomTeamFlow = ({ store }, { theme }) => {
           </li>
         </ul>
       </div>
-    </React.Fragment>
+    </>
   )
 }
 

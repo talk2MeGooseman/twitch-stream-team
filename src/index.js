@@ -1,12 +1,13 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
 import './index.css'
 
+import React from 'react'
+import ReactDOM from 'react-dom'
+
 import AuthWrapper from './components/AuthWrapper'
-import { CONFIG_MODE, VIEWER_MODE, DASHBOARD_MODE } from './services/constants'
-import StreamTeamTheme from './views/StreamTeamTheme'
 import Store from './mobx/state/Store'
+import { CONFIG_MODE, DASHBOARD_MODE,VIEWER_MODE } from './services/constants'
 import Config from './views/Config'
+import StreamTeamTheme from './views/StreamTeamTheme'
 
 // Bits 100 - csharpfritz
 
@@ -26,42 +27,34 @@ const mode = params.get('mode')
 
 // Check which mode were in to know which component to render
 switch (mode) {
-  case CONFIG_MODE:
-    viewComponent = (
-      <AuthWrapper mode={mode} store={store}>
-        <Config
-          store={store}
-          viewAnchor={viewAnchor}
-          viewPlatform={viewPlatform}
-        />
-      </AuthWrapper>
-    )
-    break
-  case VIEWER_MODE:
-    viewComponent = (
-      <AuthWrapper mode={mode} store={store}>
-        <StreamTeamTheme
-          store={store}
-          viewAnchor={viewAnchor}
-          viewPlatform={viewPlatform}
-        />
-      </AuthWrapper>
-    )
-    break
-  case DASHBOARD_MODE:
-    viewComponent = (
-      <AuthWrapper mode={mode} store={store}>
-        <StreamTeamTheme
-          store={store}
-          viewAnchor={viewAnchor}
-          viewPlatform={viewPlatform}
-        />
-      </AuthWrapper>
-    )
-    break
-  default:
-    viewComponent = <div>Nothing Loaded</div>
-    break
+case CONFIG_MODE:
+  viewComponent = (
+    <AuthWrapper mode={mode} store={store}>
+      <Config
+        store={store}
+        viewAnchor={viewAnchor}
+        viewPlatform={viewPlatform}
+      />
+    </AuthWrapper>
+  )
+  break
+
+case VIEWER_MODE:
+case DASHBOARD_MODE:
+  viewComponent = (
+    <AuthWrapper mode={mode} store={store}>
+      <StreamTeamTheme
+        store={store}
+        viewAnchor={viewAnchor}
+        viewPlatform={viewPlatform}
+      />
+    </AuthWrapper>
+  )
+  break
+
+default:
+  viewComponent = <div>Nothing Loaded</div>
+  break
 }
 
-ReactDOM.render(viewComponent, document.getElementById('root'))
+ReactDOM.render(viewComponent, document.querySelector('#root'))

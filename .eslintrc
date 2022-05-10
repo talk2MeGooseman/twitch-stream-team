@@ -1,0 +1,24 @@
+{
+  "env": {
+    "browser": true
+  },
+  "extends": ["auto", "react-app"],
+  "rules": {
+    "quotes": ["error", "single"],
+    "semi": ["error", "never"],
+    "react/jsx-filename-extension": 0,
+    "react/prop-types": 0,
+    "react/function-component-definition": [2, { "namedComponents": "arrow-function" }],
+    "import/prefer-default-export": 0,
+    "no-param-reassign": 0,
+    "react/forbid-prop-types": 0
+  },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "legacyDecorators": true
+    },
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  }
+
+}

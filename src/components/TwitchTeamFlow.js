@@ -1,9 +1,10 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import DropDownMenu from 'react-uwp/DropDownMenu'
-import Button from 'react-uwp/Button'
-import { CUSTOM_TEAM_TYPE } from '../services/constants'
 import { observer } from 'mobx-react'
+import PropTypes from 'prop-types'
+import React from 'react'
+import Button from 'react-uwp/Button'
+import DropDownMenu from 'react-uwp/DropDownMenu'
+
+import { CUSTOM_TEAM_TYPE } from '../services/constants'
 
 const baseStyle = {
   margin: '10px 20px 10px 10px',
@@ -18,7 +19,7 @@ const marginStyle = {
 
 const TwitchTeamFlow = (props, context) => {
   const { store } = props
-  const { twitchTeam } = store
+  const { twitchTeam, teamType } = store
   const { theme } = context
 
   const onChange = (team) => {
@@ -32,13 +33,13 @@ const TwitchTeamFlow = (props, context) => {
 
   let dropdownTeams = ['No Teams Found']
   if (twitchTeam.teams && twitchTeam.teams.length > 0) {
-    dropdownTeams = Array.from(twitchTeam.teams)
+    dropdownTeams = [...twitchTeam.teams]
   }
 
-  const disableSetTeamButton = store.teamType !== CUSTOM_TEAM_TYPE
+  const disableSetTeamButton = teamType !== CUSTOM_TEAM_TYPE
 
   return (
-    <React.Fragment>
+    <>
       <div style={{ marginTop: '5px', ...theme.typographyStyles.subTitle }}>
         If you are already part of a Twitch Team setup is easy!
       </div>
@@ -56,7 +57,7 @@ const TwitchTeamFlow = (props, context) => {
               values={dropdownTeams}
               defaultValue={twitchTeam.name}
               onChangeValue={onChange}
-              background={'black'}
+              background="black"
               itemWidth={200}
             />
           </li>
@@ -77,7 +78,7 @@ const TwitchTeamFlow = (props, context) => {
           </li>
         </ul>
       </div>
-    </React.Fragment>
+    </>
   )
 }
 

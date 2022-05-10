@@ -8,13 +8,13 @@ const webkitAnimation = keyframes`
 `
 
 const animation = keyframes`
-    0% { 
+    0% {
       transform: perspective(120px) rotateX(0deg) rotateY(0deg);
-      -webkit-transform: perspective(120px) rotateX(0deg) rotateY(0deg) 
-    } 50% { 
+      -webkit-transform: perspective(120px) rotateX(0deg) rotateY(0deg)
+    } 50% {
       transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);
-      -webkit-transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg) 
-    } 100% { 
+      -webkit-transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg)
+    } 100% {
       transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
       -webkit-transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
     }
@@ -35,6 +35,6 @@ const LoaderStyled = styled.div`
  * Component that displays an animated loading square
  * @returns {Object} JSX
  */
-const Loader = (props) => <LoaderStyled color={props.color} />
+const Loader = ({ color }) => <LoaderStyled color={color} />
 
 export default Loader

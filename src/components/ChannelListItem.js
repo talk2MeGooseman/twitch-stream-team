@@ -1,16 +1,15 @@
-import React from 'react'
-import Image from 'react-uwp/Image'
+import { observer } from 'mobx-react'
 import PropTypes from 'prop-types'
+import React from 'react'
+import { IoIosHeart } from 'react-icons/io'
 import Textfit from 'react-textfit'
 import IconButton from 'react-uwp/IconButton'
-import TransformCard from 'react-uwp/TransformCard'
-import Icon from 'react-uwp/Icon'
+import Image from 'react-uwp/Image'
 import { green600 } from 'react-uwp/styles/accentColors'
-import { observer } from 'mobx-react'
-import { IoIosHeart, IoIosRadioButtonOn } from 'react-icons/io'
-import ChannelModel from '../mobx/model/ChannelModel'
+import TransformCard from 'react-uwp/TransformCard'
 
-const Twitch = window.Twitch
+
+const {Twitch} = window
 
 const container = {
   position: 'relative',
@@ -54,9 +53,7 @@ const followChannel = (channel) => {
   Twitch.ext.actions.followChannel(channel)
 }
 
-const buildTwitchUrl = (channelName) => {
-  return `https://www.twitch.tv/${channelName}`
-}
+const buildTwitchUrl = (channelName) => `https://www.twitch.tv/${channelName}`
 
 const ChannelListItem = ({ channel }, { theme }) => {
   let followIconHoverColor = theme.listAccentHigh
@@ -72,12 +69,7 @@ const ChannelListItem = ({ channel }, { theme }) => {
     ...theme.typographyStyles.caption,
   }
 
-  let followIconBG
-  if (channel.followed) {
-    followIconBG = followIconHoverColor = green600
-  } else {
-    followIconBG = theme.listAccentLow
-  }
+  const followIconBG = channel.followed ? (followIconHoverColor = green600) : theme.listAccentLow
 
   const followButtonStyles = {
     display: 'inline-block',
@@ -90,9 +82,9 @@ const ChannelListItem = ({ channel }, { theme }) => {
     <div key={channel.id} style={container}>
       <div style={{ flex: 1 }}>
         <TransformCard xMaxRotate={50} yMaxRotate={50} perspective={240}>
-          <a href={buildTwitchUrl(channel.name)} target="_blank">
+          <a href={buildTwitchUrl(channel.name)} target="_blank" rel="noreferrer">
             {channel.isLive && (
-              <div className="pulse" style={liveIconStyles}></div>
+              <div className="pulse" style={liveIconStyles} />
             )}
             <Image src={resizeImage(channel.profile_image)} />
           </a>
@@ -123,6 +115,6 @@ const ChannelListItem = ({ channel }, { theme }) => {
 
 ChannelListItem.contextTypes = { theme: PropTypes.object }
 ChannelListItem.propTypes = {
-  channel: PropTypes.any,
+  channel: PropTypes.any.isRequired,
 }
 export default observer(ChannelListItem)

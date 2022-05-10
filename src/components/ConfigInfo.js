@@ -1,10 +1,11 @@
-import React from 'react'
 import PropTypes from 'prop-types'
+import React from 'react'
 import Separator from 'react-uwp/Separator'
 import Tabs, { Tab } from 'react-uwp/Tabs'
-import TwitchTeamFlow from './TwitchTeamFlow'
-import CustomTeamFlow from './CustomTeamFlow'
+
 import { CUSTOM_TEAM_TYPE } from '../services/constants'
+import CustomTeamFlow from './CustomTeamFlow'
+import TwitchTeamFlow from './TwitchTeamFlow'
 
 const ConfigInfo = (props, context) => {
   const { store } = props
@@ -13,7 +14,7 @@ const ConfigInfo = (props, context) => {
 
   if (
     !store.twitchTeam.teams ||
-    !store.twitchTeam.teams.length ||
+    store.twitchTeam.teams.length === 0 ||
     store.teamType === CUSTOM_TEAM_TYPE
   ) {
     focusTabIndex = 1
@@ -48,6 +49,6 @@ const ConfigInfo = (props, context) => {
 
 ConfigInfo.contextTypes = { theme: PropTypes.object }
 ConfigInfo.propTypes = {
-  store: PropTypes.object,
+  store: PropTypes.object.isRequired,
 }
 export default ConfigInfo

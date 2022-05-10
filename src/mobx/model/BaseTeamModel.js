@@ -1,21 +1,29 @@
-import { observable, action } from 'mobx'
-import ChannelModel from '../model/ChannelModel'
+import { action,observable } from 'mobx'
+
 import {
   LOAD_PENDING,
-  SAVE_PENDING,
   SAVE_DONE,
-  SAVE_ERROR,
 } from '../../services/constants'
+import ChannelModel from './ChannelModel'
 
 export default class BaseTeamModel {
   @observable channels = []
+
   @observable loadingState = LOAD_PENDING
+
   @observable saveState = SAVE_DONE
+
   @observable name
+
   @observable info
+
+  // eslint-disable-next-line babel/camelcase
   @observable display_name
+
   @observable logo
+
   @observable banner
+
   @observable id
 
   constructor(parentStore) {
@@ -29,23 +37,25 @@ export default class BaseTeamModel {
    * @returns void
    * @memberof TwitchTeamModel
    */
+  // eslint-disable-next-line class-methods-use-this
   @action
   initTeamInfo() {
-    console.error('Override')
+    throw new Error('Override')
   }
+
 
   @action
   buildChannels(users) {
     this.channels = []
 
-    users.forEach((channel) => {
-      if (channel) {
-        this.channels.push(new ChannelModel(this, channel))
-      }
-    })
+    this.buildUsersChannelModel(users)
   }
 
   addChannels(users) {
+    this.buildUsersChannelModel(users)
+  }
+
+  buildUsersChannelModel(users) {
     users.forEach((channel) => {
       if (channel) {
         this.channels.push(new ChannelModel(this, channel))
@@ -60,9 +70,7 @@ export default class BaseTeamModel {
 
   @action
   setChannelFollowed(channelName) {
-    let followedChannel = this.channels.find((channel) => {
-      return channel.info.name === channelName
-    })
+    const followedChannel = this.channels.find((channel) => channel.info.name === channelName)
 
     followedChannel.followed = true
   }
@@ -73,8 +81,9 @@ export default class BaseTeamModel {
    * @param {string} selected_team
    * @memberof TwitchTeamModel
    */
+  // eslint-disable-next-line class-methods-use-this
   @action
   setTeam() {
-    console.error('Override')
+    throw new Error('Override')
   }
 }

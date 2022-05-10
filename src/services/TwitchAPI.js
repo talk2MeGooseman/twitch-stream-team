@@ -1,12 +1,21 @@
 import axios from 'axios'
 
 const BASE_URL = 'https://api.twitch.tv/helix/'
+// eslint-disable-next-line no-secrets/no-secrets
 const CLIENT_ID = 'd4t75sazjvk9cc84h30mgkyg7evbvz'
 
 const BATCH_SIZE = 100
 
 // Bits 500 - MajorThorn
 // Sub - indifferentghost
+
+function buildChannelParams(channels, key = 'id') {
+  const params = new URLSearchParams()
+  channels.forEach((channel) => {
+    params.append(key, channel.user_id || channel.id || channel)
+  })
+  return params
+}
 
 async function getStreams(channels) {
   const params = buildChannelParams(channels, 'user_id')
@@ -40,44 +49,24 @@ async function getUsers(channels, key = 'id') {
   return response.data.data
 }
 
-function buildChannelParams(channels, key = 'id') {
-  const params = new URLSearchParams()
-  channels.forEach((channel) => {
-    // have to do check for _id in case were dealing with
-    params.append(key, channel.user_id || channel._id || channel.id || channel)
-  })
-  return params
-}
-
 async function batchRequests(channels, request) {
   let channelList = []
 
   for (let i = 0; i < channels.length; i += BATCH_SIZE) {
     const channelSlice = channels.slice(i, i + BATCH_SIZE)
+    // eslint-disable-next-line no-await-in-loop
     const data = await request(channelSlice)
-    channelList = channelList.concat(data)
+    channelList = [...channelList, ...data]
   }
 
   return channelList
 }
 
-export const requestLiveChannels = async (channels) => {
-  return await batchRequests(channels, async (channelsBatch) => {
-    return await getStreams(channelsBatch)
-  })
-}
+export const requestLiveChannels = async (channels) => batchRequests(channels, async (channelsBatch) => getStreams(channelsBatch))
 
-export const requestChannelsById = async (channels) => {
-  return await batchRequests(channels, async (c) => {
-    return await getUsers(c, 'id')
-  })
-}
+export const requestChannelsById = async (channels) => batchRequests(channels, async (c) => getUsers(c, 'id'))
 
-export const requestChannelsByName = async (channels) => {
-  return await batchRequests(channels, async (c) => {
-    return await getUsers(c, 'login')
-  })
-}
+export const requestChannelsByName = async (channels) => batchRequests(channels, async (c) => getUsers(c, 'login'))
 
 export async function requestTeamInfo(teamName) {
   let response
@@ -90,7 +79,9 @@ export async function requestTeamInfo(teamName) {
         'Client-id': CLIENT_ID,
       },
     })
-  } catch (error) {}
+  } catch (error) {
+    // Do nothing
+  }
 
   return response.data
 }
