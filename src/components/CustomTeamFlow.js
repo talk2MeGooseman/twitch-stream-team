@@ -1,13 +1,16 @@
-import { observer } from 'mobx-react'
 import PropTypes from 'prop-types'
+import { pluck } from 'ramda'
 import React from 'react'
 import { IoIosTrash } from 'react-icons/io'
+import { useAsync } from 'react-use'
 import Button from 'react-uwp/Button'
 import Icon from 'react-uwp/Icon'
 import ListView from 'react-uwp/ListView'
 import TextBox from 'react-uwp/TextBox'
+import { requestChannelsById } from 'services/TwitchAPI'
 
-import { CUSTOM_TEAM_TYPE } from '../services/constants'
+import Loader from './Loader'
+
 
 const paddingStyle = {
   margin: '10px 0',
@@ -18,13 +21,27 @@ const trashStyle = {
   pointerEvents: 'none',
 }
 
-const CustomTeamFlow = ({ store }, { theme }) => {
-  const { customTeam, teamType } = store
+const ListItem = ({ channel, onRemoveChannel }) => (
+  <div key={channel.display_name}>
+    {channel.display_name}{' '}
+    <Icon onClick={onRemoveChannel} data-testid="trash-can" data-channel={channel.id}>
+      <IoIosTrash style={trashStyle} />
+    </Icon>
+  </div>
+)
+
+const CustomTeamFlow = ({ streamTeam }, { theme }) => {
+  const { customTeam, customActive } = streamTeam
+
+  const { loading, value } = useAsync(async () => {
+    const channelIds = pluck('channelId', customTeam.customTeamMembers)
+    return requestChannelsById(channelIds)
+  }, [customTeam.customTeamMembers])
 
   const channelTextBoxRef = React.createRef()
   const teamNameTextBoxRef = React.createRef()
 
-  const disableSetTeamButton = teamType === CUSTOM_TEAM_TYPE
+  const disableSetTeamButton = customActive
 
   const onChannelEnter = () => {
     const channel = channelTextBoxRef.current.getValue()
@@ -44,23 +61,16 @@ const CustomTeamFlow = ({ store }, { theme }) => {
   }
 
   const onRemoveChannel = (event) => {
-    const {channel} = event.target.dataset
+    const { channel } = event.target.dataset
     if (channel) {
       customTeam.removeChannel(channel)
     }
   }
 
-  const customTeamItems = customTeam.channels.map((channel) => (
-    <div key={channel.name}>
-      {channel.name}{' '}
-      <Icon
-        onClick={onRemoveChannel}
-        data-testid="trash-can"
-        data-channel={channel.name}
-      >
-        <IoIosTrash style={trashStyle} />
-      </Icon>
-    </div>
+  if (loading) return <Loader />
+
+  const customTeamItems = value.map((channel) => (
+    <ListItem onRemoveChannel={onRemoveChannel} channel={channel} />
   ))
 
   if (customTeamItems.length === 0) {
@@ -80,7 +90,7 @@ const CustomTeamFlow = ({ store }, { theme }) => {
               ref={teamNameTextBoxRef}
               style={paddingStyle}
               placeholder="Team Name"
-              defaultValue={customTeam.customName}
+              defaultValue={customTeam.name}
               onChangeValue={onTeamNameChange}
             />
           </li>
@@ -131,4 +141,4 @@ const CustomTeamFlow = ({ store }, { theme }) => {
 }
 
 CustomTeamFlow.contextTypes = { theme: PropTypes.object }
-export default observer(CustomTeamFlow)
+export default CustomTeamFlow

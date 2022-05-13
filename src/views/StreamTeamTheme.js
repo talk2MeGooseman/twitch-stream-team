@@ -1,9 +1,9 @@
 import React from 'react'
-import { getTheme,Theme as UWPThemeProvider } from 'react-uwp/Theme'
+import { getTheme, Theme as UWPThemeProvider } from 'react-uwp/Theme'
 
 import StreamTeams from './StreamTeams'
 
-const StreamTeamTheme = ({ store }) => (
+const StreamTeamTheme = () => (
   <UWPThemeProvider
     style={{ background: '#6441A4' }}
     theme={getTheme({
@@ -11,7 +11,7 @@ const StreamTeamTheme = ({ store }) => (
       accent: '#0078D7',
     })}
   >
-    <StreamTeams store={store.selectedTeam()} />
+    <StreamTeams />
   </UWPThemeProvider>
 )
 

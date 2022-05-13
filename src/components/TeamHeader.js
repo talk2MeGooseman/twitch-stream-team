@@ -17,13 +17,12 @@ const logoStyles = {
   left: '10px',
 }
 
-const TeamHeader = (props, context) => {
-  const { store } = props
+const TeamHeader = ({ team }, context) => {
   const { theme } = context
 
   const renderBanner = () => {
-    if (store.banner) {
-      return <Image style={imageBannerStyle} src={store.banner} />
+    if (team.banner) {
+      return <Image style={imageBannerStyle} src={team.banner} />
     }
     const style = {
       paddingLeft: '60px',
@@ -34,20 +33,20 @@ const TeamHeader = (props, context) => {
     return (
       <h1 style={style}>
         <Textfit max={24} mode="single">
-          {store.display_name}
+          {team.name}
         </Textfit>
       </h1>
     )
-
   }
 
   return (
     <a
       style={{ textDecoration: 'none' }}
-      href={`https://www.twitch.tv/team/${store.name}`}
-      target="_blank" rel="noreferrer"
+      href={`https://www.twitch.tv/team/${team.url_name}`}
+      target="_blank"
+      rel="noreferrer"
     >
-      <Image src={store.logo} style={logoStyles} />
+      <Image src={team.logo} style={logoStyles} />
       {renderBanner()}
     </a>
   )

@@ -4,7 +4,6 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 import AuthWrapper from './components/AuthWrapper'
-import Store from './mobx/state/Store'
 import { CONFIG_MODE, DASHBOARD_MODE,VIEWER_MODE } from './services/constants'
 import Config from './views/Config'
 import StreamTeamTheme from './views/StreamTeamTheme'
@@ -14,9 +13,6 @@ import StreamTeamTheme from './views/StreamTeamTheme'
 // Get the params from the url
 const params = new URLSearchParams(window.location.search)
 let viewComponent
-
-// Init the Store
-const store = new Store()
 
 // Anchor: to tell us if its rendered as "panel", "component"
 const viewAnchor = params.get('anchor')
@@ -29,9 +25,8 @@ const mode = params.get('mode')
 switch (mode) {
 case CONFIG_MODE:
   viewComponent = (
-    <AuthWrapper mode={mode} store={store}>
+    <AuthWrapper mode={mode}>
       <Config
-        store={store}
         viewAnchor={viewAnchor}
         viewPlatform={viewPlatform}
       />
@@ -42,9 +37,8 @@ case CONFIG_MODE:
 case VIEWER_MODE:
 case DASHBOARD_MODE:
   viewComponent = (
-    <AuthWrapper mode={mode} store={store}>
+    <AuthWrapper mode={mode}>
       <StreamTeamTheme
-        store={store}
         viewAnchor={viewAnchor}
         viewPlatform={viewPlatform}
       />

@@ -1,6 +1,6 @@
-import { observer } from 'mobx-react'
 import PropTypes from 'prop-types'
-import React from 'react'
+import { isEmpty, map, pluck, prop } from 'ramda'
+import React, { useState } from 'react'
 import Button from 'react-uwp/Button'
 import DropDownMenu from 'react-uwp/DropDownMenu'
 
@@ -17,26 +17,23 @@ const marginStyle = {
 // Bits 300 rw_grim
 // MajorThorn 200 MajorThorn
 
-const TwitchTeamFlow = (props, context) => {
-  const { store } = props
-  const { twitchTeam, teamType } = store
+const TwitchTeamFlow = ({ twitchTeams, streamTeam }, context) => {
   const { theme } = context
+  const [team, setTeam] = useState(streamTeam.twitchTeam)
 
-  const onChange = (team) => {
-    twitchTeam.setTeam(team)
-    twitchTeam.name = team
+
+  const onChange = (selection) => {
+    setTeam(selection)
   }
 
   const onSetTwitchTeam = () => {
-    twitchTeam.setTeam(twitchTeam.name)
+    // TODO Send GQL Mutation
   }
 
   let dropdownTeams = ['No Teams Found']
-  if (twitchTeam.teams && twitchTeam.teams.length > 0) {
-    dropdownTeams = [...twitchTeam.teams]
+  if (!isEmpty(twitchTeams)) {
+    dropdownTeams = pluck('team_name', twitchTeams)
   }
-
-  const disableSetTeamButton = teamType !== CUSTOM_TEAM_TYPE
 
   return (
     <>
@@ -55,7 +52,7 @@ const TwitchTeamFlow = (props, context) => {
             <DropDownMenu
               style={baseStyle}
               values={dropdownTeams}
-              defaultValue={twitchTeam.name}
+              defaultValue={team}
               onChangeValue={onChange}
               background="black"
               itemWidth={200}
@@ -71,7 +68,7 @@ const TwitchTeamFlow = (props, context) => {
               style={marginStyle}
               onClick={onSetTwitchTeam}
               background={theme.accent}
-              disabled={disableSetTeamButton}
+              disabled={streamTeam.customActive}
             >
               Set your Twitch Team as your Panel Team
             </Button>
@@ -83,4 +80,4 @@ const TwitchTeamFlow = (props, context) => {
 }
 
 TwitchTeamFlow.contextTypes = { theme: PropTypes.object }
-export default observer(TwitchTeamFlow)
+export default TwitchTeamFlow

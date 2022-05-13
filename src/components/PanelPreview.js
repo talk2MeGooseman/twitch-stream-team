@@ -5,18 +5,12 @@ import { SAVE_PENDING } from '../services/constants'
 import StreamTeamTheme from '../views/StreamTeamTheme'
 import Loader from './Loader'
 
-const PanelPreview = ({ store, viewAnchor, viewPlatform }) => {
-  if (store.saveState === SAVE_PENDING) {
-    return <Loader />
-  }
-  return (
-    <StreamTeamTheme
-      store={store}
-      viewAnchor={viewAnchor}
-      viewPlatform={viewPlatform}
-    />
-  )
-
-}
+const PanelPreview = ({ streamTeam, viewAnchor, viewPlatform }) => (
+  <StreamTeamTheme
+    streamTeam={streamTeam}
+    viewAnchor={viewAnchor}
+    viewPlatform={viewPlatform}
+  />
+)
 
 export default observer(PanelPreview)

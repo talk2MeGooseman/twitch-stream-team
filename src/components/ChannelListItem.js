@@ -1,4 +1,3 @@
-import { observer } from 'mobx-react'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { IoIosHeart } from 'react-icons/io'
@@ -8,8 +7,7 @@ import Image from 'react-uwp/Image'
 import { green600 } from 'react-uwp/styles/accentColors'
 import TransformCard from 'react-uwp/TransformCard'
 
-
-const {Twitch} = window
+const { Twitch } = window
 
 const container = {
   position: 'relative',
@@ -69,7 +67,9 @@ const ChannelListItem = ({ channel }, { theme }) => {
     ...theme.typographyStyles.caption,
   }
 
-  const followIconBG = channel.followed ? (followIconHoverColor = green600) : theme.listAccentLow
+  const followIconBG = channel.followed
+    ? (followIconHoverColor = green600)
+    : theme.listAccentLow
 
   const followButtonStyles = {
     display: 'inline-block',
@@ -82,10 +82,12 @@ const ChannelListItem = ({ channel }, { theme }) => {
     <div key={channel.id} style={container}>
       <div style={{ flex: 1 }}>
         <TransformCard xMaxRotate={50} yMaxRotate={50} perspective={240}>
-          <a href={buildTwitchUrl(channel.name)} target="_blank" rel="noreferrer">
-            {channel.isLive && (
-              <div className="pulse" style={liveIconStyles} />
-            )}
+          <a
+            href={buildTwitchUrl(channel.name)}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {channel.isLive && <div className="pulse" style={liveIconStyles} />}
             <Image src={resizeImage(channel.profile_image)} />
           </a>
         </TransformCard>
@@ -117,4 +119,4 @@ ChannelListItem.contextTypes = { theme: PropTypes.object }
 ChannelListItem.propTypes = {
   channel: PropTypes.any.isRequired,
 }
-export default observer(ChannelListItem)
+export default ChannelListItem

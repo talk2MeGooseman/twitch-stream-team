@@ -1,46 +1,39 @@
-import { observer } from 'mobx-react'
-import React, { Component } from 'react'
+import React, { useEffect, useState } from 'react'
+import { Provider } from 'urql'
 
-import { CONFIG_MODE,LOAD_PENDING } from '../services/constants'
+import { initClient } from '../services/Ebs'
 import Loader from './Loader'
 
-@observer
-export default class AuthWrapper extends Component {
-  componentDidMount() {
-    const { store, mode } = this.props
-    let shouldFetch = false
+export const AuthContext = React.createContext({})
+
+const AuthWrapper = ({ children, mode }) => {
+  const [loading, setLoading] = useState(true)
+  const [client, setClient] = useState(null)
+  const [authData, setAuthData] = useState()
+
+  useEffect(() => {
     // Listen to on Auth callback to get token
     window.Twitch.ext.onAuthorized((auth) => {
-      // If token is null then that means this is the first load
-      if (!store.token) {
-        shouldFetch = true
-      }
-
-      store.token = auth.token
-
-      if (shouldFetch) {
-        if (mode === CONFIG_MODE) {
-          store.fetchConfig()
-        } else {
-          store.fetchTeam()
-        }
-      }
+      setAuthData(auth)
+      setClient(initClient(auth.token))
+      setLoading(false)
     })
 
     window.Twitch.ext.actions.onFollow((didFollow, channelName) => {
       if (didFollow) {
-        store.setChannelFollowed(channelName)
+        // store.setChannelFollowed(channelName)
       }
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
-    window.Twitch.ext.listen('broadcast', (target, contentType, message) => {
-      const messageJson = JSON.parse(message)
-      store.updateLiveChannels(messageJson.data)
-    })
-  }
-
-  render() {
-    const { store, children } = this.props
-    return store.loadingState === LOAD_PENDING ? <Loader /> : children
-  }
+  return loading ? (
+    <Loader />
+  ) : (
+    <Provider value={client}>
+      <AuthContext.Provider value={authData}>{children}</AuthContext.Provider>
+    </Provider>
+  )
 }
+
+export default AuthWrapper

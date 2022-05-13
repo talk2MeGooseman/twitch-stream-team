@@ -68,6 +68,24 @@ export const requestChannelsById = async (channels) => batchRequests(channels, a
 
 export const requestChannelsByName = async (channels) => batchRequests(channels, async (c) => getUsers(c, 'login'))
 
+export async function requestChannelTeams(channelId) {
+  let response
+  try {
+    response = await axios({
+      method: 'GET',
+      baseURL: BASE_URL,
+      url: `/teams/channel?broadcaster_id=${channelId}`,
+      headers: {
+        'Client-id': CLIENT_ID,
+      },
+    })
+  } catch (error) {
+    // Do nothing
+  }
+
+  return response.data
+}
+
 export async function requestTeamInfo(teamName) {
   let response
   try {
