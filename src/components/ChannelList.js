@@ -1,11 +1,10 @@
-import { observer } from 'mobx-react'
+import { useFetchChannelsLiveStatus } from 'hooks/useFetchChannelsLiveStatus'
 import PropTypes from 'prop-types'
-import { ascend, descend, pluck, prop, sort, tap } from 'ramda'
-import React, { Component, useEffect, useState } from 'react'
+import React from 'react'
 import ListView from 'react-uwp/ListView'
-import { requestLiveChannels } from 'services/TwitchAPI'
 
 import ChannelListItem from './ChannelListItem'
+import Loader from './Loader'
 import { TeamCountStripe } from './TeamCountStripe'
 
 const baseStyle = {
@@ -16,38 +15,22 @@ const baseStyle = {
 }
 
 const ChannelList = ({ team }, context) => {
-  const [channels, setChannels] = useState([])
+  const { channels, isLoading } = useFetchChannelsLiveStatus(team)
+
   const channelsRows = []
+  channelsRows.push(
+    <TeamCountStripe count={channels.length} context={context} />
+  )
 
-  useEffect(() => {
-    const ids = pluck('id', team.channels)
-    // eslint-disable-next-line promise/catch-or-return
-    requestLiveChannels(ids)
-      .then((liveChannels) => {
-        const updatedChannels = [...team.channels]
-
-        liveChannels.forEach((liveChannel) => {
-          const channel = updatedChannels.find(
-            (foundChannel) => foundChannel.id === liveChannel.user_id
-          )
-          if (channel) {
-            channel.isLive = true
-          }
-        })
-
-        return updatedChannels
+  if (isLoading) {
+    channelsRows.push(<Loader />)
+  } else {
+    channels.forEach((channel) => {
+      channelsRows.push({
+        itemNode: <ChannelListItem channel={channel} />,
       })
-      .then(sort(descend(prop('isLive'))))
-      .then(setChannels)
-  }, [team.channels])
-
-  channelsRows.push(<TeamCountStripe channels={channels} context={context} />)
-
-  channels.forEach((channel) => {
-    channelsRows.push({
-      itemNode: <ChannelListItem channel={channel} />,
     })
-  })
+  }
 
   return (
     <ListView

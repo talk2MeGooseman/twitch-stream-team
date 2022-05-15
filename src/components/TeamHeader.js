@@ -1,8 +1,8 @@
-import { observer } from 'mobx-react'
 import PropTypes from 'prop-types'
 import React from 'react'
-import Textfit from 'react-textfit'
 import Image from 'react-uwp/Image'
+
+import { TextBanner } from './TextBanner'
 
 const imageBannerStyle = {
   height: 'auto',
@@ -17,26 +17,12 @@ const logoStyles = {
   left: '10px',
 }
 
-const TeamHeader = ({ team }, context) => {
-  const { theme } = context
-
-  const renderBanner = () => {
-    if (team.banner) {
-      return <Image style={imageBannerStyle} src={team.banner} />
-    }
-    const style = {
-      paddingLeft: '60px',
-      color: theme.baseHigh,
-      background: theme.acrylicTexture40.background,
-      ...theme.typographyStyles.header,
-    }
-    return (
-      <h1 style={style}>
-        <Textfit max={24} mode="single">
-          {team.name}
-        </Textfit>
-      </h1>
-    )
+const TeamHeader = ({ team }, { theme }) => {
+  const style = {
+    paddingLeft: '60px',
+    color: theme.baseHigh,
+    background: theme.acrylicTexture40.background,
+    ...theme.typographyStyles.header,
   }
 
   return (
@@ -47,10 +33,14 @@ const TeamHeader = ({ team }, context) => {
       rel="noreferrer"
     >
       <Image src={team.logo} style={logoStyles} />
-      {renderBanner()}
+      {team.banner ? (
+        <Image style={imageBannerStyle} src={team.banner} />
+      ) : (
+        <TextBanner text={team.name} style={style} />
+      )}
     </a>
   )
 }
 
 TeamHeader.contextTypes = { theme: PropTypes.object }
-export default observer(TeamHeader)
+export default TeamHeader

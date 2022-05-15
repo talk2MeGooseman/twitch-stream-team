@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 
-export const TeamCountStripe = ({ channels }, context) => {
+export const TeamCountStripe = ({ count }, context) => {
   const { theme } = context
 
   const teamStyles = {
@@ -22,7 +22,7 @@ export const TeamCountStripe = ({ channels }, context) => {
   return (
     <div>
       <span style={teamStyles}>Team Members</span>
-      <span style={countStyles}>{channels.length}</span>
+      <span style={countStyles}>{count}</span>
     </div>
   )
 }
