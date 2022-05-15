@@ -2,18 +2,16 @@ import { render } from '@testing-library/react'
 import React from 'react'
 import { getTheme, Theme as UWPThemeProvider } from 'react-uwp/Theme'
 
-import ChannelModel from '../mobx/model/ChannelModel'
-import ChannelListItem from './ChannelListItem'
-
+import ChannelListItem from '../ChannelListItem'
 
 describe('ChannelListItem', () => {
   it('Renders successfully', () => {
-    const channel = new ChannelModel(this, {
+    const channel = {
       id: '1',
       display_name: 'Talk2MeGooseman',
       status: 'blah blah blah',
       logo: 'https://picture.here',
-    })
+    }
 
     const { queryByText } = render(
       <UWPThemeProvider
@@ -30,6 +28,6 @@ describe('ChannelListItem', () => {
       </UWPThemeProvider>
     )
 
-    expect(queryByText('Talk2MeGooseman')).toBeTruthy()
+    expect(queryByText('Talk2MeGooseman')).toBeInTheDocument();
   })
 })

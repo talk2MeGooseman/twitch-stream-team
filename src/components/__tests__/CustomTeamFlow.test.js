@@ -3,14 +3,12 @@ import userEvent from '@testing-library/user-event'
 import React from 'react'
 import { getTheme,Theme as UWPThemeProvider } from 'react-uwp/Theme'
 
-import CustomTeamModel from '../mobx/model/CustomTeamModel'
-import { CUSTOM_TEAM_TYPE } from '../services/constants'
-import CustomTeamFlow from './CustomTeamFlow'
+import CustomTeamFlow from '../CustomTeamFlow'
 
-const team = {
+const streamTeam = {
   name: 'custom_team',
   display_name: 'Custom Team',
-  users: [
+  channels: [
     {
       id: '1',
       display_name: 'Talk2MeGooseman',
@@ -24,13 +22,6 @@ const team = {
       logo: 'https://picture.here',
     },
   ],
-}
-
-async function createCustomTeam() {
-  const customTeam = new CustomTeamModel(null, team)
-  await customTeam.initTeamInfo()
-  customTeam.buildChannels(team.users)
-  return customTeam
 }
 
 const withTheme = (component) => (
@@ -52,36 +43,24 @@ describe('CustomTeamFlow', () => {
   beforeEach(() => {})
 
   it('displays all existing team members', async () => {
-    const customTeam = await createCustomTeam()
-    const store = {
-      customTeam,
-      teamType: CUSTOM_TEAM_TYPE,
-    }
+    const { queryByText } = render(withTheme(<CustomTeamFlow streamTeam={streamTeam} />))
 
-    const { queryByText } = render(withTheme(<CustomTeamFlow store={store} />))
-
-    expect(queryByText('Talk2MeGooseman')).toBeTruthy()
-    expect(queryByText('JensDuck')).toBeTruthy()
+    expect(queryByText('Talk2MeGooseman')).toBeInTheDocument()
+    expect(queryByText('JensDuck')).toBeInTheDocument()
   })
 
   it('properly deletes team member from the list', async () => {
-    const customTeam = await createCustomTeam()
-    const store = {
-      customTeam,
-      teamType: CUSTOM_TEAM_TYPE,
-    }
-
     const { queryByText, getByText } = render(
-      withTheme(<CustomTeamFlow store={store} />)
+      withTheme(<CustomTeamFlow streamTeam={streamTeam} />)
     )
 
-    expect(queryByText('JensDuck')).toBeTruthy()
+    expect(queryByText('JensDuck')).toBeInTheDocument()
     const userRow = getByText('Talk2MeGooseman')
     const trashContainer = within(userRow).getByTestId('trash-can')
 
     userEvent.click(trashContainer)
 
-    expect(queryByText('JensDuck')).toBeTruthy()
-    expect(queryByText('Talk2MeGooseman')).not.toBeTruthy()
+    expect(queryByText('JensDuck')).toBeInTheDocument()
+    expect(queryByText('Talk2MeGooseman')).not.toBeInTheDocument()
   })
 })

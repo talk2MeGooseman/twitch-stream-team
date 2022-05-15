@@ -11,7 +11,8 @@
     "react/function-component-definition": [2, { "namedComponents": "arrow-function" }],
     "import/prefer-default-export": 0,
     "no-param-reassign": 0,
-    "react/forbid-prop-types": 0
+    "react/forbid-prop-types": 0,
+    "promise/catch-or-return": 0
   },
   "parserOptions": {
     "ecmaFeatures": {
