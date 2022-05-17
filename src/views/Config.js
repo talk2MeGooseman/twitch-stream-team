@@ -1,14 +1,8 @@
-import { AuthContext } from 'components/AuthWrapper'
-import Loader from 'components/Loader'
-import React, { useContext } from 'react'
-import { useAsync } from 'react-use'
+import React from 'react'
 import { getTheme, Theme as UWPThemeProvider } from 'react-uwp/Theme'
-import { requestChannelTeams } from 'services/TwitchAPI'
-import { useQuery } from 'urql'
 
 import ConfigInfo from '../components/ConfigInfo'
-import PanelPreview from '../components/PanelPreview'
-import { ChannelTeamQuery } from '../services/graphql'
+import StreamTeamTheme from './StreamTeamTheme'
 
 const containerStyles = {
   width: '300px',
@@ -19,27 +13,8 @@ const containerStyles = {
   position: 'relative',
 }
 
-const Config = ({ viewAnchor, viewPlatform }) => {
-  const authInfo = useContext(AuthContext)
-  const [result, reexecuteQuery] = useQuery({
-    query: ChannelTeamQuery,
-  })
-
-  const { loading, value } = useAsync(async () => {
-    const response = await requestChannelTeams(authInfo.channelId)
-    return response.data
-  }, [])
-
-  const { data, fetching, error } = result
-
-  // TODO - Fetch channels associated with twitch teams, if any
-
-  if (fetching || loading) return <Loader />
-  if (error) return <p>Oh no... {error.message}</p>
-
-  const { channel: { streamTeam } } = data
-
-  return (<UWPThemeProvider
+const Config = () => (
+  <UWPThemeProvider
     style={{ height: '100vh', display: 'flex' }}
     theme={getTheme({
       useFluentDesign: true, // sure you want use new fluent design.
@@ -47,15 +22,15 @@ const Config = ({ viewAnchor, viewPlatform }) => {
     })}
   >
     <div style={{ flex: 1 }}>
-      <ConfigInfo streamTeam={streamTeam} twitchTeams={value} />
+      <ConfigInfo />
     </div>
     <div style={{ flex: 1 }}>
       <h2>Panel Preview</h2>
       <div style={containerStyles}>
-        <PanelPreview streamTeam={streamTeam} viewAnchor={viewAnchor} viewPlatform={viewPlatform} />
+        <StreamTeamTheme />
       </div>
     </div>
-  </UWPThemeProvider>)
-}
+  </UWPThemeProvider>
+)
 
 export default Config
