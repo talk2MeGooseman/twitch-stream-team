@@ -1,59 +1,57 @@
 import PropTypes from 'prop-types'
-import { pluck } from 'ramda'
-import React from 'react'
-import { IoIosTrash } from 'react-icons/io'
-import { useAsync } from 'react-use'
+import { andThen, isNil, pipe, pluck } from 'ramda'
+import React, { useEffect, useRef, useState } from 'react'
+import { useList, useToggle } from 'react-use'
 import Button from 'react-uwp/Button'
-import Icon from 'react-uwp/Icon'
 import ListView from 'react-uwp/ListView'
 import TextBox from 'react-uwp/TextBox'
-import { requestChannelsById } from 'services/TwitchAPI'
+import { requestChannelsById, requestChannelsByName } from 'services/TwitchAPI'
 
+import { ListItem } from './ListItem'
 import Loader from './Loader'
-
 
 const paddingStyle = {
   margin: '10px 0',
 }
 
-const trashStyle = {
-  fontSize: '18px',
-  pointerEvents: 'none',
-}
-
-const ListItem = ({ channel, onRemoveChannel }) => (
-  <div key={channel.display_name}>
-    {channel.display_name}{' '}
-    <Icon onClick={onRemoveChannel} data-testid="trash-can" data-channel={channel.id}>
-      <IoIosTrash style={trashStyle} />
-    </Icon>
-  </div>
-)
-
 const CustomTeamFlow = ({ streamTeam }, { theme }) => {
   const { customTeam, customActive } = streamTeam
+  const channelTextBoxRef = useRef()
+  const teamNameTextBoxRef = useRef()
 
-  const { loading, value } = useAsync(async () => {
-    const channelIds = pluck('channelId', customTeam.customTeamMembers)
-    return requestChannelsById(channelIds)
-  }, [customTeam.customTeamMembers])
+  const [isLoading, toggleLoading] = useToggle(false)
+  const [teamName, setTeamName] = useState(customTeam.name)
+  const [teamMembers, { push, removeAt, set: setTeamMembers }] = useList()
+  const [channelErrorMessage, setChannelErrorMessage] = useState()
 
-  const channelTextBoxRef = React.createRef()
-  const teamNameTextBoxRef = React.createRef()
+  useEffect(() => {
+    pipe(
+      pluck('channelId'),
+      requestChannelsById,
+      andThen(setTeamMembers),
+      andThen(() => toggleLoading(false))
+    )(customTeam.customTeamMembers)
+  }, [customTeam.customTeamMembers, setTeamMembers, toggleLoading])
 
-  const disableSetTeamButton = customActive
-
-  const onChannelEnter = () => {
-    const channel = channelTextBoxRef.current.getValue()
-    if (!channel || channel.length === 0) {
+  const onChannelEnter = async () => {
+    const channelName = channelTextBoxRef.current.getValue()
+    if (!channelName || channelName.length === 0) {
       return
     }
-    customTeam.addChannel(channel)
-    channelTextBoxRef.current.setValue('')
+
+    const [channel] = await requestChannelsByName([channelName])
+
+    if(!isNil(channel)) {
+      push(channel)
+      channelTextBoxRef.current.setValue('')
+      setChannelErrorMessage()
+    } else {
+      setChannelErrorMessage('Channel not found, please check your spelling')
+    }
   }
 
   const onTeamNameChange = () => {
-    customTeam.setName(teamNameTextBoxRef.current.getValue())
+    setTeamName(teamNameTextBoxRef.current.getValue())
   }
 
   const onSave = () => {
@@ -67,9 +65,9 @@ const CustomTeamFlow = ({ streamTeam }, { theme }) => {
     }
   }
 
-  if (loading) return <Loader />
+  if (isLoading) return <Loader />
 
-  const customTeamItems = value.map((channel) => (
+  const customTeamItems = teamMembers.map((channel) => (
     <ListItem onRemoveChannel={onRemoveChannel} channel={channel} />
   ))
 
@@ -90,7 +88,7 @@ const CustomTeamFlow = ({ streamTeam }, { theme }) => {
               ref={teamNameTextBoxRef}
               style={paddingStyle}
               placeholder="Team Name"
-              defaultValue={customTeam.name}
+              defaultValue={teamName}
               onChangeValue={onTeamNameChange}
             />
           </li>
@@ -101,6 +99,7 @@ const CustomTeamFlow = ({ streamTeam }, { theme }) => {
               style={paddingStyle}
               placeholder="Channel Name"
             />
+            {channelErrorMessage && <div>{channelErrorMessage}</div>}
             <Button style={paddingStyle} onClick={onChannelEnter}>
               Add Channel
             </Button>
@@ -129,7 +128,7 @@ const CustomTeamFlow = ({ streamTeam }, { theme }) => {
               style={paddingStyle}
               onClick={onSave}
               background={theme.accent}
-              disabled={disableSetTeamButton}
+              disabled={customActive}
             >
               Set your Custom Team as your Panel Team
             </Button>

@@ -13,8 +13,7 @@ import CustomTeamFlow from './CustomTeamFlow'
 import Loader from './Loader'
 import TwitchTeamFlow from './TwitchTeamFlow'
 
-const ConfigInfo = (props, context) => {
-  const { theme } = context
+const ConfigInfo = (props, { theme }) => {
   let focusTabIndex = 0
 
   const authInfo = useContext(AuthContext)
