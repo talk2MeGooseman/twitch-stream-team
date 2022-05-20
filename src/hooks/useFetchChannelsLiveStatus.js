@@ -32,6 +32,7 @@ export const useFetchChannelsLiveStatus = (team) => {
       andThen(updateChannelsLiveStatus(team.channels)),
       andThen(sort(descend(prop('isLive')))),
       andThen(setChannels),
+      andThen(toggleIsLoading)
     )(team.channels)
   }, [team, team.channels, toggleIsLoading])
 
