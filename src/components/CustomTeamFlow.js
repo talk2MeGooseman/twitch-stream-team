@@ -5,7 +5,9 @@ import { useList, useToggle } from 'react-use'
 import Button from 'react-uwp/Button'
 import ListView from 'react-uwp/ListView'
 import TextBox from 'react-uwp/TextBox'
+import { CustomTeamMutation } from 'services/graphql'
 import { requestChannelsById, requestChannelsByName } from 'services/TwitchAPI'
+import { useMutation } from 'urql'
 
 import { ListItem } from './ListItem'
 import Loader from './Loader'
@@ -19,6 +21,7 @@ const CustomTeamFlow = ({ streamTeam }, { theme }) => {
   const channelTextBoxRef = useRef()
   const teamNameTextBoxRef = useRef()
 
+  const [saveResult, mutate] = useMutation(CustomTeamMutation)
   const [isLoading, toggleLoading] = useToggle(false)
   const [teamName, setTeamName] = useState(customTeam.name)
   const [teamMembers, { push, removeAt, set: setTeamMembers }] = useList()
@@ -41,7 +44,7 @@ const CustomTeamFlow = ({ streamTeam }, { theme }) => {
 
     const [channel] = await requestChannelsByName([channelName])
 
-    if(!isNil(channel)) {
+    if (!isNil(channel)) {
       push(channel)
       channelTextBoxRef.current.setValue('')
       setChannelErrorMessage()
@@ -55,7 +58,10 @@ const CustomTeamFlow = ({ streamTeam }, { theme }) => {
   }
 
   const onSave = () => {
-    customTeam.setTeam()
+    mutate({
+      name: teamName,
+      memberIds: pluck('id', teamMembers),
+    })
   }
 
   const onRemoveChannel = (event) => {

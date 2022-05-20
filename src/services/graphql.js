@@ -16,3 +16,16 @@ export const ChannelTeamQuery = gql`
     }
   }
 `
+
+export const CustomTeamMutation = gql`
+  mutation CustomTeamMutation($memberIds: [String]!, $name: String!) {
+    upsertCustomStreamTeam(memberIds: $memberIds, name: $name) {
+      customTeam {
+        name
+        customTeamMembers {
+          channelId
+        }
+      }
+    }
+  }
+`
