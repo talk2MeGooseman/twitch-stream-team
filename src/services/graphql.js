@@ -6,7 +6,7 @@ export const ChannelTeamQuery = gql`
       streamTeam {
         customActive
         customTeam {
-          customTeamMembers {
+          teamMembers {
             channelId
           }
           name
@@ -22,10 +22,18 @@ export const CustomTeamMutation = gql`
     upsertCustomStreamTeam(memberIds: $memberIds, name: $name) {
       customTeam {
         name
-        customTeamMembers {
+        teamMembers {
           channelId
         }
       }
+    }
+  }
+`
+
+export const ActivateCustomTeamMutation = gql`
+  mutation ActivateCustomStreamTeam($activate: Boolean!) {
+    activateCustomStreamTeam(activate: $activate) {
+      customActive
     }
   }
 `

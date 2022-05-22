@@ -3,8 +3,8 @@ import { isEmpty, map, pluck, prop } from 'ramda'
 import React, { useState } from 'react'
 import Button from 'react-uwp/Button'
 import DropDownMenu from 'react-uwp/DropDownMenu'
-
-import { CUSTOM_TEAM_TYPE } from '../services/constants'
+import { ActivateCustomTeamMutation } from 'services/graphql'
+import { useMutation } from 'urql'
 
 const baseStyle = {
   margin: '10px 20px 10px 10px',
@@ -20,14 +20,16 @@ const marginStyle = {
 const TwitchTeamFlow = ({ twitchTeams, streamTeam }, context) => {
   const { theme } = context
   const [team, setTeam] = useState(streamTeam.twitchTeam)
-
+  const [_activateResult, activateMutation] = useMutation(
+    ActivateCustomTeamMutation
+  )
 
   const onChange = (selection) => {
     setTeam(selection)
   }
 
   const onSetTwitchTeam = () => {
-    // TODO Send GQL Mutation
+    activateMutation({ activate: false })
   }
 
   let dropdownTeams = ['No Teams Found']
@@ -68,7 +70,7 @@ const TwitchTeamFlow = ({ twitchTeams, streamTeam }, context) => {
               style={marginStyle}
               onClick={onSetTwitchTeam}
               background={theme.accent}
-              disabled={streamTeam.customActive}
+              disabled={!streamTeam.customActive}
             >
               Set your Twitch Team as your Panel Team
             </Button>

@@ -27,6 +27,8 @@ export const useFetchChannelsLiveStatus = (team) => {
   const [channels, setChannels] = useState(team.channels)
 
   useEffect(() => {
+    toggleIsLoading(true)
+
     pipe(
       requestLiveChannels,
       andThen(updateChannelsLiveStatus(team.channels)),

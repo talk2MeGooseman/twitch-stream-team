@@ -7,13 +7,13 @@ const trashStyle = {
   pointerEvents: 'none',
 }
 
-export const ListItem = ({ channel, onRemoveChannel }) => (
-  <div key={channel.display_name}>
+export const ListItem = ({ channel, onRemoveChannel, index }) => (
+  <div key={index}>
     {channel.display_name}{' '}
     <Icon
       onClick={onRemoveChannel}
       data-testid="trash-can"
-      data-channel={channel.id}
+      data-channel-index={index}
     >
       <IoIosTrash style={trashStyle} />
     </Icon>

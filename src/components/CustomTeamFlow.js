@@ -5,7 +5,10 @@ import { useList, useToggle } from 'react-use'
 import Button from 'react-uwp/Button'
 import ListView from 'react-uwp/ListView'
 import TextBox from 'react-uwp/TextBox'
-import { CustomTeamMutation } from 'services/graphql'
+import {
+  ActivateCustomTeamMutation,
+  CustomTeamMutation,
+} from 'services/graphql'
 import { requestChannelsById, requestChannelsByName } from 'services/TwitchAPI'
 import { useMutation } from 'urql'
 
@@ -21,7 +24,10 @@ const CustomTeamFlow = ({ streamTeam }, { theme }) => {
   const channelTextBoxRef = useRef()
   const teamNameTextBoxRef = useRef()
 
-  const [saveResult, mutate] = useMutation(CustomTeamMutation)
+  const [_saveResult, saveMutation] = useMutation(CustomTeamMutation)
+  const [_activateResult, activateMutation] = useMutation(
+    ActivateCustomTeamMutation
+  )
   const [isLoading, toggleLoading] = useToggle(false)
   const [teamName, setTeamName] = useState(customTeam.name)
   const [teamMembers, { push, removeAt, set: setTeamMembers }] = useList()
@@ -33,8 +39,8 @@ const CustomTeamFlow = ({ streamTeam }, { theme }) => {
       requestChannelsById,
       andThen(setTeamMembers),
       andThen(() => toggleLoading(false))
-    )(customTeam.customTeamMembers)
-  }, [customTeam.customTeamMembers, setTeamMembers, toggleLoading])
+    )(customTeam.teamMembers)
+  }, [customTeam.teamMembers, setTeamMembers, toggleLoading])
 
   const onChannelEnter = async () => {
     const channelName = channelTextBoxRef.current.getValue()
@@ -58,23 +64,33 @@ const CustomTeamFlow = ({ streamTeam }, { theme }) => {
   }
 
   const onSave = () => {
-    mutate({
+    saveMutation({
       name: teamName,
       memberIds: pluck('id', teamMembers),
     })
   }
 
+  const activateCustomTeam = () => {
+    activateMutation({
+      activate: true,
+    })
+  }
+
   const onRemoveChannel = (event) => {
-    const { channel } = event.target.dataset
-    if (channel) {
-      customTeam.removeChannel(channel)
+    const { channelIndex } = event.target.dataset
+    if (channelIndex) {
+      removeAt(channelIndex)
     }
   }
 
   if (isLoading) return <Loader />
 
-  const customTeamItems = teamMembers.map((channel) => (
-    <ListItem onRemoveChannel={onRemoveChannel} channel={channel} />
+  const customTeamItems = teamMembers.map((channel, index) => (
+    <ListItem
+      onRemoveChannel={onRemoveChannel}
+      channel={channel}
+      index={index}
+    />
   ))
 
   if (customTeamItems.length === 0) {
@@ -132,7 +148,7 @@ const CustomTeamFlow = ({ streamTeam }, { theme }) => {
             <br />
             <Button
               style={paddingStyle}
-              onClick={onSave}
+              onClick={activateCustomTeam}
               background={theme.accent}
               disabled={customActive}
             >

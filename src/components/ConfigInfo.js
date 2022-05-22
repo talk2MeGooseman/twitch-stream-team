@@ -17,7 +17,7 @@ const ConfigInfo = (props, { theme }) => {
   let focusTabIndex = 0
 
   const authInfo = useContext(AuthContext)
-  const [{ data, fetching, error }, reexecuteQuery] = useQuery({
+  const [{ data, fetching, error }] = useQuery({
     query: ChannelTeamQuery,
   })
 
@@ -33,7 +33,6 @@ const ConfigInfo = (props, { theme }) => {
     channel: { streamTeam },
   } = data
 
-  // Check if we need to switch to custom team tab
   if (isEmpty(twitchTeams) || streamTeam.customActive) {
     focusTabIndex = 1
   }
