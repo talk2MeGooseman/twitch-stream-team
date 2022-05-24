@@ -11,12 +11,16 @@ import SadSpock from '../sad-spock.svg'
 const StreamTeams = () => {
   const { teamInfo, fetching, error } = useTeamInfoFetcher()
 
-  if (fetching || isNil(teamInfo)) {
+  if (fetching) {
     return <Loader color="white" />
   }
 
   if (error) {
     return <ErrorState SadSpock={SadSpock} />
+  }
+
+  if (isNil(teamInfo)) {
+    return <h1>No team found, please setup your team in the extension configuration panel.</h1>
   }
 
   return (

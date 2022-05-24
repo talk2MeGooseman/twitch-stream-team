@@ -1,5 +1,6 @@
+import { useMutation } from '@apollo/client'
 import PropTypes from 'prop-types'
-import { andThen, isNil, pipe, pluck } from 'ramda'
+import { andThen, isNil, pipe, pluck, propOr } from 'ramda'
 import React, { useEffect, useRef, useState } from 'react'
 import { useList, useToggle } from 'react-use'
 import Button from 'react-uwp/Button'
@@ -7,10 +8,10 @@ import ListView from 'react-uwp/ListView'
 import TextBox from 'react-uwp/TextBox'
 import {
   ActivateCustomTeamMutation,
+  ChannelTeamQuery,
   CustomTeamMutation,
 } from 'services/graphql'
 import { requestChannelsById, requestChannelsByName } from 'services/TwitchAPI'
-import { useMutation } from 'urql'
 
 import { ListItem } from './ListItem'
 import Loader from './Loader'
@@ -24,23 +25,26 @@ const CustomTeamFlow = ({ streamTeam }, { theme }) => {
   const channelTextBoxRef = useRef()
   const teamNameTextBoxRef = useRef()
 
-  const [_saveResult, saveMutation] = useMutation(CustomTeamMutation)
-  const [_activateResult, activateMutation] = useMutation(
-    ActivateCustomTeamMutation
-  )
+  const [saveMutation] = useMutation(CustomTeamMutation, {
+    refetchQueries: [ChannelTeamQuery],
+  })
+  const [activateMutation] = useMutation(ActivateCustomTeamMutation, {
+    refetchQueries: [ChannelTeamQuery],
+  })
   const [isLoading, toggleLoading] = useToggle(false)
-  const [teamName, setTeamName] = useState(customTeam.name)
+  const [teamName, setTeamName] = useState(customTeam?.name)
   const [teamMembers, { push, removeAt, set: setTeamMembers }] = useList()
   const [channelErrorMessage, setChannelErrorMessage] = useState()
 
   useEffect(() => {
     pipe(
+      propOr([], 'teamMembers'),
       pluck('channelId'),
       requestChannelsById,
       andThen(setTeamMembers),
       andThen(() => toggleLoading(false))
-    )(customTeam.teamMembers)
-  }, [customTeam.teamMembers, setTeamMembers, toggleLoading])
+    )(customTeam)
+  }, [customTeam, customTeam.teamMembers, setTeamMembers, toggleLoading])
 
   const onChannelEnter = async () => {
     const channelName = channelTextBoxRef.current.getValue()
@@ -65,14 +69,18 @@ const CustomTeamFlow = ({ streamTeam }, { theme }) => {
 
   const onSave = () => {
     saveMutation({
-      name: teamName,
-      memberIds: pluck('id', teamMembers),
+      variables: {
+        name: teamName,
+        memberIds: pluck('id', teamMembers),
+      },
     })
   }
 
   const activateCustomTeam = () => {
     activateMutation({
-      activate: true,
+      variables: {
+        activate: true,
+      },
     })
   }
 

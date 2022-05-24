@@ -1,4 +1,4 @@
-import { andThen, map, pipe, pluck, tap } from 'ramda'
+import { andThen, map, pipe, pluck } from 'ramda'
 import { requestChannelsById } from 'services/TwitchAPI'
 
 import { applyMemberSpec } from './applyMemberSpec'

@@ -1,3 +1,8 @@
-import { path } from 'ramda'
+import { path, pipe } from 'ramda'
 
-export const getStreamTeamProp = path(['channel', 'streamTeam'])
+import { applyStreamTeamSpec } from './applyStreamTeamSpec'
+
+export const getStreamTeamProp = pipe(
+  path(['channel', 'streamTeam']),
+  applyStreamTeamSpec
+)

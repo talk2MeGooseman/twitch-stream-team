@@ -1,5 +1,5 @@
+import { ApolloProvider } from '@apollo/client'
 import React, { useEffect, useState } from 'react'
-import { Provider } from 'urql'
 
 import { initClient } from '../services/Ebs'
 import Loader from './Loader'
@@ -30,9 +30,9 @@ const AuthWrapper = ({ children, mode }) => {
   return loading ? (
     <Loader />
   ) : (
-    <Provider value={client}>
+    <ApolloProvider client={client}>
       <AuthContext.Provider value={authData}>{children}</AuthContext.Provider>
-    </Provider>
+    </ApolloProvider>
   )
 }
 

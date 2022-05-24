@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'ramda'
 import React, { useContext } from 'react'
@@ -6,8 +7,9 @@ import Separator from 'react-uwp/Separator'
 import Tabs, { Tab } from 'react-uwp/Tabs'
 import { ChannelTeamQuery } from 'services/graphql'
 import { requestChannelTeams } from 'services/TwitchAPI'
-import { useQuery } from 'urql'
+import { getStreamTeamProp } from 'utils'
 
+import { applyStreamTeamSpec } from '../utils/applyStreamTeamSpec'
 import { AuthContext } from './AuthWrapper'
 import CustomTeamFlow from './CustomTeamFlow'
 import Loader from './Loader'
@@ -17,23 +19,19 @@ const ConfigInfo = (props, { theme }) => {
   let focusTabIndex = 0
 
   const authInfo = useContext(AuthContext)
-  const [{ data, fetching, error }] = useQuery({
-    query: ChannelTeamQuery,
-  })
+  const { data, loading: fetching, error } = useQuery(ChannelTeamQuery)
 
   const { loading, value: twitchTeams } = useAsync(async () => {
     const response = await requestChannelTeams(authInfo.channelId)
     return response.data
-  }, [])
+  }, [authInfo.channelId])
 
   if (fetching || loading) return <Loader />
   if (error) return <p>Oh no... {error.message}</p>
 
-  const {
-    channel: { streamTeam },
-  } = data
+  const streamTeam = getStreamTeamProp(data)
 
-  if (isEmpty(twitchTeams) || streamTeam.customActive) {
+  if (isEmpty(twitchTeams) || streamTeam?.customActive) {
     focusTabIndex = 1
   }
 

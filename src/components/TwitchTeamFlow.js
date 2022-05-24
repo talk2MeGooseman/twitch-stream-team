@@ -1,10 +1,11 @@
+import { useMutation } from '@apollo/client'
 import PropTypes from 'prop-types'
-import { isEmpty, map, pluck, prop } from 'ramda'
+import { isEmpty, pluck } from 'ramda'
 import React, { useState } from 'react'
 import Button from 'react-uwp/Button'
 import DropDownMenu from 'react-uwp/DropDownMenu'
-import { ActivateCustomTeamMutation } from 'services/graphql'
-import { useMutation } from 'urql'
+import { ChannelTeamQuery, TwitchTeamMutation } from 'services/graphql'
+import { isTwitchTeamActive } from 'utils'
 
 const baseStyle = {
   margin: '10px 20px 10px 10px',
@@ -14,27 +15,24 @@ const marginStyle = {
   margin: '10px 0',
 }
 
-// Bits 300 rw_grim
-// MajorThorn 200 MajorThorn
-
 const TwitchTeamFlow = ({ twitchTeams, streamTeam }, context) => {
   const { theme } = context
   const [team, setTeam] = useState(streamTeam.twitchTeam)
-  const [_activateResult, activateMutation] = useMutation(
-    ActivateCustomTeamMutation
-  )
+  const [mutate] = useMutation(TwitchTeamMutation, {
+    refetchQueries: [ChannelTeamQuery],
+  })
 
   const onChange = (selection) => {
     setTeam(selection)
   }
 
   const onSetTwitchTeam = () => {
-    activateMutation({ activate: false })
+    mutate({ variables: { teamName: team } })
   }
 
   let dropdownTeams = ['No Teams Found']
   if (!isEmpty(twitchTeams)) {
-    dropdownTeams = pluck('team_name', twitchTeams)
+    dropdownTeams = ['Select a team', ...pluck('team_name', twitchTeams)]
   }
 
   return (
@@ -70,7 +68,7 @@ const TwitchTeamFlow = ({ twitchTeams, streamTeam }, context) => {
               style={marginStyle}
               onClick={onSetTwitchTeam}
               background={theme.accent}
-              disabled={!streamTeam.customActive}
+              disabled={isTwitchTeamActive(streamTeam)}
             >
               Set your Twitch Team as your Panel Team
             </Button>
