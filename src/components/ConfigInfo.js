@@ -9,7 +9,6 @@ import { ChannelTeamQuery } from 'services/graphql'
 import { requestChannelTeams } from 'services/TwitchAPI'
 import { getStreamTeamProp } from 'utils'
 
-import { applyStreamTeamSpec } from '../utils/applyStreamTeamSpec'
 import { AuthContext } from './AuthWrapper'
 import CustomTeamFlow from './CustomTeamFlow'
 import Loader from './Loader'
