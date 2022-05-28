@@ -1,18 +1,16 @@
 import { useMutation } from '@apollo/client'
 import PropTypes from 'prop-types'
-import { andThen, isNil, pipe, pluck, propOr } from 'ramda'
-import React, { useEffect, useRef, useState } from 'react'
+import { pluck } from 'ramda'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useList, useToggle } from 'react-use'
 import Button from 'react-uwp/Button'
 import ListView from 'react-uwp/ListView'
 import TextBox from 'react-uwp/TextBox'
-import {
-  ActivateCustomTeamMutation,
-  ChannelTeamQuery,
-  CustomTeamMutation,
-} from 'services/graphql'
-import { requestChannelsById, requestChannelsByName } from 'services/TwitchAPI'
+import { ChannelTeamQuery, CustomTeamMutation } from 'services/graphql'
 
+import { useActivateCustomTeam } from '../hooks/useActivateCustomTeam'
+import { useFormActions } from '../hooks/useFormActions'
+import { fetchCustomTeamMemberInfo } from '../utils'
 import { ListItem } from './ListItem'
 import Loader from './Loader'
 
@@ -22,67 +20,35 @@ const paddingStyle = {
 
 const CustomTeamFlow = ({ streamTeam }, { theme }) => {
   const { customTeam, customActive } = streamTeam
-  const channelTextBoxRef = useRef()
-  const teamNameTextBoxRef = useRef()
+  const [isLoading, toggleLoading] = useToggle(false)
+  const [teamName, setTeamName] = useState(customTeam?.name)
+  const [teamMembers, { push, removeAt, set: setTeamMembers }] = useList()
+  const [activateCustomTeam] = useActivateCustomTeam()
 
   const [saveMutation] = useMutation(CustomTeamMutation, {
     refetchQueries: [ChannelTeamQuery],
   })
-  const [activateMutation] = useMutation(ActivateCustomTeamMutation, {
-    refetchQueries: [ChannelTeamQuery],
-  })
-  const [isLoading, toggleLoading] = useToggle(false)
-  const [teamName, setTeamName] = useState(customTeam?.name)
-  const [teamMembers, { push, removeAt, set: setTeamMembers }] = useList()
-  const [channelErrorMessage, setChannelErrorMessage] = useState()
-
-  useEffect(() => {
-    pipe(
-      propOr([], 'teamMembers'),
-      pluck('channelId'),
-      requestChannelsById,
-      andThen(setTeamMembers),
-      andThen(() => toggleLoading(false))
-    )(customTeam)
-  }, [customTeam, customTeam.teamMembers, setTeamMembers, toggleLoading])
-
-  const onChannelEnter = async () => {
-    const channelName = channelTextBoxRef.current.getValue()
-    if (!channelName || channelName.length === 0) {
-      return
-    }
-
-    const [channel] = await requestChannelsByName([channelName])
-
-    if (!isNil(channel)) {
-      push(channel)
-      channelTextBoxRef.current.setValue('')
-      setChannelErrorMessage()
-    } else {
-      setChannelErrorMessage('Channel not found, please check your spelling')
-    }
-  }
-
-  const onTeamNameChange = () => {
-    setTeamName(teamNameTextBoxRef.current.getValue())
-  }
-
-  const onSave = () => {
+  const onSave = useCallback(() => {
     saveMutation({
       variables: {
         name: teamName,
         memberIds: pluck('id', teamMembers),
       },
     })
-  }
+  }, [saveMutation, teamMembers, teamName])
 
-  const activateCustomTeam = () => {
-    activateMutation({
-      variables: {
-        activate: true,
-      },
-    })
-  }
+  useEffect(() => {
+    fetchCustomTeamMemberInfo(setTeamMembers, toggleLoading, customTeam)
+  }, [customTeam, customTeam.teamMembers, setTeamMembers, toggleLoading])
+
+  const {
+    onTeamNameChange,
+    onChannelEnter,
+    errorMessages,
+    teamNameTextBoxRef,
+    channelTextBoxRef,
+  } = useFormActions(push, setTeamName)
+
 
   const onRemoveChannel = (event) => {
     const { channelIndex } = event.target.dataset
@@ -129,7 +95,7 @@ const CustomTeamFlow = ({ streamTeam }, { theme }) => {
               style={paddingStyle}
               placeholder="Channel Name"
             />
-            {channelErrorMessage && <div>{channelErrorMessage}</div>}
+            {errorMessages.channel && <div>{errorMessages.channel}</div>}
             <Button style={paddingStyle} onClick={onChannelEnter}>
               Add Channel
             </Button>

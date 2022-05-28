@@ -1,6 +1,6 @@
 import { useFetchChannelsLiveStatus } from 'hooks/useFetchChannelsLiveStatus'
 import PropTypes from 'prop-types'
-import React from 'react'
+import React, { useMemo } from 'react'
 import ListView from 'react-uwp/ListView'
 
 import ChannelListItem from './ChannelListItem'
@@ -17,25 +17,26 @@ const baseStyle = {
 const ChannelList = ({ team }, context) => {
   const { channels, isLoading } = useFetchChannelsLiveStatus(team)
 
-  const channelsRows = []
-  channelsRows.push(
-    <TeamCountStripe count={channels.length} context={context} />
-  )
+  const channelRows = useMemo(() => {
+    const rows = [<TeamCountStripe count={channels.length} context={context} />]
 
-  if (isLoading) {
-    channelsRows.push(<Loader />)
-  } else {
-    channels.forEach((channel) => {
-      channelsRows.push({
-        itemNode: <ChannelListItem channel={channel} />,
+    if (isLoading) {
+      rows.push(<Loader />)
+    } else {
+      channels.forEach((channel) => {
+        rows.push({
+          itemNode: <ChannelListItem channel={channel} />,
+        })
       })
-    })
-  }
+    }
+
+    return rows
+  }, [channels, context, isLoading])
 
   return (
     <ListView
       style={baseStyle}
-      listSource={channelsRows}
+      listSource={channelRows}
       listItemStyle={{ borderBottom: '#6441A4  solid 1px' }}
     />
   )
