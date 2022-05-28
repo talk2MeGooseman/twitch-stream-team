@@ -1,4 +1,4 @@
-import { andThen, pipe, pluck, propOr } from 'ramda'
+import { andThen, pipe, pluck, propOr, reverse } from 'ramda'
 import { requestChannelsById } from 'services/TwitchAPI'
 
 export const fetchCustomTeamMemberInfo = (
@@ -8,6 +8,7 @@ export const fetchCustomTeamMemberInfo = (
 ) =>
   pipe(
     propOr([], 'teamMembers'),
+    reverse,
     pluck('channelId'),
     requestChannelsById,
     andThen(setTeamMembers),
