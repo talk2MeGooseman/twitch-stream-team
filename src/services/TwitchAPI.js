@@ -46,7 +46,14 @@ async function getUsers(channels, key = 'id') {
     },
   })
 
-  return response.data.data
+  const result = Array.from({length: channels.length})
+
+  response.data.data.forEach((user) => {
+    const index = channels.indexOf(user.id)
+    result[index] = user
+  })
+
+  return result
 }
 
 async function batchRequests(channels, request) {
