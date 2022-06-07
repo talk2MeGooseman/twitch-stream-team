@@ -22,20 +22,27 @@ const updateChannelsLiveStatus = curry((channels, liveChannels) =>
   })
 )
 
-export const useFetchChannelsLiveStatus = (team) => {
+export const useLiveStatusFetcher = (team) => {
   const [isLoading, toggleIsLoading] = useToggle(true)
   const [channels, setChannels] = useState(team.channels)
 
   useEffect(() => {
     toggleIsLoading(true)
 
-    pipe(
+    const refetch = pipe(
       requestLiveChannels,
       andThen(updateChannelsLiveStatus(team.channels)),
       andThen(sort(descend(prop('isLive')))),
       andThen(setChannels),
-      andThen(toggleIsLoading)
-    )(team.channels)
+      andThen(() => toggleIsLoading(false))
+    )
+
+    refetch(team.channels)
+    const intervalId = setInterval(() => refetch(team.channels), 30_000)
+
+    return () => {
+      clearInterval(intervalId)
+    }
   }, [team, team.channels, toggleIsLoading])
 
   return { channels, isLoading }

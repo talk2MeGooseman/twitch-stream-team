@@ -1,4 +1,4 @@
-import { useFetchChannelsLiveStatus } from 'hooks/useFetchChannelsLiveStatus'
+import { useLiveStatusFetcher } from 'hooks/useLiveStatusFetcher'
 import PropTypes from 'prop-types'
 import React, { useMemo } from 'react'
 import ListView from 'react-uwp/ListView'
@@ -15,7 +15,7 @@ const baseStyle = {
 }
 
 const ChannelList = ({ team }, context) => {
-  const { channels, isLoading } = useFetchChannelsLiveStatus(team)
+  const { channels, isLoading } = useLiveStatusFetcher(team)
 
   const channelRows = useMemo(() => {
     const rows = [<TeamCountStripe count={channels.length} context={context} />]
