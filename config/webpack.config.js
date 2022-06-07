@@ -245,15 +245,19 @@ module.exports = function (webpackEnv) {
       level: 'none',
     },
     optimization: {
-      splitChunks: {
-        cacheGroups: {
-          commons: {
-            test: /[\\/]node_modules[\\/]/,
-            name: 'vendors',
-            chunks: 'all',
-          },
-        },
-      },
+      ...(isEnvProduction
+        ? {
+            splitChunks: {
+              cacheGroups: {
+                commons: {
+                  test: /[/\\]node_modules[/\\]/,
+                  name: 'vendors',
+                  chunks: 'all',
+                },
+              },
+            },
+          }
+        : {}),
       minimize: isEnvProduction,
       minimizer: [
         // This is only used in production mode
