@@ -49,7 +49,7 @@ async function getUsers(channels, key = 'id') {
   const result = Array.from({length: channels.length})
 
   response.data.data.forEach((user) => {
-    const index = channels.indexOf(user.id)
+    const index = channels.indexOf(user[key])
     result[index] = user
   })
 
