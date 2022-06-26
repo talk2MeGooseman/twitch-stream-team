@@ -126,7 +126,7 @@ const CustomTeamFlow = ({ streamTeam }, { theme }) => {
               background={theme.accent}
               disabled={customActive}
             >
-              Set your Custom Team as your Panel Team
+              Save and Preview in the Panel
             </Button>
           </li>
         </ul>

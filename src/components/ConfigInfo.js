@@ -5,6 +5,7 @@ import React, { useContext } from 'react'
 import { useAsync } from 'react-use'
 import Separator from 'react-uwp/Separator'
 import Tabs, { Tab } from 'react-uwp/Tabs'
+import { CUSTOM_TEAM_PANEL_ACTIVE, TWITCH_TEAM_PANEL_ACTIVE } from 'services/constants'
 import { ChannelTeamQuery } from 'services/graphql'
 import { requestChannelTeams } from 'services/TwitchAPI'
 import { getStreamTeamProp } from 'utils'
@@ -15,7 +16,7 @@ import Loader from './Loader'
 import TwitchTeamFlow from './TwitchTeamFlow'
 
 const ConfigInfo = (props, { theme }) => {
-  let focusTabIndex = 0
+  let focusTabIndex = TWITCH_TEAM_PANEL_ACTIVE
 
   const authInfo = useContext(AuthContext)
   const { data, loading: fetching, error } = useQuery(ChannelTeamQuery)
@@ -31,7 +32,7 @@ const ConfigInfo = (props, { theme }) => {
   const streamTeam = getStreamTeamProp(data)
 
   if (isEmpty(twitchTeams) || streamTeam?.customActive) {
-    focusTabIndex = 1
+    focusTabIndex = CUSTOM_TEAM_PANEL_ACTIVE
   }
 
   return (

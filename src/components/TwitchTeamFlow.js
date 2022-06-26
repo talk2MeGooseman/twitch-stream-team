@@ -70,7 +70,7 @@ const TwitchTeamFlow = ({ twitchTeams, streamTeam }, context) => {
               background={theme.accent}
               disabled={isTwitchTeamActive(streamTeam)}
             >
-              Set your Twitch Team as your Panel Team
+              Save and Preview in the Panel
             </Button>
           </li>
         </ul>
