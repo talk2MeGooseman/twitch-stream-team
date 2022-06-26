@@ -19,7 +19,7 @@ const ConfigInfo = (props, { theme }) => {
   let focusTabIndex = TWITCH_TEAM_PANEL_ACTIVE
 
   const authInfo = useContext(AuthContext)
-  const { data, loading: fetching, error } = useQuery(ChannelTeamQuery)
+  const { data, loading: fetching } = useQuery(ChannelTeamQuery)
 
   const { loading, value: twitchTeams } = useAsync(async () => {
     const response = await requestChannelTeams(authInfo.channelId)
@@ -27,7 +27,6 @@ const ConfigInfo = (props, { theme }) => {
   }, [authInfo.channelId])
 
   if (fetching || loading) return <Loader />
-  if (error) return <p>Oh no... {error.message}</p>
 
   const streamTeam = getStreamTeamProp(data)
 

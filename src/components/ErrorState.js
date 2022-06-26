@@ -8,7 +8,6 @@ export const ErrorState = ({ SadSpock }) => (
   >
     <h3>Looks like we couldnt find your Team</h3>
     <img src={SadSpock} alt="Sad Spock" />
-    <h3>Spock is now sad</h3>
     <h3
       style={{
         paddingTop: '20px',

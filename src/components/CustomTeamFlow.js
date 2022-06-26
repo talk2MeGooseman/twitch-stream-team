@@ -21,12 +21,15 @@ const paddingStyle = {
 const CustomTeamFlow = ({ streamTeam }, { theme }) => {
   const { customTeam, customActive } = streamTeam
   const [isLoading, toggleLoading] = useToggle(false)
+  const [isSaved, setSaved] = useState(false)
   const [teamName, setTeamName] = useState(customTeam?.name)
   const [teamMembers, { push, removeAt, set: setTeamMembers }] = useList()
   const [activateCustomTeam] = useActivateCustomTeam()
 
+  const refetchQueries = customActive ? [ChannelTeamQuery] : []
+
   const [saveMutation] = useMutation(CustomTeamMutation, {
-    refetchQueries: [ChannelTeamQuery],
+    refetchQueries,
   })
   const onSave = useCallback(() => {
     saveMutation({
@@ -34,7 +37,7 @@ const CustomTeamFlow = ({ streamTeam }, { theme }) => {
         name: teamName,
         memberIds: pluck('id', teamMembers),
       },
-    })
+    }).then(() => setSaved(true))
   }, [saveMutation, teamMembers, teamName])
 
   useEffect(() => {
@@ -48,7 +51,6 @@ const CustomTeamFlow = ({ streamTeam }, { theme }) => {
     teamNameTextBoxRef,
     channelTextBoxRef,
   } = useFormActions(push, setTeamName)
-
 
   const onRemoveChannel = (event) => {
     const { channelIndex } = event.target.dataset
@@ -115,7 +117,8 @@ const CustomTeamFlow = ({ streamTeam }, { theme }) => {
               background={theme.accent}
             >
               Save
-            </Button>
+            </Button>{' '}
+            {isSaved && <h5 style={{ display: 'inline-block'}}>Saved!</h5>}
           </li>
           <li>
             Step 4: Display your Custom Team in the panel
@@ -126,7 +129,7 @@ const CustomTeamFlow = ({ streamTeam }, { theme }) => {
               background={theme.accent}
               disabled={customActive}
             >
-              Save and Preview in the Panel
+              Set Custom Team in Panel
             </Button>
           </li>
         </ul>
