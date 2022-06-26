@@ -19,7 +19,7 @@ jobs:
         with:
           type: 'zip'
           filename: 'release.zip'
-          path: 'build/'
+          directory: 'build/'
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
@@ -27,4 +27,4 @@ jobs:
           prerelease: true
           title: "Development Build"
           files: |
-            release.zip
+            build/release.zip
