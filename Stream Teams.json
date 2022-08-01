@@ -2,29 +2,51 @@
   "allowHttpBackend": false,
   "backendCommand": "",
   "backendFolderName": "",
+  "certificateExceptions": [],
   "extensionViews": [
     {
-      "id": "2",
-      "label": "",
-      "channelId": "120750024",
+      "channelId": "198757556",
       "configurationAnchor": "panel",
       "displayChannelName": "talk2megooseman",
-      "type": "config",
       "features": {
-        "isChatEnabled": false
+        "isBitsEnabled": false,
+        "isChatEnabled": false,
+        "isSubscriptionStatusAvailable": false
       },
+      "frameSize": {
+        "width": 1280,
+        "height": 720
+      },
+      "id": "1",
+      "isPopout": false,
+      "label": "",
+      "linked": false,
+      "linkedUserId": "",
+      "orientation": "Portrait",
+      "type": "panel",
+      "viewerType": "Broadcaster"
+    },
+    {
+      "channelId": "198757556",
+      "configurationAnchor": "panel",
+      "displayChannelName": "talk2megooseman",
+      "features": {
+        "isBitsEnabled": false,
+        "isChatEnabled": false,
+        "isSubscriptionStatusAvailable": false
+      },
+      "frameSize": {
+        "width": 1280,
+        "height": 720
+      },
+      "id": "2",
+      "isPopout": false,
+      "label": "",
       "linked": true,
       "linkedUserId": "265737932",
-      "mode": "config",
-      "isPopout": false,
-      "role": "Broadcaster",
-      "x": 0,
-      "y": 0,
       "orientation": "Portrait",
-      "frameSize": {
-        "width": 640,
-        "height": 480
-      }
+      "type": "config",
+      "viewerType": "Broadcaster"
     }
   ],
   "manifest": {
@@ -35,14 +57,14 @@
     "canInstall": true,
     "configUrl": "http://localhost:8080/config.html",
     "configurationLocation": "custom",
-    "description": "Stream Team extension is to show your viewers what team you're on and who is part of your team inside your panels. It will automatically pick the team you are apart of and allow you to pick another team if you have joined more then one.\r\n\r\nNot part of a team? No problem! Stream team now included the ability to build your own team and show them off on your channel.\r\n\r\nViewers can easily check out the other people on your team and follow them by clicking the heart icon.\r\nFeatures:\r\n(1) Display your Twitch Team or build your own Custom Team\r\n(2) Click on the banner to open a window to see the team \r\n(3) Click on channels profile icon to open window to view channel \r\n(4) Click on the heart icon to follow the channel\r\n(5) Live channels move to the top of the list\r\nThis extension was built as part of the Twitch Extension Jam and I plan to include a couple more features in the near future.  #TEJ2018",
+    "description": "NEW UPDATE!!! Fixes issue with loading large twitch teams!\nShow off your Twitch team in yours panels in the way it was meant to be shown.\nNot part of a team? No problem! Stream team includes the ability to build your own team so you can show off all your friends to your viewers.\nViewers can easily check out the other people on your team and follow them by clicking the heart icon.\nFeatures:\n(1) Display your Twitch Team or build your own Custom Team\n(2) Click on the banner to open a window to see the team \n(3) Click on channels profile icon to open window to view channel \n(4) Click on the heart icon to follow the channel\n(5) Live channels move to the top of the list\nThis extension was built as part of the Twitch Extension Jam and I plan to include a couple more features in the near future.  #TEJ2018",
     "eulaTosUrl": "",
     "hasChatSupport": false,
     "iconUrl": "https://media.forgecdn.net/avatars/163/917/636684323127379687.jpeg",
     "iconUrls": {
       "100x100": "https://media.forgecdn.net/avatars/163/917/636684323127379687.jpeg",
       "24x24": "https://media.forgecdn.net/avatars/163/920/636684328313065702.jpeg",
-      "300x200": "https://media.forgecdn.net/avatars/163/921/636684329967878890.png"
+      "300x200": "https://extensions-discovery-images.twitch.tv/d4t75sazjvk9cc84h30mgkyg7evbvz/1.1.0/discovery0adf7cfb-1c69-4150-8f11-55e22231eb97"
     },
     "id": "d4t75sazjvk9cc84h30mgkyg7evbvz",
     "installationCount": -42,
@@ -53,7 +75,9 @@
     "requestIdentityLink": false,
     "requiredBroadcasterAbilities": [],
     "screenshotUrls": [
-      "https://media.forgecdn.net/attachments/233/805/twitch-screenshot.png"
+      "https://extensions-discovery-images.twitch.tv/d4t75sazjvk9cc84h30mgkyg7evbvz/1.1.0/screenshot9a7c8aa9-a65c-42a3-9116-0a68655cf344",
+      "https://extensions-discovery-images.twitch.tv/d4t75sazjvk9cc84h30mgkyg7evbvz/1.1.0/screenshot52b6ca04-46c5-4bbe-b811-a754352bb4ba",
+      "https://extensions-discovery-images.twitch.tv/d4t75sazjvk9cc84h30mgkyg7evbvz/1.1.0/screenshot070f6601-c0fb-4ede-971d-6fbf20bc17a8"
     ],
     "sku": "",
     "state": "Testing",
@@ -61,7 +85,8 @@
     "summary": "Show off your team in your panels the way it was meant to be seen! And allow viewers to easily follow other people on your team.",
     "supportEmail": "help@gooseman.codes",
     "vendorCode": "",
-    "version": "1.1.0",
+    "version": "1.2.1",
+    "viewerSummary": "Show off your team in your panels the way it was meant to be seen! And allow viewers to easily follow other people on your team.",
     "viewerUrl": "http://localhost:8080/panel.html",
     "viewerUrls": {
       "mobile": "http://localhost:8080/panel.html",
@@ -85,10 +110,16 @@
         "canLinkExternalContent": true
       }
     },
-    "whitelistedConfigUrls": ["https://www.twitch.tv/*"],
-    "whitelistedPanelUrls": ["https://www.twitch.tv/*"]
+    "whitelistedConfigUrls": [
+      "https://www.twitch.tv/*"
+    ],
+    "whitelistedPanelUrls": [
+      "https://www.twitch.tv/*"
+    ]
   },
   "frontendCommand": "",
   "frontendFolderName": "",
-  "name": "Stream Teams"
+  "name": "Stream Teams",
+  "usingRandomFrontendHostingPort": false,
+  "version": 3
 }

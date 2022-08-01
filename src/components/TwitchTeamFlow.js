@@ -1,11 +1,11 @@
 import { useMutation } from '@apollo/client'
 import PropTypes from 'prop-types'
-import { isEmpty, pluck } from 'ramda'
+import { pluck } from 'ramda'
 import React, { useState } from 'react'
 import Button from 'react-uwp/Button'
 import DropDownMenu from 'react-uwp/DropDownMenu'
 import { ChannelTeamQuery, TwitchTeamMutation } from 'services/graphql'
-import { isTwitchTeamActive } from 'utils'
+import { hasTwitchTeam, isTwitchTeamActive } from 'utils'
 
 const baseStyle = {
   margin: '10px 20px 10px 10px',
@@ -31,7 +31,7 @@ const TwitchTeamFlow = ({ twitchTeams, streamTeam }, context) => {
   }
 
   let dropdownTeams = ['No Teams Found']
-  if (!isEmpty(twitchTeams)) {
+  if (hasTwitchTeam(twitchTeams)) {
     dropdownTeams = ['Select a team', ...pluck('team_name', twitchTeams)]
   }
 

@@ -1,6 +1,5 @@
 import { useQuery } from '@apollo/client'
 import PropTypes from 'prop-types'
-import { isEmpty } from 'ramda'
 import React, { useContext } from 'react'
 import { useAsync } from 'react-use'
 import Separator from 'react-uwp/Separator'
@@ -8,7 +7,7 @@ import Tabs, { Tab } from 'react-uwp/Tabs'
 import { CUSTOM_TEAM_PANEL_ACTIVE, TWITCH_TEAM_PANEL_ACTIVE } from 'services/constants'
 import { ChannelTeamQuery } from 'services/graphql'
 import { requestChannelTeams } from 'services/TwitchAPI'
-import { getStreamTeamProp } from 'utils'
+import { getStreamTeamProp, hasTwitchTeam } from 'utils'
 
 import { AuthContext } from './AuthWrapper'
 import CustomTeamFlow from './CustomTeamFlow'
@@ -30,7 +29,7 @@ const ConfigInfo = (props, { theme }) => {
 
   const streamTeam = getStreamTeamProp(data)
 
-  if (isEmpty(twitchTeams) || streamTeam?.customActive) {
+  if (!hasTwitchTeam(twitchTeams) || streamTeam?.customActive) {
     focusTabIndex = CUSTOM_TEAM_PANEL_ACTIVE
   }
 
