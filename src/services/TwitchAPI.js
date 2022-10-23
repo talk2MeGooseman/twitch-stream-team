@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { toLower } from 'ramda'
 
 const BASE_URL = 'https://api.twitch.tv/helix/'
 // eslint-disable-next-line no-secrets/no-secrets
@@ -46,10 +47,12 @@ async function getUsers(channels, key = 'id') {
     },
   })
 
+  // Ensuring we keep order of channels the same the order the user inputted
   const result = Array.from({length: channels.length})
 
   response.data.data.forEach((user) => {
-    const index = channels.indexOf(user[key])
+    const lowerCase = toLower(user[key])
+    const index = channels.indexOf(lowerCase)
     result[index] = user
   })
 

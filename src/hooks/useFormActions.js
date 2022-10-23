@@ -8,7 +8,7 @@ export const useFormActions = (push, setTeamName) => {
   const [errorMessages, setErrorMessages] = useState({})
 
   const onChannelEnter = async () => {
-    const channelName = channelTextBoxRef.current.getValue()
+    const channelName = channelTextBoxRef.current.getValue().toLowerCase()
 
     if (!channelName || channelName.length === 0) {
       return
