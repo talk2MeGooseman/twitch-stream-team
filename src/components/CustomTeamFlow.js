@@ -6,6 +6,7 @@ import { useList, useToggle } from 'react-use'
 import Button from 'react-uwp/Button'
 import ListView from 'react-uwp/ListView'
 import TextBox from 'react-uwp/TextBox'
+import Toast from 'react-uwp/Toast'
 import { ChannelTeamQuery, CustomTeamMutation } from 'services/graphql'
 
 import { useActivateCustomTeam } from '../hooks/useActivateCustomTeam'
@@ -22,6 +23,7 @@ const CustomTeamFlow = ({ streamTeam }, { theme }) => {
   const { customTeam, customActive } = streamTeam
   const [isLoading, toggleLoading] = useToggle(false)
   const [isSaved, setSaved] = useState(false)
+  const [isDirty, toggleDirty] = useToggle(false)
   const [teamName, setTeamName] = useState(customTeam?.name)
   const [teamMembers, { push, removeAt, set: setTeamMembers }] = useList()
   const [activateCustomTeam] = useActivateCustomTeam()
@@ -37,12 +39,17 @@ const CustomTeamFlow = ({ streamTeam }, { theme }) => {
         name: teamName,
         memberIds: pluck('id', teamMembers),
       },
-    }).then(() => setSaved(true))
-  }, [saveMutation, teamMembers, teamName])
+    }).then(() => setSaved(true)).then(toggleDirty)
+  }, [saveMutation, teamMembers, teamName, toggleDirty])
 
   useEffect(() => {
     fetchCustomTeamMemberInfo(setTeamMembers, toggleLoading, customTeam)
   }, [customTeam, customTeam.teamMembers, setTeamMembers, toggleLoading])
+
+  const addChannel = useCallback((channel) => {
+    push(channel)
+    toggleDirty(true)
+  }, [push, toggleDirty])
 
   const {
     onTeamNameChange,
@@ -50,7 +57,7 @@ const CustomTeamFlow = ({ streamTeam }, { theme }) => {
     errorMessages,
     teamNameTextBoxRef,
     channelTextBoxRef,
-  } = useFormActions(push, setTeamName)
+  } = useFormActions(addChannel, setTeamName)
 
   const onRemoveChannel = (event) => {
     const { channelIndex } = event.target.dataset
@@ -75,6 +82,12 @@ const CustomTeamFlow = ({ streamTeam }, { theme }) => {
 
   return (
     <>
+      <Toast
+        defaultShow={isDirty}
+        title="Change Detected"
+        description={['You have unsaved changes.', 'Click save to see updates.']}
+        showCloseIcon
+      />
       <div style={{ marginTop: '5px', ...theme.typographyStyles.subTitle }}>
         Instructions:
       </div>
@@ -115,10 +128,11 @@ const CustomTeamFlow = ({ streamTeam }, { theme }) => {
               style={paddingStyle}
               onClick={onSave}
               background={theme.accent}
+              disabled={!isDirty}
             >
               Save
             </Button>{' '}
-            {isSaved && <h5 style={{ display: 'inline-block'}}>Saved!</h5>}
+            {isSaved && <h5 style={{ display: 'inline-block' }}>Saved!</h5>}
           </li>
           <li>
             Step 4: Display your Custom Team in the panel

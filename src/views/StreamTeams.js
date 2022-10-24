@@ -9,9 +9,9 @@ import TeamHeader from '../components/TeamHeader'
 import SadSpock from '../sad-spock.svg'
 
 const StreamTeams = () => {
-  const { teamInfo, fetching, error } = useTeamInfoFetcher()
+  const { teamInfo, loading, error } = useTeamInfoFetcher()
 
-  if (fetching) {
+  if (loading) {
     return <Loader color="white" />
   }
 
