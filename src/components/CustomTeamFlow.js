@@ -62,6 +62,7 @@ const CustomTeamFlow = ({ streamTeam }, { theme }) => {
   const onRemoveChannel = (event) => {
     const { channelIndex } = event.target.dataset
     if (channelIndex) {
+      toggleDirty(true)
       removeAt(channelIndex)
     }
   }
