@@ -5,7 +5,7 @@ import React, { useState } from 'react'
 import Button from 'react-uwp/Button'
 import DropDownMenu from 'react-uwp/DropDownMenu'
 import { ChannelTeamQuery, TwitchTeamMutation } from 'services/graphql'
-import { hasTwitchTeam, isTwitchTeamActive } from 'utils'
+import { hasTwitchTeam, isTwitchTeamActive, stillTeamMember } from 'utils'
 
 const baseStyle = {
   margin: '10px 20px 10px 10px',
@@ -16,8 +16,9 @@ const marginStyle = {
 }
 
 const TwitchTeamFlow = ({ twitchTeams, streamTeam }, context) => {
+  const defaultTeam = stillTeamMember(streamTeam.twitchTeam, twitchTeams) ? streamTeam.twitchTeam : null
   const { theme } = context
-  const [team, setTeam] = useState(streamTeam.twitchTeam)
+  const [team, setTeam] = useState(defaultTeam)
   const [mutate] = useMutation(TwitchTeamMutation, {
     refetchQueries: [ChannelTeamQuery],
   })
@@ -31,6 +32,7 @@ const TwitchTeamFlow = ({ twitchTeams, streamTeam }, context) => {
   }
 
   let dropdownTeams = ['No Teams Found']
+
   if (hasTwitchTeam(twitchTeams)) {
     dropdownTeams = ['Select a team', ...pluck('team_name', twitchTeams)]
   }
