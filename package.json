@@ -20,8 +20,6 @@
     "graphql": "^16.5.0",
     "html-webpack-plugin": "^5.5.0",
     "image-validator": "^1.2.0",
-    "mobx": "^4.3.0",
-    "mobx-react": "^5.2.3",
     "node-pre-gyp": "^0.17.0",
     "object-assign": "4.1.1",
     "postcss": "^8.4.4",
@@ -46,30 +44,25 @@
     "source-map-loader": "^3.0.0",
     "style-loader": "3.3.1",
     "styled-components": "^3.3.2",
-    "sw-precache-webpack-plugin": "0.11.4",
-    "terser-webpack-plugin": "^5.2.5",
     "url-loader": "0.6.2",
     "url-search-params-polyfill": "^8.1.1",
-    "webpack": "^5.64.4",
-    "webpack-dev-server": "^4.6.0",
-    "webpack-manifest-plugin": "^4.0.2",
     "whatwg-fetch": "2.0.3"
   },
   "scripts": {
-    "start": "PORT=8080 HTTPS=false node scripts/start.js",
-    "build": "node scripts/build.js",
+    "start": "PORT=8080 vite",
+    "build": "vite build",
     "format": "prettier --write \"**/*.{js,jsx,json,md}\"",
-    "test": "node scripts/test.js",
+    "test": "NODE_ENV=test jest",
     "eslint": "eslint --color --ext .html,.js,.json,.jsx,.md,.ts,.tsx ./src",
-    "eslint:fix": "npm run eslint -- --fix"
+    "eslint:fix": "npm run eslint -- --fix",
+    "vite:start": "vite"
   },
   "jest": {
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,mjs}"
     ],
-    "setupFiles": [
-      "react-app-polyfill/jsdom",
-      "jest-canvas-mock"
+    "setupFilesAfterEnv": [
+      "<rootDir>/src/setupTests.js"
     ],
     "testMatch": [
       "<rootDir>/src/**/__tests__/**/*.{js,jsx,mjs}",
@@ -78,11 +71,11 @@
     "testEnvironmentOptions": {
       "url": "http://localhost"
     },
-    "testEnvironment": "node",
+    "testEnvironment": "jsdom",
     "transform": {
       "^.+\\.(js|jsx|mjs)$": "<rootDir>/node_modules/babel-jest",
       "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
-      "^(?!.*\\.(js|jsx|mjs|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
+      "^(?!.*\\.(js|jsx|mjs|cjs|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
     },
     "transformIgnorePatterns": [
       "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs)$"
@@ -90,6 +83,9 @@
     "moduleNameMapper": {
       "^react-native$": "react-native-web"
     },
+    "modulePaths": [
+      "<rootDir>/src/"
+    ],
     "moduleFileExtensions": [
       "web.js",
       "js",
@@ -102,7 +98,13 @@
   },
   "babel": {
     "presets": [
-      "@babel/preset-react"
+      "@babel/preset-env",
+      [
+        "@babel/preset-react",
+        {
+          "runtime": "automatic"
+        }
+      ]
     ],
     "plugins": [
       [
@@ -123,14 +125,14 @@
     "@babel/core": "^7.17.10",
     "@babel/plugin-proposal-class-properties": "^7.16.7",
     "@babel/plugin-proposal-decorators": "^7.0.0",
-    "@babel/preset-env": "^7.17.10",
-    "@babel/preset-react": "^7.16.7",
+    "@babel/preset-env": "^7.20.2",
+    "@babel/preset-react": "^7.18.6",
     "@babel/runtime-corejs2": "^7.0.0",
-    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.5",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^11.2.2",
     "@testing-library/user-event": "^12.3.0",
-    "babel-jest": "^28.1",
+    "@vitejs/plugin-react": "^3.0.1",
+    "babel-jest": "^29.3.1",
     "babel-loader": "^8.0.0",
     "babel-preset-react-app": "^10.0.1",
     "bfj": "^7.0.2",
@@ -168,17 +170,19 @@
     "eslint-plugin-switch-case": "^1.1.2",
     "eslint-plugin-testing-library": "^5.3.1",
     "eslint-plugin-unicorn": "^42.0.0",
-    "eslint-webpack-plugin": "^3.1.1",
-    "jest": "^27.4.3",
+    "jest": "^29.3.1",
     "jest-canvas-mock": "^2.3.0",
+    "jest-environment-jsdom": "^29.3.1",
     "jest-resolve": "^27.4.2",
     "jest-watch-typeahead": "^1.0.0",
     "mini-css-extract-plugin": "^2.6.0",
-    "mobx-react-devtools": "^6.0.2",
     "prettier": "^2.2.1",
-    "react-refresh": "^0.13.0",
+    "react-test-renderer": "^18.2.0",
+    "regenerator-runtime": "^0.13.11",
     "sass-loader": "^12.6.0",
-    "workbox-webpack-plugin": "^6.5.3"
+    "vite": "^4.0.4",
+    "vite-plugin-svgr": "^2.4.0",
+    "vite-react-jsx": "^1.1.2"
   },
   "browserslist": {
     "production": [

@@ -7,10 +7,14 @@
       manifest.json provides metadata used when your web app is added to the
       homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/
     -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
+    <link rel="manifest" href="manifest.json">
   </head>
   <body>
     <div id="root"></div>
     <script src="https://extension-files.twitch.tv/helper/v1/twitch-ext.min.js"></script>
+    <script type="module" src="/src/index.jsx"></script>
+    <script>
+      global = window
+    </script>
   </body>
 </html>

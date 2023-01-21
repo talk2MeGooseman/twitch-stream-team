@@ -5,7 +5,7 @@
   "certificateExceptions": [],
   "extensionViews": [
     {
-      "channelId": "198757556",
+      "channelId": "120750024",
       "configurationAnchor": "panel",
       "displayChannelName": "talk2megooseman",
       "features": {
@@ -17,7 +17,7 @@
         "width": 1280,
         "height": 720
       },
-      "id": "1",
+      "id": "3",
       "isPopout": false,
       "label": "",
       "linked": false,
@@ -27,7 +27,7 @@
       "viewerType": "Broadcaster"
     },
     {
-      "channelId": "198757556",
+      "channelId": "120750024",
       "configurationAnchor": "panel",
       "displayChannelName": "talk2megooseman",
       "features": {
@@ -39,7 +39,7 @@
         "width": 1280,
         "height": 720
       },
-      "id": "2",
+      "id": "4",
       "isPopout": false,
       "label": "",
       "linked": true,
@@ -55,7 +55,7 @@
     "authorName": "talk2megooseman",
     "bitsEnabled": false,
     "canInstall": true,
-    "configUrl": "http://localhost:8080/config.html",
+    "configUrl": "http://localhost:8080/index.html",
     "configurationLocation": "custom",
     "description": "NEW UPDATE!!! Fixes issue with loading large twitch teams!\nShow off your Twitch team in yours panels in the way it was meant to be shown.\nNot part of a team? No problem! Stream team includes the ability to build your own team so you can show off all your friends to your viewers.\nViewers can easily check out the other people on your team and follow them by clicking the heart icon.\nFeatures:\n(1) Display your Twitch Team or build your own Custom Team\n(2) Click on the banner to open a window to see the team \n(3) Click on channels profile icon to open window to view channel \n(4) Click on the heart icon to follow the channel\n(5) Live channels move to the top of the list\nThis extension was built as part of the Twitch Extension Jam and I plan to include a couple more features in the near future.  #TEJ2018",
     "eulaTosUrl": "",
@@ -68,7 +68,7 @@
     },
     "id": "d4t75sazjvk9cc84h30mgkyg7evbvz",
     "installationCount": -42,
-    "liveConfigUrl": "http://localhost:8080/dashboard_config.html",
+    "liveConfigUrl": "http://localhost:8080/index.html",
     "name": "Stream Team",
     "panelHeight": 500,
     "privacyPolicyUrl": "",
@@ -85,28 +85,28 @@
     "summary": "Show off your team in your panels the way it was meant to be seen! And allow viewers to easily follow other people on your team.",
     "supportEmail": "help@gooseman.codes",
     "vendorCode": "",
-    "version": "1.2.1",
+    "version": "1.2.5",
     "viewerSummary": "Show off your team in your panels the way it was meant to be seen! And allow viewers to easily follow other people on your team.",
-    "viewerUrl": "http://localhost:8080/panel.html",
+    "viewerUrl": "http://localhost:8080/index.html",
     "viewerUrls": {
-      "mobile": "http://localhost:8080/panel.html",
-      "panel": "http://localhost:8080/panel.html"
+      "mobile": "http://localhost:8080/index.html",
+      "panel": "http://localhost:8080/index.html"
     },
     "views": {
       "mobile": {
-        "viewerUrl": "http://localhost:8080/panel.html"
+        "viewerUrl": "http://localhost:8080/index.html"
       },
       "panel": {
-        "viewerUrl": "http://localhost:8080/panel.html",
+        "viewerUrl": "http://localhost:8080/index.html",
         "height": 500,
         "canLinkExternalContent": true
       },
       "config": {
-        "viewerUrl": "http://localhost:8080/config.html",
+        "viewerUrl": "http://localhost:8080/index.html",
         "canLinkExternalContent": true
       },
       "liveConfig": {
-        "viewerUrl": "http://localhost:8080/dashboard_config.html",
+        "viewerUrl": "http://localhost:8080/index.html",
         "canLinkExternalContent": true
       }
     },

@@ -1,3 +1,4 @@
+import { MockedProvider } from '@apollo/client/testing'
 import { render, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
@@ -25,18 +26,20 @@ const streamTeam = {
 }
 
 const withTheme = (component) => (
-  <UWPThemeProvider
-    theme={getTheme({
-      themeName: 'dark', // set custom theme
-      accent: '#0078D7', // set accent color
-      useFluentDesign: true, // sure you want use new fluent design.
-      desktopBackgroundImage:
-        // eslint-disable-next-line no-secrets/no-secrets
-        'https://static-cdn.jtvnw.net/jtv_user_pictures/team-brainbytes-background_image-4baba38e0e3991c5.png', // set global desktop background image
-    })}
-  >
-    {component}
-  </UWPThemeProvider>
+  <MockedProvider>
+    <UWPThemeProvider
+      theme={getTheme({
+        themeName: 'dark', // set custom theme
+        accent: '#0078D7', // set accent color
+        useFluentDesign: true, // sure you want use new fluent design.
+        desktopBackgroundImage:
+          // eslint-disable-next-line no-secrets/no-secrets
+          'https://static-cdn.jtvnw.net/jtv_user_pictures/team-brainbytes-background_image-4baba38e0e3991c5.png', // set global desktop background image
+      })}
+    >
+      {component}
+    </UWPThemeProvider>
+  </MockedProvider>
 )
 
 describe('CustomTeamFlow', () => {
