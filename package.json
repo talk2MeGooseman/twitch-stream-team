@@ -176,7 +176,7 @@
     "jest-resolve": "^27.4.2",
     "jest-watch-typeahead": "^1.0.0",
     "mini-css-extract-plugin": "^2.6.0",
-    "prettier": "^2.2.1",
+    "prettier": "^2.8.3",
     "react-test-renderer": "^18.2.0",
     "regenerator-runtime": "^0.13.11",
     "sass-loader": "^12.6.0",
