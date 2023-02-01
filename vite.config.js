@@ -5,6 +5,7 @@ import svgrPlugin from 'vite-plugin-svgr'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: './',
   server: {
     port: '8080'
   },
@@ -13,10 +14,6 @@ export default defineConfig({
       'services' : resolve(__dirname, './src/services'),
       'hooks' : resolve(__dirname, './src/hooks'),
       'utils' : resolve(__dirname, './src/utils')
-    },
-  },
-  build: {
-    rollupOptions: {
     },
   },
   plugins: [
