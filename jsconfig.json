@@ -6,7 +6,8 @@
     "target": "es2020",
     "module": "es2015",
     "baseUrl": "src",
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "types": ["vitest/globals"]
   },
   "exclude": [
     "dist",

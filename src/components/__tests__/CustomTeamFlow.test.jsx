@@ -2,27 +2,29 @@ import { MockedProvider } from '@apollo/client/testing'
 import { render, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
-import { getTheme,Theme as UWPThemeProvider } from 'react-uwp/Theme'
+import { getTheme, Theme as UWPThemeProvider } from 'react-uwp/Theme'
 
 import CustomTeamFlow from '../CustomTeamFlow'
 
 const streamTeam = {
-  name: 'custom_team',
-  display_name: 'Custom Team',
-  channels: [
-    {
-      id: '1',
-      display_name: 'Talk2MeGooseman',
-      status: 'blah blah blah',
-      logo: 'https://picture.here',
-    },
-    {
-      id: '2',
-      display_name: 'JensDuck',
-      status: 'blah blah blah',
-      logo: 'https://picture.here',
-    },
-  ],
+  customActive: true,
+  customTeam: {
+    name: 'custom_team',
+    teamMembers: [
+      {
+        id: '1',
+        display_name: 'Talk2MeGooseman',
+        status: 'blah blah blah',
+        logo: 'https://picture.here',
+      },
+      {
+        id: '2',
+        display_name: 'JensDuck',
+        status: 'blah blah blah',
+        logo: 'https://picture.here',
+      },
+    ],
+  }
 }
 
 const withTheme = (component) => (
@@ -43,7 +45,7 @@ const withTheme = (component) => (
 )
 
 describe('CustomTeamFlow', () => {
-  beforeEach(() => {})
+  beforeEach(() => { })
 
   it('displays all existing team members', async () => {
     const { queryByText } = render(withTheme(<CustomTeamFlow streamTeam={streamTeam} />))

@@ -24,5 +24,10 @@ export default defineConfig({
         icon: true,
       }
     })
-  ]
+  ],
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: 'src/setupTests.js'
+  },
 })
