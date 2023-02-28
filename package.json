@@ -43,7 +43,7 @@
     "resolve-url-loader": "^4.0.0",
     "source-map-loader": "^3.0.0",
     "style-loader": "3.3.1",
-    "styled-components": "^3.3.2",
+    "styled-components": "^4.4.1",
     "url-loader": "0.6.2",
     "url-search-params-polyfill": "^8.1.1",
     "whatwg-fetch": "2.0.3"
