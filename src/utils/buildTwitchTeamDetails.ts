@@ -14,6 +14,10 @@ export const buildTwitchTeamDetails = async (twitchTeam) => {
     .then(head)
     .then(applyTwitchTeamSpec)
 
+  if (isNil(teamSpec.channels)) {
+    return null
+  }
+
   return fetchTwitchTeamMemberInfo(teamSpec.channels)
     .then((data) => ({
       channels: data,

@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client'
+import { QueryResult, useQuery } from '@apollo/client'
 import PropTypes from 'prop-types'
 import React, { useContext } from 'react'
 import { useAsync } from 'react-use'
@@ -18,11 +18,11 @@ const ConfigInfo = (props, { theme }) => {
   let focusTabIndex = TWITCH_TEAM_PANEL_ACTIVE
 
   const authInfo = useContext(AuthContext)
-  const { data, loading: fetching } = useQuery(ChannelTeamQuery)
+  const { data, loading: fetching } : QueryResult<RootQueryType> = useQuery(ChannelTeamQuery)
 
   const { loading, value: twitchTeams } = useAsync(async () => {
     const response = await requestChannelTeams(authInfo.channelId)
-    return response.data
+    return response?.data
   }, [authInfo.channelId])
 
   if (fetching || loading) return <Loader />
