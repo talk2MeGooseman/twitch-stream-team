@@ -92,7 +92,6 @@ export async function requestChannelTeams(channelId) {
   } catch (error) {
     // Do nothing
   }
-
   return response.data
 }
 

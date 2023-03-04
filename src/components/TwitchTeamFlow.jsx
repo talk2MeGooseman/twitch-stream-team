@@ -16,7 +16,7 @@ const marginStyle = {
 }
 
 const TwitchTeamFlow = ({ twitchTeams, streamTeam }, context) => {
-  const defaultTeam = stillTeamMember(streamTeam.twitchTeam, twitchTeams) ? streamTeam.twitchTeam : null
+  const defaultTeam = stillTeamMember(streamTeam?.twitchTeam, twitchTeams) ? streamTeam.twitchTeam : null
   const { theme } = context
   const [team, setTeam] = useState(defaultTeam)
   const [mutate] = useMutation(TwitchTeamMutation, {

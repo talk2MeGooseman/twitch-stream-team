@@ -28,6 +28,6 @@ describe('ChannelListItem', () => {
       </UWPThemeProvider>
     )
 
-    expect(queryByText('Talk2MeGooseman')).toBeInTheDocument();
+    expect(queryByText('Talk2MeGooseman')).toBeInTheDocument()
   })
 })
