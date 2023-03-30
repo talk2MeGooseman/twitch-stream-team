@@ -2,6 +2,7 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { IoIosHeart } from 'react-icons/io'
 import Textfit from 'react-textfit'
+import type { Theme } from 'react-uwp'
 import IconButton from 'react-uwp/IconButton'
 import Image from 'react-uwp/Image'
 import { green600 } from 'react-uwp/styles/accentColors'
@@ -40,20 +41,25 @@ const displayNameContainerStyles = {
   marginLeft: '4px',
 }
 
-const resizeImage = (url) => {
+const resizeImage = (url: string) => {
   if (!url) {
     return 'https://static-cdn.jtvnw.net/jtv_user_pictures/xarth/404_user_50x50.png'
   }
   return url.replace('-300x300.', '-50x50.')
 }
 
-const followChannel = (channel) => {
+const followChannel = (channel: string) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   Twitch.ext.actions.followChannel(channel)
 }
 
-const buildTwitchUrl = (channelName) => `https://www.twitch.tv/${channelName}`
+const buildTwitchUrl = (channelName: string) => `https://www.twitch.tv/${channelName}`
 
-const ChannelListItem = ({ channel }, { theme }) => {
+type ChannelListItemProps = {
+  channel: TeamMemberSpecType
+}
+
+const ChannelListItem = ({ channel } : ChannelListItemProps, { theme }: { theme: Theme }) => {
   let followIconHoverColor = theme.listAccentHigh
 
   const displayNameStyles = {
@@ -88,7 +94,7 @@ const ChannelListItem = ({ channel }, { theme }) => {
             rel="noreferrer"
           >
             {channel.isLive && <div className="pulse" style={liveIconStyles} />}
-            <Image src={resizeImage(channel.profile_image)} />
+            <Image src={resizeImage(channel.profileImage)} />
           </a>
         </TransformCard>
       </div>

@@ -1,15 +1,15 @@
-import { andThen, pipe, pluck, propOr } from 'ramda'
+import { pipe, pluck, propOr } from 'ramda'
 import { requestChannelsById } from 'services/TwitchAPI'
 
-export const fetchCustomTeamMemberInfo = (
-  setTeamMembers: (teamMembers: HelixUser[]) => void,
-  toggleLoading: (isLoading: boolean) => void,
+export const fetchCustomTeamMemberInfo = ({
+  token,
+  customTeam
+}: {
+  token: string,
   customTeam: CustomTeam
-) =>
-  pipe(
+}) =>
+  pipe<[CustomTeam], CustomTeamMember[], string[], Promise<HelixUser[]>>(
     propOr([], 'teamMembers'),
     pluck('channelId'),
-    requestChannelsById,
-    andThen(setTeamMembers),
-    andThen(() => toggleLoading(false))
+    requestChannelsById(token),
   )(customTeam)

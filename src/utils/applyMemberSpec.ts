@@ -1,9 +1,9 @@
 import { applySpec, F, prop } from 'ramda'
 
-export const applyMemberSpec = applySpec({
+export const applyMemberSpec = applySpec<TeamMemberSpecType>({
   id: prop('id'),
   name: prop('display_name'),
-  profile_image: prop('profile_image_url'),
+  profileImage: prop('profile_image_url'),
   description: prop('description'),
   isLive: F,
 })

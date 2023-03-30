@@ -1,8 +1,9 @@
 import { useMutation } from '@apollo/client'
 import PropTypes from 'prop-types'
 import { pluck } from 'ramda'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { MouseEventHandler, useCallback, useContext, useEffect, useState } from 'react'
 import { useList, useToggle } from 'react-use'
+import type { Theme } from 'react-uwp'
 import Button from 'react-uwp/Button'
 import ListView from 'react-uwp/ListView'
 import TextBox from 'react-uwp/TextBox'
@@ -12,6 +13,7 @@ import { ChannelTeamQuery, CustomTeamMutation } from 'services/graphql'
 import { useActivateCustomTeam } from '../hooks/useActivateCustomTeam'
 import { useFormActions } from '../hooks/useFormActions'
 import { fetchCustomTeamMemberInfo } from '../utils'
+import { AuthContext } from '../utils/AuthContext'
 import { ListItem } from './ListItem'
 import Loader from './Loader'
 
@@ -19,14 +21,19 @@ const paddingStyle = {
   margin: '10px 0',
 }
 
-const CustomTeamFlow = ({ streamTeam }, { theme }) => {
+type CustomTeamFlowProps = {
+  streamTeam: StreamTeam
+};
+
+const CustomTeamFlow = ({ streamTeam }: CustomTeamFlowProps, { theme }: { theme: Theme }) => {
   const { customTeam, customActive } = streamTeam
   const [isLoading, toggleLoading] = useToggle(false)
   const [isSaved, setSaved] = useState(false)
   const [isDirty, toggleDirty] = useToggle(false)
   const [teamName, setTeamName] = useState(customTeam?.name)
-  const [teamMembers, { push, removeAt, set: setTeamMembers }] = useList()
+  const [teamMembers, { push, removeAt, set: setTeamMembers }] = useList<HelixUser>()
   const [activateCustomTeam] = useActivateCustomTeam()
+  const authInfo = useContext(AuthContext)
 
   const refetchQueries = customActive ? [ChannelTeamQuery] : []
 
@@ -40,14 +47,25 @@ const CustomTeamFlow = ({ streamTeam }, { theme }) => {
         memberIds: pluck('id', teamMembers),
       },
     }).then(() => setSaved(true)).then(toggleDirty)
+      .catch((error) => { })
   }, [saveMutation, teamMembers, teamName, toggleDirty])
 
   useEffect(() => {
-    fetchCustomTeamMemberInfo(setTeamMembers, toggleLoading, customTeam)
-  }, [customTeam, customTeam.teamMembers, setTeamMembers, toggleLoading])
+    if (!authInfo?.helixToken || !customTeam) return
 
-  const addChannel = useCallback((channel) => {
+    fetchCustomTeamMemberInfo({
+      token: authInfo.helixToken,
+      customTeam
+    }).then(setTeamMembers).then(() => toggleLoading(false)).catch(() => { })
+  }, [authInfo?.helixToken, customTeam, customTeam?.teamMembers, setTeamMembers, toggleLoading])
+
+  const addChannel = useCallback((channel: HelixUser) => {
     push(channel)
+    toggleDirty(true)
+  }, [push, toggleDirty])
+
+  const changeName = useCallback((name: string) => {
+    setTeamName(name)
     toggleDirty(true)
   }, [push, toggleDirty])
 
@@ -57,13 +75,13 @@ const CustomTeamFlow = ({ streamTeam }, { theme }) => {
     errorMessages,
     teamNameTextBoxRef,
     channelTextBoxRef,
-  } = useFormActions(addChannel, setTeamName)
+  } = useFormActions(addChannel, changeName)
 
-  const onRemoveChannel = (event) => {
+  const onRemoveChannel: MouseEventHandler<HTMLSpanElement> = (event) => {
     const { channelIndex } = event.target.dataset
     if (channelIndex) {
       toggleDirty(true)
-      removeAt(channelIndex)
+      removeAt(parseInt(channelIndex, 10))
     }
   }
 

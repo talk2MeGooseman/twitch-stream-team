@@ -2,6 +2,7 @@ import { useMutation } from '@apollo/client'
 import PropTypes from 'prop-types'
 import { pluck } from 'ramda'
 import React, { useState } from 'react'
+import type { Theme } from 'react-uwp'
 import Button from 'react-uwp/Button'
 import DropDownMenu from 'react-uwp/DropDownMenu'
 import { ChannelTeamQuery, TwitchTeamMutation } from 'services/graphql'
@@ -15,20 +16,28 @@ const marginStyle = {
   margin: '10px 0',
 }
 
-const TwitchTeamFlow = ({ twitchTeams, streamTeam }, context) => {
+type TwitchTeamFlowProps = {
+  twitchTeams: HelixChannelTeam[]
+  streamTeam: StreamTeam
+};
+
+const TwitchTeamFlow = ({ twitchTeams, streamTeam }: TwitchTeamFlowProps, { theme } : { theme: Theme } ) => {
   const defaultTeam = stillTeamMember(streamTeam?.twitchTeam, twitchTeams) ? streamTeam.twitchTeam : null
-  const { theme } = context
+
   const [team, setTeam] = useState(defaultTeam)
   const [mutate] = useMutation(TwitchTeamMutation, {
     refetchQueries: [ChannelTeamQuery],
   })
 
-  const onChange = (selection) => {
+  const onChange = (selection: string) => {
     setTeam(selection)
   }
 
   const onSetTwitchTeam = () => {
     mutate({ variables: { teamName: team } })
+    .catch((error) => {
+      // error handling
+    })
   }
 
   let dropdownTeams = ['No Teams Found']

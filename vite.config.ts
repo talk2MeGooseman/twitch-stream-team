@@ -5,9 +5,12 @@ import svgrPlugin from 'vite-plugin-svgr'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  define: {
+    'import.meta.vitest': undefined
+  },
   base: './',
   server: {
-    port: '8080'
+    port: 8080
   },
   resolve:{
     alias:{
@@ -28,6 +31,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
-    setupFiles: 'src/setupTests.js'
+    setupFiles: 'src/setupTests.js',
+    includeSource: ['src/**/*.{js,ts}']
   },
 })

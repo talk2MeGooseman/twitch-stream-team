@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios'
-import { toLower } from 'ramda'
+import { curry,toLower } from 'ramda'
 
 const BASE_URL = 'https://api.twitch.tv/helix/'
 // eslint-disable-next-line no-secrets/no-secrets
@@ -7,44 +7,44 @@ const CLIENT_ID = 'd4t75sazjvk9cc84h30mgkyg7evbvz'
 
 const BATCH_SIZE = 100
 
+const helixHeaders = (token: string) => ({
+    'Content-Type': 'application/json',
+    'Client-ID': CLIENT_ID,
+    Authorization: `Extension ${token}`,
+  })
+
 // Bits 500 - MajorThorn
 // Sub - indifferentghost
 
-function buildChannelParams(channels: HelixTeamUser[], key = 'id'): URLSearchParams {
+function buildChannelParams(channels: string[], key = 'id'): URLSearchParams {
   const params = new URLSearchParams()
   channels.forEach((channel) => {
-    params.append(key, channel.user_id || channel.id || channel)
+    params.append(key, channel)
   })
   return params
 }
 
-async function getStreams(channels: unknown[]): Promise<HelixStream[]> {
+async function getStreams(token: string, channels: string[]): Promise<HelixStream[]> {
   const params = buildChannelParams(channels, 'user_id')
 
   const response: AxiosResponse<{data: HelixStream[]}> = await axios({
     method: 'GET',
     baseURL: BASE_URL,
     url: `/streams?first=100&${params.toString()}`,
-    headers: {
-      'Content-Type': 'application/json',
-      'Client-ID': CLIENT_ID,
-    },
+    headers: helixHeaders(token),
   })
 
   return response.data.data
 }
 
-async function getUsers(channels: unknown[], key: 'id' | 'login' = 'id') : Promise<HelixUser[]> {
+async function getUsers(token: string, channels: string[], key: 'id' | 'login' = 'id') : Promise<HelixUser[]> {
   const params = buildChannelParams(channels, key)
 
   const response: AxiosResponse<{ data: HelixUser[] }> = await axios({
     method: 'GET',
     baseURL: BASE_URL,
     url: `/users?${params.toString()}`,
-    headers: {
-      'Content-Type': 'application/json',
-      'Client-ID': CLIENT_ID,
-    },
+    headers: helixHeaders(token),
   })
 
   // Ensuring we keep order of channels the same the order the user inputted
@@ -59,8 +59,8 @@ async function getUsers(channels: unknown[], key: 'id' | 'login' = 'id') : Promi
   return result
 }
 
-async function batchRequests(channels: unknown[], request: (channels: unknown[]) => Promise<unknown[]>): Promise<unknown[]> {
-  let channelList: unknown[] = []
+async function batchRequests<C,T>(channels:C[], request: (channels: C[]) => Promise<T[]>): Promise<T[]> {
+  let channelList: T[] = []
 
   for (let i = 0; i < channels.length; i += BATCH_SIZE) {
     const channelSlice = channels.slice(i, i + BATCH_SIZE)
@@ -72,22 +72,20 @@ async function batchRequests(channels: unknown[], request: (channels: unknown[])
   return channelList
 }
 
-export const requestLiveChannels = async (channels: unknown[]): Promise<unknown[]> => batchRequests(channels, async (channelsBatch) => getStreams(channelsBatch))
+export const requestLiveChannels = curry( async (token: string, channels: string[]): Promise<ReturnType<typeof getStreams>> => batchRequests(channels, async (channelsBatch) => getStreams(token, channelsBatch)))
 
-export const requestChannelsById = async (channels: unknown[]): Promise<unknown[]> => batchRequests(channels, async (c) => getUsers(c, 'id'))
+export const requestChannelsById = curry(async (token: string, channels: string[]): Promise<ReturnType<typeof getUsers>> => batchRequests(channels, async (c) => getUsers(token, c, 'id')))
 
-export const requestChannelsByName = async (channels: unknown[]): Promise<unknown[]> => batchRequests(channels, async (c) => getUsers(c, 'login'))
+export const requestChannelsByName = curry(async (token: string, channels: string[]): Promise<ReturnType<typeof getUsers>> => batchRequests(channels, async (c) => getUsers(token, c, 'login')))
 
-export async function requestChannelTeams(channelId: string): Promise<HelixChannelTeams | undefined> {
+export async function requestChannelTeams(token: string, channelId: string): Promise<HelixChannelTeams | undefined> {
   let response: AxiosResponse<HelixChannelTeams> | undefined
   try {
     response = await axios({
       method: 'GET',
       baseURL: BASE_URL,
       url: `/teams/channel?broadcaster_id=${channelId}`,
-      headers: {
-        'Client-id': CLIENT_ID,
-      },
+      headers: helixHeaders(token),
     })
   } catch (error) {
     // Do nothing
@@ -95,20 +93,17 @@ export async function requestChannelTeams(channelId: string): Promise<HelixChann
   return response?.data
 }
 
-export async function requestTeamInfo(teamName: string): Promise<{ data: HelixTeam[] } | undefined> {
-  let response: AxiosResponse<{ data: HelixTeam[] }> | undefined
+export async function requestTeamInfo(token: string, teamName: string): Promise<{ data: HelixTeam[] }> {
   try {
-    response = await axios({
+    const response = await axios<{ data: HelixTeam[] }>({
       method: 'GET',
       baseURL: BASE_URL,
       url: `/teams?name=${teamName}`,
-      headers: {
-        'Client-id': CLIENT_ID,
-      },
+      headers: helixHeaders(token),
     })
-  } catch (error) {
-    // Do nothing
-  }
 
-  return response?.data
+    return response.data
+  } catch (error) {
+    return { data: [] }
+  }
 }

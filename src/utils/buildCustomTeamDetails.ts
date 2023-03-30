@@ -1,11 +1,11 @@
 import { mergeRight } from 'ramda'
 import { applyCustomTeamSpec, fetchCustomMembersInfo } from 'utils'
 
-export const buildCustomTeamDetails = (customTeam: CustomTeam) => {
-  const customTeamSpec = applyCustomTeamSpec(customTeam)
-  return fetchCustomMembersInfo(customTeam.teamMembers)
+export const buildCustomTeamDetails = (token: string, customTeam: CustomTeam) => {
+  const team = applyCustomTeamSpec(customTeam)
+  return fetchCustomMembersInfo(token, team.channels)
     .then((data) => ({
       channels: data,
     }))
-    .then(mergeRight(customTeamSpec))
+    .then(mergeRight(team))
 }

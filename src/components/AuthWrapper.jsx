@@ -2,11 +2,8 @@ import { ApolloProvider } from '@apollo/client'
 import React, { useEffect, useState } from 'react'
 
 import { initClient } from '../services/Ebs'
+import { AuthContext } from '../utils/AuthContext'
 import Loader from './Loader'
-
-export const AuthContext = React.createContext({
-  channelId: ''
-})
 
 const AuthWrapper = ({ children, mode }) => {
   const [loading, setLoading] = useState(true)

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { MouseEventHandler } from 'react'
 import { IoIosTrash } from 'react-icons/io'
 import Icon from 'react-uwp/Icon'
 
@@ -7,7 +7,13 @@ const trashStyle = {
   pointerEvents: 'none',
 }
 
-export const ListItem = ({ channel, onRemoveChannel, index }) => (
+type ListItemProps = {
+  channel: HelixUser,
+  onRemoveChannel: MouseEventHandler<HTMLSpanElement>,
+  index: number,
+}
+
+export const ListItem = ({ channel, onRemoveChannel, index }: ListItemProps) => (
   <div key={index}>
     {channel.display_name}{' '}
     <Icon

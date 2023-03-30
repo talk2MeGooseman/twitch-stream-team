@@ -1,12 +1,16 @@
 import {
-  applySpec, prop,
+  applySpec, map,
+  pipe,
+  prop,
   propOr
 } from 'ramda'
 
-export const applyCustomTeamSpec = applySpec({
+export const applyCustomTeamSpec = applySpec<TeamSpecType>({
   name: prop('name'),
-  banner: propOr(null, 'banner'),
-  logo: propOr(null, 'logo'),
-  url_name: propOr(null, 'url_name'),
-  channels: prop('channels'),
+  channels: pipe<[CustomTeam], CustomTeamMember[], TeamMemberSpecType[]>(
+    propOr([], 'teamMembers'),
+    map(applySpec<TeamMemberSpecType>({
+      id: prop('channelId')
+    }))
+  )
 })

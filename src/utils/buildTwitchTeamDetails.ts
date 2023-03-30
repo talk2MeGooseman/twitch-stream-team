@@ -1,26 +1,19 @@
-import { head, isNil, mergeRight, prop } from 'ramda'
+import { head, mergeRight, prop } from 'ramda'
 import { requestTeamInfo } from 'services/TwitchAPI'
-import { applyTwitchTeamSpec, fetchTwitchTeamMemberInfo } from 'utils'
+import { convertHelixToTeamSpec, fetchTwitchTeamMemberInfo } from 'utils'
 
 
-export const buildTwitchTeamDetails = async (twitchTeam) => {
-
-  if (isNil(twitchTeam)) {
-    return null
-  }
-
-  const teamSpec = await requestTeamInfo(twitchTeam)
+export const buildTwitchTeamDetails = async (token: string, twitchTeam: string) => {
+  const teamSpec = await requestTeamInfo(token, twitchTeam)
     .then(prop('data'))
     .then(head)
-    .then(applyTwitchTeamSpec)
+    .then(convertHelixToTeamSpec)
 
-  if (isNil(teamSpec.channels)) {
-    return null
-  }
 
-  return fetchTwitchTeamMemberInfo(teamSpec.channels)
+  return fetchTwitchTeamMemberInfo(token, teamSpec.channels)
     .then((data) => ({
       channels: data,
     }))
     .then(mergeRight(teamSpec))
+    .catch(() => teamSpec)
 }

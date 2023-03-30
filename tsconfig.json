@@ -3,7 +3,8 @@
     "types": [
       "vite/client",
       "@types/jest",
-      "vitest/globals"
+      "vitest/globals",
+      "vitest/importMeta"
     ],
     "target": "es2020",
     "lib": ["dom", "dom.iterable", "esnext"],

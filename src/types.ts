@@ -1,4 +1,5 @@
-type Maybe<T> = T | null
+/* eslint-disable @typescript-eslint/no-unused-vars */
+type Maybe<T> = T | null | undefined
 type Exact<T extends { [key: string]: unknown }> = {
   [K in keyof T]: T[K]
 }
@@ -16,16 +17,16 @@ type Scalars = {
 }
 
 type CustomTeam = {
-  __typename?: 'CustomTeam'
-  id?: Maybe<Scalars['ID']>
-  name?: Maybe<Scalars['String']>
-  teamMembers?: Maybe<Array<Maybe<CustomTeamMember>>>
+  __typename: 'CustomTeam'
+  id: Maybe<Scalars['ID']>
+  name: Maybe<Scalars['String']>
+  teamMembers: Maybe<CustomTeamMember[]>
 }
 
 type CustomTeamMember = {
   __typename?: 'CustomTeamMember'
-  channelId?: Maybe<Scalars['String']>
-  id?: Maybe<Scalars['ID']>
+  channelId: Scalars['String']
+  id: Scalars['ID']
 }
 
 type RootMutationType = {
@@ -57,25 +58,25 @@ type RootQueryType = {
 }
 
 type StreamTeam = {
-  __typename?: 'StreamTeam'
-  customActive?: Maybe<Scalars['Boolean']>
-  customTeam?: Maybe<CustomTeam>
-  id?: Maybe<Scalars['ID']>
-  twitchTeam?: Maybe<Scalars['String']>
+  __typename: 'StreamTeam'
+  customActive: Maybe<Scalars['Boolean']>
+  customTeam: Maybe<CustomTeam>
+  id: Maybe<Scalars['ID']>
+  twitchTeam: Maybe<Scalars['String']>
 }
 
 type TeamMember = {
-  __typename?: 'TeamMember'
-  userId?: Maybe<Scalars['String']>
-  userLogin?: Maybe<Scalars['String']>
-  userName?: Maybe<Scalars['String']>
+  __typename: 'TeamMember'
+  userId: Maybe<Scalars['String']>
+  userLogin: Maybe<Scalars['String']>
+  userName: Maybe<Scalars['String']>
 }
 
 type TwitchChannel = {
-  __typename?: 'TwitchChannel'
-  channelId?: Maybe<Scalars['String']>
-  id?: Maybe<Scalars['ID']>
-  streamTeam?: Maybe<StreamTeam>
+  __typename: 'TwitchChannel'
+  channelId: Maybe<Scalars['String']>
+  id: Maybe<Scalars['ID']>
+  streamTeam: Maybe<StreamTeam>
 }
 
 type HelixTeamUser = {
@@ -151,6 +152,30 @@ interface TwitchTeam {
   team_name: string;
 }
 
-type TwitchTeams = TwitchTeam[] | undefined;
+interface TwitchTeamUser {
+  user_id: string
+  user_login: string
+  user_name: string
+}
 
-type CurrentTeam = string;
+
+interface TeamSpecType {
+  name: string
+  banner: Maybe<string>
+  logo: Maybe<string>
+  url_name: Maybe<string>
+  channels: TeamMemberSpecType[]
+}
+
+interface TeamMemberSpecType {
+  id: string
+  name: string
+  profileImage: string
+  description: string
+  isLive: boolean
+}
+
+interface AuthContextType {
+  channelId: string
+  helixToken: string
+}

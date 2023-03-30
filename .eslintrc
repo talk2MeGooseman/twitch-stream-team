@@ -2,7 +2,10 @@
   "env": {
     "browser": true
   },
-  "extends": ["auto", "react-app"],
+  "extends": ["auto", "react-app", "prettier"],
+  "globals": {
+    "vi": true
+  },
   "rules": {
     "quotes": ["error", "single"],
     "semi": ["error", "never"],
@@ -14,7 +17,9 @@
     "react/forbid-prop-types": 0,
     "promise/catch-or-return": 0,
     "import/no-extraneous-dependencies": 0,
-    "@typescript-eslint/explicit-function-return-type": 0
+    "@typescript-eslint/explicit-function-return-type": 0,
+    "@typescript-eslint/no-misused-promises": 0,
+    "@typescript-eslint/no-floating-promises": 0
   },
   "parserOptions": {
     "ecmaFeatures": {
