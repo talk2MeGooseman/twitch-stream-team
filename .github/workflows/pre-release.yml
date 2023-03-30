@@ -11,15 +11,15 @@ jobs:
     runs-on: "ubuntu-latest"
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: bahmutov/npm-install@v1
+      - uses: actions/checkout@latest
+      - uses: bahmutov/npm-install@latest
       - run: yarn build
       - name: Zip Release Build
         uses: thedoctor0/zip-release@main
         with:
           type: 'zip'
           filename: 'release.zip'
-          directory: 'build/'
+          directory: 'dist/'
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
@@ -27,4 +27,4 @@ jobs:
           prerelease: true
           title: "Development Build"
           files: |
-            build/release.zip
+            dist/release.zip
