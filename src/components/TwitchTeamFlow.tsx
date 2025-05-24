@@ -67,7 +67,6 @@ const TwitchTeamFlow = ({ twitchTeams, streamTeam }: TwitchTeamFlowProps, { them
                 zIndex: 1000, // Higher z-index to ensure it shows above other elements
               }}
               wrapperStyle={{
-                maxHeight: 300, // Set a reasonable max height for the wrapper
                 overflow: 'visible', // Ensure dropdown can expand
               }}
               values={dropdownTeams}
