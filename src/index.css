@@ -4,6 +4,13 @@ body {
   font-family: sans-serif;
 }
 
+/* Fix for DropDownMenu to ensure all items are visible */
+.dropDownMenu {
+  max-height: 300px !important; /* Set max height */
+  overflow-y: auto !important; /* Enable vertical scrolling if content exceeds max-height */
+  z-index: 1000 !important; /* Ensure dropdown appears above other elements */
+}
+
 
 .pulse {
   display: block;

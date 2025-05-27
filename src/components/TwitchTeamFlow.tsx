@@ -61,7 +61,14 @@ const TwitchTeamFlow = ({ twitchTeams, streamTeam }: TwitchTeamFlowProps, { them
           <li>
             Step 3: Select your team (if you have multiple teams);
             <DropDownMenu
-              style={baseStyle}
+              style={{
+                ...baseStyle,
+                position: 'relative', // Ensure dropdown is positioned relative to parent
+                zIndex: 1000, // Higher z-index to ensure it shows above other elements
+              }}
+              wrapperStyle={{
+                overflow: 'visible', // Ensure dropdown can expand
+              }}
               values={dropdownTeams}
               defaultValue={team}
               onChangeValue={onChange}
