@@ -36,22 +36,19 @@ beforeEach(() => {
 })
 
 describe('useLiveStatusFetcher', () => {
-  it('marks channels with their matching live stream', async () => {
+  it('marks live channels with a boolean and sorts them to the front', async () => {
     // channel 2 is live
-    mockedLive.mockImplementation(() => async () => [{ user_id: '2' }] as never)
+    mockedLive.mockResolvedValue([{ user_id: '2' }] as never)
 
     const { result } = renderHook(() => useLiveStatusFetcher(team), { wrapper })
 
     await waitFor(() => expect(result.current.isLoading).toBe(false))
 
     expect(result.current.channels).toHaveLength(2)
-    const live = result.current.channels.find((c) => c.id === '2')
-    const offline = result.current.channels.find((c) => c.id === '1')
-    // NOTE: current code assigns the matched stream object (truthy) to `isLive`,
-    // not a boolean. Because of that, the `descend(prop('isLive'))` sort comparing
-    // an object against `undefined` is a no-op and does not reorder live-first.
-    expect(live?.isLive).toEqual({ user_id: '2' })
-    expect(offline?.isLive).toBeUndefined()
+    // live channel is sorted to the front and flagged with a boolean
+    expect(result.current.channels[0].id).toBe('2')
+    expect(result.current.channels[0].isLive).toBe(true)
+    expect(result.current.channels.find((c) => c.id === '1')?.isLive).toBe(false)
   })
 
   it('does not fetch when there is no auth token', async () => {

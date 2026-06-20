@@ -6,7 +6,7 @@ import '@testing-library/jest-dom'
 
 import { vi } from 'vitest'
 
-// jsdom does not implement ResizeObserver, which react-uwp instantiates at
+// jsdom does not implement ResizeObserver, which some components rely on at
 // runtime. Provide a no-op mock so components can render under test.
 class ResizeObserverMock {
   observe() {}

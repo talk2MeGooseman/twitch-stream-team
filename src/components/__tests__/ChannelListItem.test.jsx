@@ -44,11 +44,9 @@ describe('ChannelListItem', () => {
   })
 
   it('calls the Twitch follow action when the follow button is clicked', () => {
-    const { container } = renderWithProviders(<ChannelListItem channel={channel} />)
+    const { getByRole } = renderWithProviders(<ChannelListItem channel={channel} />)
 
-    // The follow control is a react-uwp IconButton wrapping the heart icon,
-    // which renders the only <svg> in the row.
-    fireEvent.click(container.querySelector('svg'))
+    fireEvent.click(getByRole('button', { name: /follow/i }))
 
     expect(window.Twitch.ext.actions.followChannel).toHaveBeenCalledWith('Talk2MeGooseman')
   })

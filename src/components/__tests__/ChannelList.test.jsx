@@ -24,7 +24,7 @@ const team = {
 }
 
 beforeEach(() => {
-  vi.mocked(requestLiveChannels).mockImplementation(() => async () => [])
+  vi.mocked(requestLiveChannels).mockResolvedValue([])
 })
 
 describe('ChannelList', () => {

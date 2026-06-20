@@ -33,11 +33,7 @@ describe('useFormActions', () => {
 
     const { result } = renderHook(() => useFormActions(push, setName), { wrapper })
 
-    const setValue = vi.fn()
-    result.current.channelTextBoxRef.current = {
-      getValue: () => 'Goose',
-      setValue,
-    } as never
+    result.current.channelTextBoxRef.current = { value: 'Goose' } as HTMLInputElement
 
     await act(async () => {
       await result.current.onChannelEnter()
@@ -45,7 +41,7 @@ describe('useFormActions', () => {
 
     expect(mockedByName).toHaveBeenCalledWith('token', ['goose'])
     expect(push).toHaveBeenCalledWith(channel)
-    expect(setValue).toHaveBeenCalledWith('')
+    expect(result.current.channelTextBoxRef.current?.value).toBe('')
     expect(result.current.errorMessages.channel).toBeUndefined()
   })
 
@@ -55,10 +51,7 @@ describe('useFormActions', () => {
 
     const { result } = renderHook(() => useFormActions(push, vi.fn()), { wrapper })
 
-    result.current.channelTextBoxRef.current = {
-      getValue: () => 'ghost',
-      setValue: vi.fn(),
-    } as never
+    result.current.channelTextBoxRef.current = { value: 'ghost' } as HTMLInputElement
 
     await act(async () => {
       await result.current.onChannelEnter()
@@ -74,10 +67,7 @@ describe('useFormActions', () => {
     const push = vi.fn()
     const { result } = renderHook(() => useFormActions(push, vi.fn()), { wrapper })
 
-    result.current.channelTextBoxRef.current = {
-      getValue: () => '',
-      setValue: vi.fn(),
-    } as never
+    result.current.channelTextBoxRef.current = { value: '' } as HTMLInputElement
 
     await act(async () => {
       await result.current.onChannelEnter()
@@ -91,9 +81,7 @@ describe('useFormActions', () => {
     const setName = vi.fn()
     const { result } = renderHook(() => useFormActions(vi.fn(), setName), { wrapper })
 
-    result.current.teamNameTextBoxRef.current = {
-      getValue: () => 'My Team',
-    } as never
+    result.current.teamNameTextBoxRef.current = { value: 'My Team' } as HTMLInputElement
 
     act(() => {
       result.current.onTeamNameChange()

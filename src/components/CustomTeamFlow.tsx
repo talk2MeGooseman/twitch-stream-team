@@ -1,13 +1,15 @@
 import { useMutation } from '@apollo/client'
-import PropTypes from 'prop-types'
+import {
+  Box,
+  Button,
+  List,
+  ListItem as MuiListItem,
+  Snackbar,
+  TextField,
+  Typography,
+} from '@mui/material'
 import { pluck } from 'ramda'
 import React, { MouseEventHandler, useCallback, useContext, useEffect, useState } from 'react'
-import { useList, useToggle } from 'react-use'
-import type { Theme } from 'react-uwp'
-import Button from 'react-uwp/Button'
-import ListView from 'react-uwp/ListView'
-import TextBox from 'react-uwp/TextBox'
-import Toast from 'react-uwp/Toast'
 import { ChannelTeamQuery, CustomTeamMutation } from 'services/graphql'
 
 import { useActivateCustomTeam } from '../hooks/useActivateCustomTeam'
@@ -17,159 +19,168 @@ import { AuthContext } from '../utils/AuthContext'
 import { ListItem } from './ListItem'
 import Loader from './Loader'
 
-const paddingStyle = {
-  margin: '10px 0',
-}
+const fieldStyle = { my: 1 }
 
 type CustomTeamFlowProps = {
   streamTeam: StreamTeam
-};
+}
 
-const CustomTeamFlow = ({ streamTeam }: CustomTeamFlowProps, { theme }: { theme: Theme }) => {
+const CustomTeamFlow = ({ streamTeam }: CustomTeamFlowProps) => {
   const { customTeam, customActive } = streamTeam
-  const [isLoading, toggleLoading] = useToggle(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [isSaved, setSaved] = useState(false)
-  const [isDirty, toggleDirty] = useToggle(false)
+  const [isDirty, setIsDirty] = useState(false)
   const [teamName, setTeamName] = useState(customTeam?.name)
-  const [teamMembers, { push, removeAt, set: setTeamMembers }] = useList<HelixUser>()
+  const [teamMembers, setTeamMembers] = useState<HelixUser[]>([])
   const [activateCustomTeam] = useActivateCustomTeam()
   const authInfo = useContext(AuthContext)
 
-  const refetchQueries = customActive ? [ChannelTeamQuery] : []
+  const markDirty = useCallback(() => setIsDirty(true), [])
+  const push = useCallback(
+    (channel: HelixUser) => setTeamMembers((prev) => [...prev, channel]),
+    []
+  )
+  const removeAt = useCallback(
+    (index: number) => setTeamMembers((prev) => prev.filter((_, i) => i !== index)),
+    []
+  )
 
-  const [saveMutation] = useMutation(CustomTeamMutation, {
-    refetchQueries,
-  })
+  const refetchQueries = customActive ? [ChannelTeamQuery] : []
+  const [saveMutation] = useMutation(CustomTeamMutation, { refetchQueries })
+
   const onSave = useCallback(() => {
     saveMutation({
       variables: {
         name: teamName,
         memberIds: pluck('id', teamMembers),
       },
-    }).then(() => setSaved(true)).then(toggleDirty)
-      .catch((error) => { })
-  }, [saveMutation, teamMembers, teamName, toggleDirty])
+    })
+      .then(() => {
+        setSaved(true)
+        setIsDirty(false)
+      })
+      .catch(() => {})
+  }, [saveMutation, teamMembers, teamName])
 
   useEffect(() => {
     if (!authInfo?.helixToken || !customTeam) return
 
-    fetchCustomTeamMemberInfo({
-      token: authInfo.helixToken,
-      customTeam
-    }).then(setTeamMembers).then(() => toggleLoading(false)).catch(() => { })
-  }, [authInfo?.helixToken, customTeam, customTeam?.teamMembers, setTeamMembers, toggleLoading])
+    fetchCustomTeamMemberInfo({ token: authInfo.helixToken, customTeam })
+      .then(setTeamMembers)
+      .then(() => setIsLoading(false))
+      .catch(() => {})
+  }, [authInfo?.helixToken, customTeam])
 
-  const addChannel = useCallback((channel: HelixUser) => {
-    push(channel)
-    toggleDirty(true)
-  }, [push, toggleDirty])
+  const addChannel = useCallback(
+    (channel: HelixUser) => {
+      push(channel)
+      markDirty()
+    },
+    [push, markDirty]
+  )
 
-  const changeName = useCallback((name: string) => {
-    setTeamName(name)
-    toggleDirty(true)
-  }, [push, toggleDirty])
+  const changeName = useCallback(
+    (name: string) => {
+      setTeamName(name)
+      markDirty()
+    },
+    [markDirty]
+  )
 
-  const {
-    onTeamNameChange,
-    onChannelEnter,
-    errorMessages,
-    teamNameTextBoxRef,
-    channelTextBoxRef,
-  } = useFormActions(addChannel, changeName)
+  const { onTeamNameChange, onChannelEnter, errorMessages, teamNameTextBoxRef, channelTextBoxRef } =
+    useFormActions(addChannel, changeName)
 
-  const onRemoveChannel: MouseEventHandler<HTMLSpanElement> = (event) => {
-    const { channelIndex } = event.target.dataset
+  const onRemoveChannel: MouseEventHandler<HTMLButtonElement> = (event) => {
+    const { channelIndex } = event.currentTarget.dataset
     if (channelIndex) {
-      toggleDirty(true)
+      markDirty()
       removeAt(parseInt(channelIndex, 10))
     }
   }
 
   if (isLoading) return <Loader />
 
-  const customTeamItems = teamMembers.map((channel, index) => (
-    <ListItem
-      onRemoveChannel={onRemoveChannel}
-      channel={channel}
-      index={index}
-    />
-  ))
-
-  if (customTeamItems.length === 0) {
-    customTeamItems.push(<div>No Team Members</div>)
-  }
-
   return (
     <>
-      <Toast
-        defaultShow={isDirty}
-        title="Change Detected"
-        description={['You have unsaved changes.', 'Click save to see updates.']}
-        showCloseIcon
-      />
-      <div style={{ marginTop: '5px', ...theme.typographyStyles.subTitle }}>
+      <Snackbar open={isDirty} message="You have unsaved changes. Click save to see updates." />
+      <Typography variant="subtitle1" sx={{ mt: 1 }}>
         Instructions:
-      </div>
-      <div style={{ marginTop: '5px', ...theme.typographyStyles.baseAlt }}>
-        <ul style={{ listStyleType: 'none' }}>
-          <li>
-            Step 1: Name Your Team <br />
-            <TextBox
-              ref={teamNameTextBoxRef}
-              style={paddingStyle}
-              placeholder="Team Name"
-              defaultValue={teamName}
-              onChangeValue={onTeamNameChange}
-            />
-          </li>
-          <li>
-            Step 2: Add the Channels you want to have <br />
-            <TextBox
-              ref={channelTextBoxRef}
-              style={paddingStyle}
-              placeholder="Channel Name"
-            />
-            {errorMessages.channel && <div>{errorMessages.channel}</div>}
-            <Button style={paddingStyle} onClick={onChannelEnter}>
-              Add Channel
-            </Button>
-          </li>
-          <li>
-            <ListView
-              listSource={customTeamItems}
-              listItemStyle={{ height: 40 }}
-            />
-          </li>
-          <li>
-            Step 3: Save your Custom Team
-            <br />
-            <Button
-              style={paddingStyle}
-              onClick={onSave}
-              background={theme.accent}
-              disabled={!isDirty}
-            >
-              Save
-            </Button>{' '}
-            {isSaved && <h5 style={{ display: 'inline-block' }}>Saved!</h5>}
-          </li>
-          <li>
-            Step 4: Display your Custom Team in the panel
-            <br />
-            <Button
-              style={paddingStyle}
-              onClick={activateCustomTeam}
-              background={theme.accent}
-              disabled={customActive}
-            >
-              Set Custom Team in Panel
-            </Button>
-          </li>
-        </ul>
-      </div>
+      </Typography>
+      <Box component="ul" sx={{ listStyleType: 'none', pl: 0 }}>
+        <li>
+          Step 1: Name Your Team
+          <TextField
+            inputRef={teamNameTextBoxRef}
+            fullWidth
+            size="small"
+            placeholder="Team Name"
+            defaultValue={teamName ?? ''}
+            onChange={onTeamNameChange}
+            sx={fieldStyle}
+          />
+        </li>
+        <li>
+          Step 2: Add the Channels you want to have
+          <TextField
+            inputRef={channelTextBoxRef}
+            fullWidth
+            size="small"
+            placeholder="Channel Name"
+            error={Boolean(errorMessages.channel)}
+            helperText={errorMessages.channel}
+            sx={fieldStyle}
+          />
+          <Button variant="outlined" onClick={onChannelEnter} sx={fieldStyle}>
+            Add Channel
+          </Button>
+        </li>
+        <li>
+          <List>
+            {teamMembers.length === 0 ? (
+              <MuiListItem>No Team Members</MuiListItem>
+            ) : (
+              teamMembers.map((channel, index) => (
+                <MuiListItem key={channel.id ?? index} sx={{ height: 40 }}>
+                  <ListItem onRemoveChannel={onRemoveChannel} channel={channel} index={index} />
+                </MuiListItem>
+              ))
+            )}
+          </List>
+        </li>
+        <li>
+          Step 3: Save your Custom Team
+          <br />
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={onSave}
+            disabled={!isDirty}
+            sx={fieldStyle}
+          >
+            Save
+          </Button>{' '}
+          {isSaved && (
+            <Typography component="span" variant="subtitle2" sx={{ display: 'inline-block' }}>
+              Saved!
+            </Typography>
+          )}
+        </li>
+        <li>
+          Step 4: Display your Custom Team in the panel
+          <br />
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={activateCustomTeam}
+            disabled={Boolean(customActive)}
+            sx={fieldStyle}
+          >
+            Set Custom Team in Panel
+          </Button>
+        </li>
+      </Box>
     </>
   )
 }
 
-CustomTeamFlow.contextTypes = { theme: PropTypes.object }
 export default CustomTeamFlow

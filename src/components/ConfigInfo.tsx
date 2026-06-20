@@ -1,10 +1,6 @@
-import { QueryResult, useQuery } from '@apollo/client'
-import PropTypes from 'prop-types'
-import React, { useContext } from 'react'
-import { useAsync } from 'react-use'
-import type { Theme } from 'react-uwp'
-import Separator from 'react-uwp/Separator'
-import Tabs, { Tab } from 'react-uwp/Tabs'
+import { useQuery } from '@apollo/client'
+import { Box, Divider, Tab, Tabs, Typography } from '@mui/material'
+import React, { useContext, useEffect, useState } from 'react'
 import { CUSTOM_TEAM_PANEL_ACTIVE, TWITCH_TEAM_PANEL_ACTIVE } from 'services/constants'
 import { ChannelTeamQuery } from 'services/graphql'
 import { requestChannelTeams } from 'services/TwitchAPI'
@@ -15,56 +11,64 @@ import CustomTeamFlow from './CustomTeamFlow'
 import Loader from './Loader'
 import TwitchTeamFlow from './TwitchTeamFlow'
 
-type ConfigInfoProps = Record<string, never>;
-
-const ConfigInfo = (_props: ConfigInfoProps, { theme }: { theme: Theme }) => {
-  let focusTabIndex = TWITCH_TEAM_PANEL_ACTIVE
-
+const ConfigInfo = () => {
   const authInfo = useContext(AuthContext)
-  const { data, loading: fetching } : QueryResult<RootQueryType> = useQuery(ChannelTeamQuery)
+  const { data, loading: fetching } = useQuery<RootQueryType>(ChannelTeamQuery)
+  const [twitchTeams, setTwitchTeams] = useState<HelixChannelTeam[] | undefined>()
+  const [loadingTeams, setLoadingTeams] = useState(true)
+  const [selectedTab, setSelectedTab] = useState<number | null>(null)
 
-  const { loading, value: twitchTeams } = useAsync(async () => {
-    if(!authInfo?.helixToken || !authInfo?.channelId) return []
+  useEffect(() => {
+    let active = true
 
-    const response = await requestChannelTeams(authInfo?.helixToken, authInfo.channelId)
-    return response?.data
+    if (!authInfo?.helixToken || !authInfo?.channelId) {
+      setTwitchTeams([])
+      setLoadingTeams(false)
+      return undefined
+    }
+
+    setLoadingTeams(true)
+    requestChannelTeams(authInfo.helixToken, authInfo.channelId).then((response) => {
+      if (active) {
+        setTwitchTeams(response?.data)
+        setLoadingTeams(false)
+      }
+    })
+
+    return () => {
+      active = false
+    }
   }, [authInfo?.helixToken, authInfo?.channelId])
 
-  if (fetching || loading) return <Loader />
+  if (fetching || loadingTeams) return <Loader />
 
   const streamTeam = getStreamTeamProp(data)
-  console.log({ twitchTeams, streamTeam })
-  if (!hasTwitchTeam(twitchTeams) || streamTeam?.customActive) {
-    focusTabIndex = CUSTOM_TEAM_PANEL_ACTIVE
-  }
+  const defaultTab =
+    !hasTwitchTeam(twitchTeams) || streamTeam?.customActive
+      ? CUSTOM_TEAM_PANEL_ACTIVE
+      : TWITCH_TEAM_PANEL_ACTIVE
+  const currentTab = selectedTab ?? defaultTab
 
   return (
-    <div style={{ marginLeft: '30px' }}>
-      <h1 style={theme.typographyStyles.header}>Stream Team</h1>
-      <Separator />
-      <div
-        style={{
-          marginTop: '5px',
-          marginBottom: '5px',
-          ...theme.typographyStyles.subTitle,
-        }}
-      >
-        Select if you want to show case your Twitch Team or build a custom team
-        with all your favorite streamers
-      </div>
-      <Tabs defaultFocusTabIndex={focusTabIndex}>
-        <Tab title="Twitch Team Selection">
-          <TwitchTeamFlow twitchTeams={twitchTeams || []} streamTeam={streamTeam} />
-        </Tab>
-
-        <Tab title="Custom Team Builder">
-          <CustomTeamFlow streamTeam={streamTeam} />
-        </Tab>
+    <Box sx={{ ml: 4 }}>
+      <Typography variant="h4" component="h1">
+        Stream Team
+      </Typography>
+      <Divider />
+      <Typography variant="subtitle1" sx={{ my: 1 }}>
+        Select if you want to show case your Twitch Team or build a custom team with all your
+        favorite streamers
+      </Typography>
+      <Tabs value={currentTab} onChange={(_event, value: number) => setSelectedTab(value)}>
+        <Tab label="Twitch Team Selection" />
+        <Tab label="Custom Team Builder" />
       </Tabs>
-    </div>
+      {currentTab === TWITCH_TEAM_PANEL_ACTIVE && (
+        <TwitchTeamFlow twitchTeams={twitchTeams || []} streamTeam={streamTeam} />
+      )}
+      {currentTab === CUSTOM_TEAM_PANEL_ACTIVE && <CustomTeamFlow streamTeam={streamTeam} />}
+    </Box>
   )
 }
-
-ConfigInfo.contextTypes = { theme: PropTypes.object }
 
 export default ConfigInfo

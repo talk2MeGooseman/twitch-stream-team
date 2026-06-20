@@ -1,27 +1,16 @@
-import { andThen, map, pipe, pluck } from 'ramda'
 import { requestChannelsById } from 'services/TwitchAPI'
 
 import { applyMemberSpec } from './applyMemberSpec'
 
-export const fetchCustomMembersInfo = async (token: string, data: TeamMemberSpecType[]) => pipe<
-  [TeamMemberSpecType[]],
-  string[],
-  Promise<TwitchChannel[]>,
-  Promise<TeamMemberSpecType[]>
->(
-  pluck('id'),
-  requestChannelsById(token),
-  andThen(map(applyMemberSpec))
-)(data)
+const fetchMembers = async (
+  token: string,
+  channels: TeamMemberSpecType[]
+): Promise<TeamMemberSpecType[]> => {
+  const ids = channels.map((channel) => channel.id)
+  const users = await requestChannelsById(token)(ids)
+  return users.map(applyMemberSpec)
+}
 
-export const fetchTwitchTeamMemberInfo = async (token: string, channels: TeamMemberSpecType[] ) => pipe<
-[TeamMemberSpecType[]],
-string[],
-Promise<TwitchChannel[]>,
-Promise<TeamMemberSpecType[]>
->(
-  pluck('id'),
-  requestChannelsById(token),
-  andThen(map(applyMemberSpec)),
-)(channels)
+export const fetchCustomMembersInfo = fetchMembers
 
+export const fetchTwitchTeamMemberInfo = fetchMembers

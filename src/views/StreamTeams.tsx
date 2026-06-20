@@ -1,3 +1,4 @@
+import { Typography } from '@mui/material'
 import { useTeamInfoFetcher } from 'hooks/useTeamInfoFetcher'
 import { isNil } from 'ramda'
 import React from 'react'
@@ -20,7 +21,11 @@ const StreamTeams = () => {
   }
 
   if (isNil(teamInfo)) {
-    return <h1>No team found, please setup your team in the extension configuration panel.</h1>
+    return (
+      <Typography variant="h5" component="h1">
+        No team found, please setup your team in the extension configuration panel.
+      </Typography>
+    )
   }
 
   return (

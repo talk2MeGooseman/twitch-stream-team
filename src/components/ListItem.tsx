@@ -1,27 +1,26 @@
+import DeleteIcon from '@mui/icons-material/Delete'
+import { Box, IconButton } from '@mui/material'
 import React, { MouseEventHandler } from 'react'
-import { IoIosTrash } from 'react-icons/io'
-import Icon from 'react-uwp/Icon'
-
-const trashStyle = {
-  fontSize: '18px',
-  pointerEvents: 'none',
-}
 
 type ListItemProps = {
-  channel: HelixUser,
-  onRemoveChannel: MouseEventHandler<HTMLSpanElement>,
-  index: number,
+  channel: HelixUser
+  onRemoveChannel: MouseEventHandler<HTMLButtonElement>
+  index: number
 }
 
 export const ListItem = ({ channel, onRemoveChannel, index }: ListItemProps) => (
-  <div key={index}>
-    {channel.display_name}{' '}
-    <Icon
-      onClick={onRemoveChannel}
+  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+    {channel.display_name}
+    <IconButton
+      size="small"
+      aria-label={`Remove ${channel.display_name}`}
       data-testid="trash-can"
       data-channel-index={index}
+      onClick={onRemoveChannel}
     >
-      <IoIosTrash style={trashStyle} />
-    </Icon>
-  </div>
+      <DeleteIcon fontSize="small" sx={{ pointerEvents: 'none' }} />
+    </IconButton>
+  </Box>
 )
+
+export default ListItem
