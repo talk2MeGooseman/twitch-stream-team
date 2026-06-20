@@ -13,7 +13,7 @@ export const TeamCountStripe = ({ count }: TeamCountStripeProps) => (
     >
       Team Members
     </Typography>
-    <Typography variant="caption" sx={{ color: 'primary.main', fontWeight: 700 }}>
+    <Typography variant="caption" sx={{ color: 'secondary.main', fontWeight: 700 }}>
       {count}
     </Typography>
   </Box>

@@ -36,22 +36,22 @@ const avatar = (label: string, color: string) =>
   )}`
 
 const channels = [
-  { id: '1', name: 'Talk2MeGooseman', description: 'Building cool stuff with code', profileImage: avatar('TG', '#9147ff'), isLive: true },
-  { id: '2', name: 'JensDuck', description: 'Game dev & chill vibes', profileImage: avatar('JD', '#0078d7'), isLive: false },
-  { id: '3', name: 'rw_grim', description: 'Open source & libpurple', profileImage: avatar('RG', '#1f8a4c'), isLive: true },
-  { id: '4', name: 'MajorThorn', description: 'Strategy and city builders', profileImage: avatar('MT', '#e0598b'), isLive: false },
+  { id: '1', name: 'Talk2MeGooseman', description: 'Building cool stuff with code', profileImage: avatar('TG', '#6d5efc'), isLive: true },
+  { id: '2', name: 'JensDuck', description: 'Game dev & chill vibes', profileImage: avatar('JD', '#2dd4bf'), isLive: false },
+  { id: '3', name: 'rw_grim', description: 'Open source & libpurple', profileImage: avatar('RG', '#34d399'), isLive: true },
+  { id: '4', name: 'MajorThorn', description: 'Strategy and city builders', profileImage: avatar('MT', '#fb7185'), isLive: false },
 ] as TeamMemberSpecType[]
 
 const banner = (label: string) =>
   `data:image/svg+xml;utf8,${encodeURIComponent(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="120"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6441a4"/><stop offset="1" stop-color="#9147ff"/></linearGradient></defs><rect width="600" height="120" fill="url(#g)"/><text x="120" y="74" font-size="44" fill="white" font-family="Segoe UI, sans-serif" font-weight="300">${label}</text></svg>`
+    `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="120"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6d5efc"/><stop offset="0.5" stop-color="#a855f7"/><stop offset="1" stop-color="#2dd4bf"/></linearGradient></defs><rect width="600" height="120" fill="url(#g)"/><text x="120" y="74" font-size="44" fill="white" font-family="Inter, Segoe UI, sans-serif" font-weight="600">${label}</text></svg>`
   )}`
 
 const team = {
   name: 'Brain Bytes',
   url_name: 'brainbytes',
   banner: banner('Brain Bytes'),
-  logo: avatar('BB', '#1f1f23'),
+  logo: avatar('BB', '#11141d'),
   channels,
 } as TeamSpecType
 

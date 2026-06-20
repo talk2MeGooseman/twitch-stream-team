@@ -1,6 +1,8 @@
 import { Avatar, Box, Typography } from '@mui/material'
 import React from 'react'
 
+import { gradients } from '../theme'
+
 type TeamHeaderProps = {
   team: TeamSpecType
 }
@@ -34,7 +36,7 @@ const TeamHeader = ({ team }: TeamHeaderProps) => (
         )}
       </Box>
     ) : (
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, p: 2 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, p: 2, background: gradients.brand }}>
         {team.logo && <Avatar src={team.logo} alt="" variant="rounded" sx={{ width: 44, height: 44 }} />}
         <Typography variant="h6" noWrap>
           {team.name}
