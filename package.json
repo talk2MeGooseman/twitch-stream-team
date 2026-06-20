@@ -17,6 +17,7 @@
   },
   "scripts": {
     "start": "PORT=8080 vite",
+    "mock": "PORT=8080 vite --open /preview.html",
     "build": "vite build",
     "preview": "vite preview",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",

@@ -24,6 +24,22 @@ with.
 The extension is loaded with a `mode` query parameter (`config`, `viewer` or
 `dashboard`) that selects which view renders.
 
+### Previewing with mock data
+
+The real app needs the Twitch CDN auth helper and the GraphQL backend, so it
+can't render meaningfully in isolation. To work on the UI against mock data
+instead, run:
+
+```
+yarn mock
+```
+
+This serves `preview.html`, which renders the viewer panel and broadcaster
+config components with fake data — no Twitch auth or backend required. Edit the
+sample data in `src/preview/mockData.ts` to try different shapes (live/offline
+channels, teams, members). The preview is dev-only and is not part of the
+production build.
+
 ## Production build
 
 1. `yarn install`
