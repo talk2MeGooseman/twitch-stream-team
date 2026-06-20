@@ -9,7 +9,6 @@ vi.mock('services/TwitchAPI', () => ({
   requestChannelsByName: vi.fn(),
 }))
 
-// eslint-disable-next-line import/first
 import { requestChannelsById } from 'services/TwitchAPI'
 
 const authValue = { helixToken: 'token', channelId: 'c1' }

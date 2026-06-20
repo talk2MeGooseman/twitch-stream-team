@@ -9,7 +9,6 @@ vi.mock('services/TwitchAPI', () => ({
   requestLiveChannels: vi.fn(),
 }))
 
-// eslint-disable-next-line import/first
 import { requestLiveChannels } from 'services/TwitchAPI'
 
 const mockedLive = vi.mocked(requestLiveChannels)

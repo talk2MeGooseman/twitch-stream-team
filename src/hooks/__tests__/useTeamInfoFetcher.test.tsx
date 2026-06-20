@@ -14,9 +14,7 @@ vi.mock('utils/buildCustomTeamDetails', () => ({
   buildCustomTeamDetails: vi.fn(),
 }))
 
-// eslint-disable-next-line import/first
 import { buildCustomTeamDetails } from 'utils/buildCustomTeamDetails'
-// eslint-disable-next-line import/first
 import { buildTwitchTeamDetails } from 'utils/buildTwitchTeamDetails'
 
 const mockedBuildTwitch = vi.mocked(buildTwitchTeamDetails)

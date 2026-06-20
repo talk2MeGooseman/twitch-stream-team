@@ -48,7 +48,7 @@ export const useLiveStatusFetcher = (team: TeamSpecType) => {
     )
 
     return () => clearInterval(intervalId)
-  }, [authInfo?.helixToken, team, team.channels])
+  }, [authInfo, team])
 
   return { channels, isLoading }
 }
