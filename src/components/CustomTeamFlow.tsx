@@ -4,7 +4,10 @@ import {
   Button,
   List,
   ListItem as MuiListItem,
+  ListItemText,
+  Paper,
   Snackbar,
+  Stack,
   TextField,
   Typography,
 } from '@mui/material'
@@ -18,8 +21,6 @@ import { fetchCustomTeamMemberInfo } from '../utils'
 import { AuthContext } from '../utils/AuthContext'
 import { ListItem } from './ListItem'
 import Loader from './Loader'
-
-const fieldStyle = { my: 1 }
 
 type CustomTeamFlowProps = {
   streamTeam: StreamTeam
@@ -36,10 +37,7 @@ const CustomTeamFlow = ({ streamTeam }: CustomTeamFlowProps) => {
   const authInfo = useContext(AuthContext)
 
   const markDirty = useCallback(() => setIsDirty(true), [])
-  const push = useCallback(
-    (channel: HelixUser) => setTeamMembers((prev) => [...prev, channel]),
-    []
-  )
+  const push = useCallback((channel: HelixUser) => setTeamMembers((prev) => [...prev, channel]), [])
   const removeAt = useCallback(
     (index: number) => setTeamMembers((prev) => prev.filter((_, i) => i !== index)),
     []
@@ -103,82 +101,63 @@ const CustomTeamFlow = ({ streamTeam }: CustomTeamFlowProps) => {
   return (
     <>
       <Snackbar open={isDirty} message="You have unsaved changes. Click save to see updates." />
-      <Typography variant="subtitle1" sx={{ mt: 1 }}>
-        Instructions:
-      </Typography>
-      <Box component="ul" sx={{ listStyleType: 'none', pl: 0 }}>
-        <li>
-          Step 1: Name Your Team
-          <TextField
-            inputRef={teamNameTextBoxRef}
-            fullWidth
-            size="small"
-            placeholder="Team Name"
-            defaultValue={teamName ?? ''}
-            onChange={onTeamNameChange}
-            sx={fieldStyle}
-          />
-        </li>
-        <li>
-          Step 2: Add the Channels you want to have
+      <Stack spacing={2.5}>
+        <TextField
+          inputRef={teamNameTextBoxRef}
+          label="Team name"
+          fullWidth
+          size="small"
+          defaultValue={teamName ?? ''}
+          onChange={onTeamNameChange}
+        />
+
+        <Box sx={{ display: 'flex', gap: 1, alignItems: 'flex-start' }}>
           <TextField
             inputRef={channelTextBoxRef}
+            label="Add a channel"
             fullWidth
             size="small"
-            placeholder="Channel Name"
             error={Boolean(errorMessages.channel)}
             helperText={errorMessages.channel}
-            sx={fieldStyle}
           />
-          <Button variant="outlined" onClick={onChannelEnter} sx={fieldStyle}>
-            Add Channel
+          <Button variant="outlined" onClick={onChannelEnter} sx={{ flexShrink: 0, height: 40 }}>
+            Add
           </Button>
-        </li>
-        <li>
-          <List>
+        </Box>
+
+        <Paper variant="outlined" sx={{ maxHeight: 220, overflowY: 'auto' }}>
+          <List dense disablePadding>
             {teamMembers.length === 0 ? (
-              <MuiListItem>No Team Members</MuiListItem>
+              <MuiListItem>
+                <ListItemText
+                  primary="No Team Members"
+                  slotProps={{ primary: { variant: 'body2', color: 'text.secondary' } }}
+                />
+              </MuiListItem>
             ) : (
               teamMembers.map((channel, index) => (
-                <MuiListItem key={channel.id ?? index} sx={{ height: 40 }}>
+                <MuiListItem key={channel.id ?? index} divider>
                   <ListItem onRemoveChannel={onRemoveChannel} channel={channel} index={index} />
                 </MuiListItem>
               ))
             )}
           </List>
-        </li>
-        <li>
-          Step 3: Save your Custom Team
-          <br />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={onSave}
-            disabled={!isDirty}
-            sx={fieldStyle}
-          >
+        </Paper>
+
+        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+          <Button variant="contained" onClick={onSave} disabled={!isDirty}>
             Save
-          </Button>{' '}
+          </Button>
+          <Button variant="outlined" onClick={activateCustomTeam} disabled={Boolean(customActive)}>
+            Set in Panel
+          </Button>
           {isSaved && (
-            <Typography component="span" variant="subtitle2" sx={{ display: 'inline-block' }}>
+            <Typography variant="body2" sx={{ color: 'success.main' }}>
               Saved!
             </Typography>
           )}
-        </li>
-        <li>
-          Step 4: Display your Custom Team in the panel
-          <br />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={activateCustomTeam}
-            disabled={Boolean(customActive)}
-            sx={fieldStyle}
-          >
-            Set Custom Team in Panel
-          </Button>
-        </li>
-      </Box>
+        </Box>
+      </Stack>
     </>
   )
 }

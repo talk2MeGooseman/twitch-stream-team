@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client'
-import { Box, Divider, Tab, Tabs, Typography } from '@mui/material'
+import { Box, Tab, Tabs, Typography } from '@mui/material'
 import React, { useContext, useEffect, useState } from 'react'
 import { CUSTOM_TEAM_PANEL_ACTIVE, TWITCH_TEAM_PANEL_ACTIVE } from 'services/constants'
 import { ChannelTeamQuery } from 'services/graphql'
@@ -50,18 +50,20 @@ const ConfigInfo = () => {
   const currentTab = selectedTab ?? defaultTab
 
   return (
-    <Box sx={{ ml: 4 }}>
-      <Typography variant="h4" component="h1">
+    <Box sx={{ p: 3, maxWidth: 520 }}>
+      <Typography variant="h5" component="h1" gutterBottom>
         Stream Team
       </Typography>
-      <Divider />
-      <Typography variant="subtitle1" sx={{ my: 1 }}>
-        Select if you want to show case your Twitch Team or build a custom team with all your
-        favorite streamers
+      <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}>
+        Showcase your Twitch Team or build a custom team with all your favorite streamers.
       </Typography>
-      <Tabs value={currentTab} onChange={(_event, value: number) => setSelectedTab(value)}>
-        <Tab label="Twitch Team Selection" />
-        <Tab label="Custom Team Builder" />
+      <Tabs
+        value={currentTab}
+        onChange={(_event, value: number) => setSelectedTab(value)}
+        sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}
+      >
+        <Tab label="Twitch Team" />
+        <Tab label="Custom Team" />
       </Tabs>
       {currentTab === TWITCH_TEAM_PANEL_ACTIVE && (
         <TwitchTeamFlow twitchTeams={twitchTeams || []} streamTeam={streamTeam} />

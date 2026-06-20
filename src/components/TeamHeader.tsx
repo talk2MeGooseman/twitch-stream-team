@@ -1,7 +1,5 @@
-import { Box } from '@mui/material'
+import { Avatar, Box, Typography } from '@mui/material'
 import React from 'react'
-
-import { TextBanner } from './TextBanner'
 
 type TeamHeaderProps = {
   team: TeamSpecType
@@ -13,25 +11,35 @@ const TeamHeader = ({ team }: TeamHeaderProps) => (
     href={`https://www.twitch.tv/team/${team.url_name}`}
     target="_blank"
     rel="noreferrer"
-    sx={{ display: 'block', position: 'relative', textDecoration: 'none', color: 'text.primary' }}
+    sx={{ display: 'block', textDecoration: 'none', color: 'inherit' }}
   >
-    {team.logo && (
-      <Box
-        component="img"
-        src={team.logo}
-        alt=""
-        sx={{ height: 50, width: 50, position: 'absolute', top: 20, left: 10 }}
-      />
-    )}
     {team.banner ? (
-      <Box
-        component="img"
-        src={team.banner}
-        alt={team.name}
-        sx={{ height: 'auto', maxWidth: '100%' }}
-      />
+      <Box sx={{ position: 'relative', lineHeight: 0 }}>
+        <Box component="img" src={team.banner} alt={team.name} sx={{ width: '100%', display: 'block' }} />
+        {team.logo && (
+          <Avatar
+            src={team.logo}
+            alt=""
+            variant="rounded"
+            sx={{
+              position: 'absolute',
+              left: 12,
+              bottom: 10,
+              width: 48,
+              height: 48,
+              border: '3px solid',
+              borderColor: 'background.paper',
+            }}
+          />
+        )}
+      </Box>
     ) : (
-      <TextBanner text={team.name} sx={{ pl: '60px' }} />
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, p: 2 }}>
+        {team.logo && <Avatar src={team.logo} alt="" variant="rounded" sx={{ width: 44, height: 44 }} />}
+        <Typography variant="h6" noWrap>
+          {team.name}
+        </Typography>
+      </Box>
     )}
   </Box>
 )

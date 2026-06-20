@@ -1,5 +1,14 @@
 import { useMutation } from '@apollo/client'
-import { Box, Button, FormControl, MenuItem, Select, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  Typography,
+} from '@mui/material'
 import { pluck } from 'ramda'
 import React, { useState } from 'react'
 import { ChannelTeamQuery, TwitchTeamMutation } from 'services/graphql'
@@ -9,6 +18,13 @@ type TwitchTeamFlowProps = {
   twitchTeams: HelixChannelTeam[]
   streamTeam: StreamTeam
 }
+
+const steps = [
+  'Join a Twitch Team',
+  'Select your team above',
+  'Activate the extension in panel 1, 2 or 3',
+  'Tell your chat about the extension!',
+]
 
 const TwitchTeamFlow = ({ twitchTeams, streamTeam }: TwitchTeamFlowProps) => {
   const defaultTeam = stillTeamMember(streamTeam?.twitchTeam, twitchTeams)
@@ -27,53 +43,52 @@ const TwitchTeamFlow = ({ twitchTeams, streamTeam }: TwitchTeamFlowProps) => {
   const dropdownTeams = hasTwitchTeam(twitchTeams) ? pluck('team_name', twitchTeams) : []
 
   return (
-    <Box>
-      <Typography variant="subtitle1" sx={{ mt: 1 }}>
-        If you are already part of a Twitch Team setup is easy!
+    <Stack spacing={2.5}>
+      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+        Already part of a Twitch Team? Pick it below and save — it will show in your panel.
       </Typography>
-      <Typography variant="subtitle1" sx={{ mt: 4 }}>
-        Instructions:
-      </Typography>
-      <Box component="ul" sx={{ listStyleType: 'none', pl: 0 }}>
-        <li>Step 1: Install the extension (which you have already done!)</li>
-        <li>Step 2: Join a Twitch Team</li>
-        <li>
-          Step 3: Select your team (if you have multiple teams);
-          <FormControl size="small" sx={{ m: 1, minWidth: 200 }}>
-            <Select
-              value={team}
-              displayEmpty
-              onChange={(event) => setTeam(event.target.value)}
-            >
-              <MenuItem value="">
-                {dropdownTeams.length > 0 ? 'Select a team' : 'No Teams Found'}
-              </MenuItem>
-              {dropdownTeams.map((name) => (
-                <MenuItem key={name} value={name}>
-                  {name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </li>
-        <li>Step 4: Look at the preview to see how your team looks.</li>
-        <li>Step 5: Activate the extension in panel 1, 2 or 3</li>
-        <li>Step 6: Tell your chat about the extension!</li>
-        <li>
-          Step 7: Display your Twitch Team in the panel
-          <br />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={onSetTwitchTeam}
-            disabled={isTwitchTeamActive(streamTeam)}
-            sx={{ my: 1 }}
-          >
-            Save and Preview in the Panel
-          </Button>
-        </li>
+
+      <FormControl fullWidth size="small">
+        <InputLabel id="twitch-team-label">Twitch Team</InputLabel>
+        <Select
+          labelId="twitch-team-label"
+          label="Twitch Team"
+          value={team}
+          displayEmpty
+          onChange={(event) => setTeam(event.target.value)}
+        >
+          <MenuItem value="">{dropdownTeams.length > 0 ? 'Select a team' : 'No teams found'}</MenuItem>
+          {dropdownTeams.map((name) => (
+            <MenuItem key={name} value={name}>
+              {name}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+
+      <Box>
+        <Button
+          variant="contained"
+          onClick={onSetTwitchTeam}
+          disabled={isTwitchTeamActive(streamTeam)}
+        >
+          Save and Preview in the Panel
+        </Button>
       </Box>
-    </Box>
+
+      <Box>
+        <Typography variant="overline" sx={{ color: 'text.secondary' }}>
+          How it works
+        </Typography>
+        <Stack component="ol" spacing={0.5} sx={{ m: 0, pl: 2.5 }}>
+          {steps.map((step) => (
+            <Typography key={step} component="li" variant="body2" sx={{ color: 'text.secondary' }}>
+              {step}
+            </Typography>
+          ))}
+        </Stack>
+      </Box>
+    </Stack>
   )
 }
 

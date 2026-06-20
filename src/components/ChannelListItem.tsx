@@ -20,51 +20,48 @@ type ChannelListItemProps = {
 }
 
 const ChannelListItem = ({ channel }: ChannelListItemProps) => (
-  <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', gap: 1 }}>
-    <Box sx={{ flexShrink: 0 }}>
-      <Box
-        component="a"
-        href={buildTwitchUrl(channel.name)}
-        target="_blank"
-        rel="noreferrer"
-        sx={{ display: 'inline-block', position: 'relative' }}
-      >
-        {channel.isLive && (
-          <Box
-            className="pulse"
-            data-testid="live-indicator"
-            sx={{ position: 'absolute', bottom: -2, right: -2 }}
-          />
-        )}
-        <Avatar src={resizeImage(channel.profileImage)} alt={channel.name} variant="rounded" />
-      </Box>
+  <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', gap: 1.5 }}>
+    <Box sx={{ position: 'relative', flexShrink: 0, lineHeight: 0 }}>
+      <Avatar
+        src={resizeImage(channel.profileImage)}
+        alt={channel.name}
+        sx={{
+          width: 44,
+          height: 44,
+          border: '2px solid',
+          borderColor: channel.isLive ? 'error.main' : 'transparent',
+        }}
+      />
+      {channel.isLive && (
+        <Box
+          className="pulse"
+          data-testid="live-indicator"
+          sx={{ position: 'absolute', right: -1, bottom: -1 }}
+        />
+      )}
     </Box>
-    <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-        <IconButton
-          size="small"
-          aria-label={`Follow ${channel.name}`}
-          onClick={() => followChannel(channel.name)}
-          sx={{ color: 'common.white' }}
-        >
-          <FavoriteIcon fontSize="small" />
-        </IconButton>
-        <Typography
-          variant="subtitle1"
-          noWrap
-          sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
-        >
-          {channel.name}
-        </Typography>
-      </Box>
-      <Typography
-        variant="caption"
-        sx={{ overflow: 'hidden', textOverflow: 'ellipsis', color: 'rgba(255,255,255,0.85)' }}
-        noWrap
-      >
+    <Box
+      component="a"
+      href={buildTwitchUrl(channel.name)}
+      target="_blank"
+      rel="noreferrer"
+      sx={{ flex: 1, minWidth: 0, textDecoration: 'none', color: 'inherit' }}
+    >
+      <Typography variant="body2" noWrap sx={{ fontWeight: 700 }}>
+        {channel.name}
+      </Typography>
+      <Typography variant="caption" noWrap sx={{ display: 'block', color: 'text.secondary' }}>
         {channel.description}
       </Typography>
     </Box>
+    <IconButton
+      size="small"
+      aria-label={`Follow ${channel.name}`}
+      onClick={() => followChannel(channel.name)}
+      sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}
+    >
+      <FavoriteIcon fontSize="small" />
+    </IconButton>
   </Box>
 )
 

@@ -26,7 +26,7 @@ describe('TwitchTeamFlow', () => {
   it('renders the setup instructions', () => {
     const { getByText } = renderFlow({ streamTeam: { customActive: true, twitchTeam: null } })
 
-    expect(getByText('Step 2: Join a Twitch Team')).toBeInTheDocument()
+    expect(getByText('Join a Twitch Team')).toBeInTheDocument()
   })
 
   it('saves the selected team when the panel is not already showing a twitch team', async () => {

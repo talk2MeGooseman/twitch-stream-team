@@ -6,11 +6,14 @@ type TeamCountStripeProps = {
 }
 
 export const TeamCountStripe = ({ count }: TeamCountStripeProps) => (
-  <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-    <Typography variant="body2" component="span">
+  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+    <Typography
+      variant="caption"
+      sx={{ color: 'text.secondary', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 700 }}
+    >
       Team Members
     </Typography>
-    <Typography variant="body2" component="span" sx={{ color: 'secondary.light' }}>
+    <Typography variant="caption" sx={{ color: 'primary.main', fontWeight: 700 }}>
       {count}
     </Typography>
   </Box>

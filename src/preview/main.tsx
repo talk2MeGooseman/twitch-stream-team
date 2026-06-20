@@ -75,14 +75,27 @@ const Card = ({ title, width = 360, children }: { title: string; width?: number;
 )
 
 const ViewerPanel = () => (
-  <Box sx={{ width: 320, background: '#6441A4', minHeight: 360 }}>
+  <Box
+    sx={{
+      width: 320,
+      bgcolor: 'background.paper',
+      border: 1,
+      borderColor: 'divider',
+      borderRadius: 1,
+      overflow: 'hidden',
+    }}
+  >
     <TeamHeader team={team} />
-    <List sx={{ width: '100%', py: 0 }}>
-      <ListItem divider>
+    <List disablePadding sx={{ width: '100%' }}>
+      <ListItem divider sx={{ px: 2, py: 1 }}>
         <TeamCountStripe count={channels.length} />
       </ListItem>
       {channels.map((channel) => (
-        <ListItem key={channel.id} divider>
+        <ListItem
+          key={channel.id}
+          divider
+          sx={{ px: 2, py: 1, '&:hover': { bgcolor: 'rgba(255,255,255,0.04)' } }}
+        >
           <ChannelListItem channel={channel} />
         </ListItem>
       ))}
@@ -92,17 +105,15 @@ const ViewerPanel = () => (
 
 const ConfigChrome = () => (
   <Box>
-    <Typography variant="h4" component="h1">
+    <Typography variant="h5" component="h1" gutterBottom>
       Stream Team
     </Typography>
-    <Divider />
-    <Typography variant="subtitle1" sx={{ my: 1 }}>
-      Select if you want to show case your Twitch Team or build a custom team with all your favorite
-      streamers
+    <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}>
+      Showcase your Twitch Team or build a custom team with all your favorite streamers.
     </Typography>
-    <Tabs value={0}>
-      <Tab label="Twitch Team Selection" />
-      <Tab label="Custom Team Builder" />
+    <Tabs value={0} sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
+      <Tab label="Twitch Team" />
+      <Tab label="Custom Team" />
     </Tabs>
     <TwitchTeamFlow twitchTeams={twitchTeams} streamTeam={twitchStreamTeam} />
   </Box>
