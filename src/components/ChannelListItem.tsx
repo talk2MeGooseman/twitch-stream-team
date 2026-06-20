@@ -20,30 +20,32 @@ type ChannelListItemProps = {
 }
 
 const ChannelListItem = ({ channel }: ChannelListItemProps) => (
-  <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', textDecoration: 'none' }}>
-    <Box sx={{ position: 'relative', flex: 1 }}>
-      <a href={buildTwitchUrl(channel.name)} target="_blank" rel="noreferrer">
+  <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', gap: 1 }}>
+    <Box sx={{ flexShrink: 0 }}>
+      <Box
+        component="a"
+        href={buildTwitchUrl(channel.name)}
+        target="_blank"
+        rel="noreferrer"
+        sx={{ display: 'inline-block', position: 'relative' }}
+      >
         {channel.isLive && (
           <Box
             className="pulse"
             data-testid="live-indicator"
-            sx={{ position: 'absolute', bottom: 18, right: 18 }}
+            sx={{ position: 'absolute', bottom: -2, right: -2 }}
           />
         )}
-        <Avatar
-          src={resizeImage(channel.profileImage)}
-          alt={channel.name}
-          variant="rounded"
-        />
-      </a>
+        <Avatar src={resizeImage(channel.profileImage)} alt={channel.name} variant="rounded" />
+      </Box>
     </Box>
-    <Box sx={{ flex: 3, display: 'flex', flexDirection: 'column', overflow: 'hidden', ml: 1 }}>
+    <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
         <IconButton
           size="small"
-          color="secondary"
           aria-label={`Follow ${channel.name}`}
           onClick={() => followChannel(channel.name)}
+          sx={{ color: 'common.white' }}
         >
           <FavoriteIcon fontSize="small" />
         </IconButton>
@@ -57,9 +59,8 @@ const ChannelListItem = ({ channel }: ChannelListItemProps) => (
       </Box>
       <Typography
         variant="caption"
-        color="text.secondary"
+        sx={{ overflow: 'hidden', textOverflow: 'ellipsis', color: 'rgba(255,255,255,0.85)' }}
         noWrap
-        sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
       >
         {channel.description}
       </Typography>

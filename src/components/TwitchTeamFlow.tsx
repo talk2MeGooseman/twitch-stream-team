@@ -64,7 +64,7 @@ const TwitchTeamFlow = ({ twitchTeams, streamTeam }: TwitchTeamFlowProps) => {
           <br />
           <Button
             variant="contained"
-            color="secondary"
+            color="primary"
             onClick={onSetTwitchTeam}
             disabled={isTwitchTeamActive(streamTeam)}
             sx={{ my: 1 }}

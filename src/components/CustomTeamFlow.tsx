@@ -152,7 +152,7 @@ const CustomTeamFlow = ({ streamTeam }: CustomTeamFlowProps) => {
           <br />
           <Button
             variant="contained"
-            color="secondary"
+            color="primary"
             onClick={onSave}
             disabled={!isDirty}
             sx={fieldStyle}
@@ -170,7 +170,7 @@ const CustomTeamFlow = ({ streamTeam }: CustomTeamFlowProps) => {
           <br />
           <Button
             variant="contained"
-            color="secondary"
+            color="primary"
             onClick={activateCustomTeam}
             disabled={Boolean(customActive)}
             sx={fieldStyle}
