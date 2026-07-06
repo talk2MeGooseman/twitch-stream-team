@@ -7,7 +7,7 @@ import ChannelList from '../components/ChannelList'
 import { ErrorState } from '../components/ErrorState'
 import Loader from '../components/Loader'
 import TeamHeader from '../components/TeamHeader'
-import SadSpock from '../sad-spock.svg'
+import sadSpockSrc from '../sad-spock.svg'
 
 const StreamTeams = () => {
   const { teamInfo, loading, error } = useTeamInfoFetcher()
@@ -17,7 +17,7 @@ const StreamTeams = () => {
   }
 
   if (error) {
-    return <ErrorState SadSpock={SadSpock} />
+    return <ErrorState sadSpockSrc={sadSpockSrc} />
   }
 
   if (isNil(teamInfo)) {

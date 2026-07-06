@@ -6,7 +6,7 @@ import { ErrorState } from '../ErrorState'
 
 describe('ErrorState', () => {
   it('renders the not-found messaging and the sad spock image', () => {
-    const { getByText, getByAltText } = render(<ErrorState SadSpock="sad-spock.svg" />)
+    const { getByText, getByAltText } = render(<ErrorState sadSpockSrc="sad-spock.svg" />)
 
     expect(getByText("Looks like we couldn't find your Team")).toBeInTheDocument()
     expect(getByText('Join a Twitch Team or build your own Custom Team!')).toBeInTheDocument()

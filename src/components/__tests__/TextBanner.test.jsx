@@ -6,7 +6,7 @@ import { TextBanner } from '../TextBanner'
 
 describe('TextBanner', () => {
   it('renders the provided text', () => {
-    const { getByText } = render(<TextBanner text="Brain Bytes" style={{}} />)
+    const { getByText } = render(<TextBanner text="Brain Bytes" sx={{ color: 'red' }} />)
 
     expect(getByText('Brain Bytes')).toBeInTheDocument()
   })
