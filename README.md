@@ -45,9 +45,10 @@ The extension is loaded with a `mode` query parameter (`config`, `viewer` or
 `dashboard`) that selects which view renders. `yarn start` serves the app at
 `http://localhost:8080/?mode=config`, for example.
 
-CI (`.github/workflows/pre-release.yml`) runs `typecheck`, `lint`, `test` and
-`build` on every push to `master`, so it's worth running those four locally
-before pushing.
+CI runs `typecheck`, `lint`, `test` and `build` on every pull request
+(`.github/workflows/ci.yml`) and again on push to `master` before the release
+build (`.github/workflows/pre-release.yml`), so it's worth running those four
+locally before pushing.
 
 ## Previewing with mock data
 
