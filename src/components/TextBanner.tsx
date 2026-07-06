@@ -12,7 +12,7 @@ export const TextBanner = ({ text, sx }: TextBannerProps) => (
     variant="h4"
     component="h1"
     noWrap
-    sx={{ overflow: 'hidden', textOverflow: 'ellipsis', ...sx }}
+    sx={[{ overflow: 'hidden', textOverflow: 'ellipsis' }, ...(Array.isArray(sx) ? sx : [sx])]}
   >
     {text}
   </Typography>
