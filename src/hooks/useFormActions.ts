@@ -25,15 +25,23 @@ export const useFormActions = (
       return
     }
 
-    const [channel] = await requestChannelsByName(authInfo.helixToken, [channelName.toLowerCase()])
+    try {
+      const [channel] = await requestChannelsByName(authInfo.helixToken, [
+        channelName.toLowerCase(),
+      ])
 
-    if (!isNil(channel)) {
-      push(channel)
-      channelTextBoxRef.current.value = ''
-      setErrorMessages({})
-    } else {
+      if (!isNil(channel)) {
+        push(channel)
+        channelTextBoxRef.current.value = ''
+        setErrorMessages({})
+      } else {
+        setErrorMessages({
+          channel: 'Channel not found, please check your spelling',
+        })
+      }
+    } catch {
       setErrorMessages({
-        channel: 'Channel not found, please check your spelling',
+        channel: 'Something went wrong looking up that channel, please try again',
       })
     }
   }

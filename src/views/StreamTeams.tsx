@@ -23,7 +23,7 @@ const StreamTeams = () => {
   if (isNil(teamInfo)) {
     return (
       <Typography variant="h5" component="h1">
-        No team found, please setup your team in the extension configuration panel.
+        No team found, please set up your team in the extension configuration panel.
       </Typography>
     )
   }

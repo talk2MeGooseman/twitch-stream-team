@@ -47,9 +47,13 @@ const CustomTeamFlow = ({ streamTeam }: CustomTeamFlowProps) => {
   const [saveMutation] = useMutation(CustomTeamMutation, { refetchQueries })
 
   const onSave = useCallback(() => {
+    const name = teamName?.trim()
+    // The mutation declares $name: String!, so never send an empty/undefined name.
+    if (!name) return
+
     saveMutation({
       variables: {
-        name: teamName,
+        name,
         memberIds: pluck('id', teamMembers),
       },
     })
@@ -63,10 +67,11 @@ const CustomTeamFlow = ({ streamTeam }: CustomTeamFlowProps) => {
   useEffect(() => {
     if (!authInfo?.helixToken || !customTeam) return
 
+    setIsLoading(true)
     fetchCustomTeamMemberInfo({ token: authInfo.helixToken, customTeam })
       .then(setTeamMembers)
-      .then(() => setIsLoading(false))
       .catch(() => {})
+      .finally(() => setIsLoading(false))
   }, [authInfo?.helixToken, customTeam])
 
   const addChannel = useCallback(
@@ -145,7 +150,7 @@ const CustomTeamFlow = ({ streamTeam }: CustomTeamFlowProps) => {
         </Paper>
 
         <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-          <Button variant="contained" onClick={onSave} disabled={!isDirty}>
+          <Button variant="contained" onClick={onSave} disabled={!isDirty || !teamName?.trim()}>
             Save
           </Button>
           <Button variant="outlined" onClick={activateCustomTeam} disabled={Boolean(customActive)}>

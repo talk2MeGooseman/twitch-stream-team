@@ -17,17 +17,23 @@ const refetchLiveChannels = async ({
   setChannels,
   setIsLoading,
 }: RefetchLiveChannelsArgs) => {
-  const channelIds = team.channels.map((channel) => channel.id)
-  const liveChannels = await requestLiveChannels(authInfo.helixToken, channelIds)
+  try {
+    const channelIds = team.channels.map((channel) => channel.id)
+    const liveChannels = await requestLiveChannels(authInfo.helixToken, channelIds)
 
-  const withLiveStatus = team.channels.map((channel) => ({
-    ...channel,
-    isLive: liveChannels.some((live) => isLiveChannel(channel, live)),
-  }))
+    const withLiveStatus = team.channels.map((channel) => ({
+      ...channel,
+      isLive: liveChannels.some((live) => isLiveChannel(channel, live)),
+    }))
 
-  // Show live channels first.
-  setChannels(sort(descend(prop('isLive')), withLiveStatus))
-  setIsLoading(false)
+    // Show live channels first.
+    setChannels(sort(descend(prop('isLive')), withLiveStatus))
+  } catch {
+    // Network/Helix error: keep the last known channels rather than throwing an
+    // unhandled rejection or leaving the panel stuck on the loader.
+  } finally {
+    setIsLoading(false)
+  }
 }
 
 export const useLiveStatusFetcher = (team: TeamSpecType) => {

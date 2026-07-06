@@ -37,6 +37,7 @@ const TwitchTeamFlow = ({ twitchTeams, streamTeam }: TwitchTeamFlowProps) => {
   })
 
   const onSetTwitchTeam = () => {
+    if (!team) return
     mutate({ variables: { teamName: team } }).catch(() => {})
   }
 
@@ -70,7 +71,7 @@ const TwitchTeamFlow = ({ twitchTeams, streamTeam }: TwitchTeamFlowProps) => {
         <Button
           variant="contained"
           onClick={onSetTwitchTeam}
-          disabled={isTwitchTeamActive(streamTeam)}
+          disabled={isTwitchTeamActive(streamTeam) || !team}
         >
           Save and Preview in the Panel
         </Button>

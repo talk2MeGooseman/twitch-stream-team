@@ -8,7 +8,7 @@ type ErrorStateProps = {
 export const ErrorState = ({ SadSpock }: ErrorStateProps) => (
   <Box sx={{ textAlign: 'center' }}>
     <Typography variant="h6" component="h3">
-      Looks like we couldnt find your Team
+      Looks like we couldn&apos;t find your Team
     </Typography>
     <img src={SadSpock} alt="Sad Spock" />
     <Typography variant="h6" component="h3" sx={{ pt: 2.5 }}>
