@@ -2,7 +2,6 @@ import axios, { AxiosResponse } from 'axios'
 import { curry,toLower } from 'ramda'
 
 const BASE_URL = 'https://api.twitch.tv/helix/'
-// eslint-disable-next-line no-secrets/no-secrets
 const CLIENT_ID = 'd4t75sazjvk9cc84h30mgkyg7evbvz'
 
 const BATCH_SIZE = 100
@@ -64,7 +63,6 @@ async function batchRequests<C,T>(channels:C[], request: (channels: C[]) => Prom
 
   for (let i = 0; i < channels.length; i += BATCH_SIZE) {
     const channelSlice = channels.slice(i, i + BATCH_SIZE)
-    // eslint-disable-next-line no-await-in-loop
     const data = await request(channelSlice)
     channelList = [...channelList, ...data]
   }
@@ -87,7 +85,7 @@ export async function requestChannelTeams(token: string, channelId: string): Pro
       url: `/teams/channel?broadcaster_id=${channelId}`,
       headers: helixHeaders(token),
     })
-  } catch (error) {
+  } catch {
     // Do nothing
   }
   return response?.data
@@ -103,7 +101,7 @@ export async function requestTeamInfo(token: string, teamName: string): Promise<
     })
 
     return response.data
-  } catch (error) {
+  } catch {
     return { data: [] }
   }
 }

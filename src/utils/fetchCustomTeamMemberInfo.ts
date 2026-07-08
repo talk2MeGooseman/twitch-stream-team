@@ -1,15 +1,12 @@
-import { pipe, pluck, propOr } from 'ramda'
 import { requestChannelsById } from 'services/TwitchAPI'
 
 export const fetchCustomTeamMemberInfo = ({
   token,
-  customTeam
+  customTeam,
 }: {
-  token: string,
+  token: string
   customTeam: CustomTeam
-}) =>
-  pipe<[CustomTeam], CustomTeamMember[], string[], Promise<HelixUser[]>>(
-    propOr([], 'teamMembers'),
-    pluck('channelId'),
-    requestChannelsById(token),
-  )(customTeam)
+}): Promise<HelixUser[]> => {
+  const channelIds = (customTeam.teamMembers ?? []).map((member) => member.channelId)
+  return requestChannelsById(token)(channelIds)
+}

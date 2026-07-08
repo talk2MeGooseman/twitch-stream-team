@@ -1,14 +1,16 @@
 import { isNil } from 'ramda'
-import { useContext,useRef, useState } from 'react'
-import type { TextBox } from 'react-uwp'
+import { useContext, useRef, useState } from 'react'
 import { requestChannelsByName } from 'services/TwitchAPI'
 import { AuthContext } from 'utils/AuthContext'
 
-export const useFormActions = (push: (arg: HelixUser) => void, setTeamName: (arg: string) => void ) => {
-  const channelTextBoxRef = useRef<TextBox>()
-  const teamNameTextBoxRef = useRef<TextBox>()
+export const useFormActions = (
+  push: (arg: HelixUser) => void,
+  setTeamName: (arg: string) => void
+) => {
+  const channelTextBoxRef = useRef<HTMLInputElement>(null)
+  const teamNameTextBoxRef = useRef<HTMLInputElement>(null)
   const [errorMessages, setErrorMessages] = useState<{ channel?: Maybe<string> }>({
-    channel: null
+    channel: null,
   })
   const authInfo = useContext(AuthContext)
 
@@ -17,21 +19,29 @@ export const useFormActions = (push: (arg: HelixUser) => void, setTeamName: (arg
       return
     }
 
-    const channelName: string = channelTextBoxRef.current.getValue()
+    const channelName = channelTextBoxRef.current.value
 
     if (!channelName || channelName.length === 0) {
       return
     }
 
-    const [channel] = await requestChannelsByName(authInfo.helixToken, [channelName.toLowerCase()])
+    try {
+      const [channel] = await requestChannelsByName(authInfo.helixToken, [
+        channelName.toLowerCase(),
+      ])
 
-    if (!isNil(channel)) {
-      push(channel)
-      channelTextBoxRef.current.setValue('')
-      setErrorMessages({})
-    } else {
+      if (!isNil(channel)) {
+        push(channel)
+        channelTextBoxRef.current.value = ''
+        setErrorMessages({})
+      } else {
+        setErrorMessages({
+          channel: 'Channel not found, please check your spelling',
+        })
+      }
+    } catch {
       setErrorMessages({
-        channel: 'Channel not found, please check your spelling',
+        channel: 'Something went wrong looking up that channel, please try again',
       })
     }
   }
@@ -40,7 +50,7 @@ export const useFormActions = (push: (arg: HelixUser) => void, setTeamName: (arg
     if (!teamNameTextBoxRef.current) {
       return
     }
-    setTeamName(teamNameTextBoxRef.current.getValue())
+    setTeamName(teamNameTextBoxRef.current.value)
   }
 
   return {

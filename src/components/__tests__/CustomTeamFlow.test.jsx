@@ -1,71 +1,65 @@
-import { MockedProvider } from '@apollo/client/testing'
-import { render, within } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import React from 'react'
-import { getTheme, Theme as UWPThemeProvider } from 'react-uwp/Theme'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { fireEvent, renderWithProviders, within } from '../../test/testUtils'
 import CustomTeamFlow from '../CustomTeamFlow'
 
+vi.mock('services/TwitchAPI', () => ({
+  requestChannelsById: vi.fn(),
+  requestChannelsByName: vi.fn(),
+}))
+
+import { requestChannelsById } from 'services/TwitchAPI'
+
+const authValue = { helixToken: 'token', channelId: 'c1' }
+
 const streamTeam = {
-  customActive: true,
+  customActive: false,
   customTeam: {
     name: 'custom_team',
-    teamMembers: [
-      {
-        id: '1',
-        display_name: 'Talk2MeGooseman',
-        status: 'blah blah blah',
-        logo: 'https://picture.here',
-      },
-      {
-        id: '2',
-        display_name: 'JensDuck',
-        status: 'blah blah blah',
-        logo: 'https://picture.here',
-      },
-    ],
-  }
+    teamMembers: [{ channelId: '1' }, { channelId: '2' }],
+  },
 }
 
-const withTheme = (component) => (
-  <MockedProvider>
-    <UWPThemeProvider
-      theme={getTheme({
-        themeName: 'dark', // set custom theme
-        accent: '#0078D7', // set accent color
-        useFluentDesign: true, // sure you want use new fluent design.
-        desktopBackgroundImage:
-          // eslint-disable-next-line no-secrets/no-secrets
-          'https://static-cdn.jtvnw.net/jtv_user_pictures/team-brainbytes-background_image-4baba38e0e3991c5.png', // set global desktop background image
-      })}
-    >
-      {component}
-    </UWPThemeProvider>
-  </MockedProvider>
-)
+beforeEach(() => {
+  vi.mocked(requestChannelsById).mockImplementation(() => async () => [
+    { id: '1', display_name: 'Talk2MeGooseman' },
+    { id: '2', display_name: 'JensDuck' },
+  ])
+})
 
 describe('CustomTeamFlow', () => {
-  beforeEach(() => { })
+  it('hydrates and displays existing team members', async () => {
+    const { findByText } = renderWithProviders(<CustomTeamFlow streamTeam={streamTeam} />, {
+      authValue,
+    })
 
-  it('displays all existing team members', async () => {
-    const { queryByText } = render(withTheme(<CustomTeamFlow streamTeam={streamTeam} />))
+    expect(await findByText('Talk2MeGooseman')).toBeInTheDocument()
+    expect(await findByText('JensDuck')).toBeInTheDocument()
+  })
 
-    expect(queryByText('Talk2MeGooseman')).toBeInTheDocument()
+  it('removes a team member from the list when its trash icon is clicked', async () => {
+    const { findByText, getByText, queryByText } = renderWithProviders(
+      <CustomTeamFlow streamTeam={streamTeam} />,
+      { authValue }
+    )
+
+    await findByText('Talk2MeGooseman')
+
+    const gooseRow = getByText('Talk2MeGooseman')
+    const trash = within(gooseRow).getByTestId('trash-can')
+    fireEvent.click(trash)
+
+    expect(queryByText('Talk2MeGooseman')).not.toBeInTheDocument()
     expect(queryByText('JensDuck')).toBeInTheDocument()
   })
 
-  it('properly deletes team member from the list', async () => {
-    const { queryByText, getByText } = render(
-      withTheme(<CustomTeamFlow streamTeam={streamTeam} />)
+  it('shows a placeholder when there are no members to display', async () => {
+    const { findByText } = renderWithProviders(
+      <CustomTeamFlow streamTeam={{ customActive: false, customTeam: null }} />,
+      { authValue }
     )
 
-    expect(queryByText('JensDuck')).toBeInTheDocument()
-    const userRow = getByText('Talk2MeGooseman')
-    const trashContainer = within(userRow).getByTestId('trash-can')
-
-    userEvent.click(trashContainer)
-
-    expect(queryByText('JensDuck')).toBeInTheDocument()
-    expect(queryByText('Talk2MeGooseman')).not.toBeInTheDocument()
+    expect(await findByText('No Team Members')).toBeInTheDocument()
   })
 })

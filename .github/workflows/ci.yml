@@ -1,0 +1,21 @@
+name: "ci"
+
+on:
+  pull_request:
+
+jobs:
+  checks:
+    name: "Checks"
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+      - run: yarn install --frozen-lockfile
+      - run: yarn typecheck
+      - run: yarn lint
+      - run: yarn test
+      - run: yarn build

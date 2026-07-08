@@ -1,61 +1,60 @@
-import {
-  andThen,
-  assoc,
-  curry,
-  descend,
-  pipe,
-  pluck,
-  prop,
-  sort,
-} from 'ramda'
+import { descend, prop, sort } from 'ramda'
 import { useContext, useEffect, useState } from 'react'
-import { useToggle } from 'react-use'
 import { requestLiveChannels } from 'services/TwitchAPI'
 import { isLiveChannel } from 'utils'
 import { AuthContext } from 'utils/AuthContext'
 
-const updateChannelsLiveStatus = curry((channels: TeamMemberSpecType[], liveChannels: HelixStream[]) =>
-  channels.map((channel) => {
-    const isLive = liveChannels.find(isLiveChannel(channel))
-    return assoc('isLive', isLive, channel)
-  })
-)
-
 type RefetchLiveChannelsArgs = {
   authInfo: AuthContextType
   team: TeamSpecType
-  setChannels: (channels: TeamMemberSpecType[]) => void,
-  toggleIsLoading: (isLoading: boolean) => void
+  setChannels: (channels: TeamMemberSpecType[]) => void
+  setIsLoading: (isLoading: boolean) => void
 }
 
-const refetchLiveChannels = ({ authInfo, team, setChannels, toggleIsLoading }: RefetchLiveChannelsArgs) =>
-  pipe<[TeamMemberSpecType[]], string[], Promise<HelixStream[]>, Promise<TeamMemberSpecType[]>, Promise<TeamMemberSpecType[]>, Promise<void>, Promise<void>>(
-    pluck('id'),
-    requestLiveChannels(authInfo.helixToken),
-    andThen(updateChannelsLiveStatus(team.channels)),
-    andThen(sort(descend(prop('isLive')))),
-    andThen(setChannels),
-    andThen(() => toggleIsLoading(false))
-  )(team.channels)
+const refetchLiveChannels = async ({
+  authInfo,
+  team,
+  setChannels,
+  setIsLoading,
+}: RefetchLiveChannelsArgs) => {
+  try {
+    const channelIds = team.channels.map((channel) => channel.id)
+    const liveChannels = await requestLiveChannels(authInfo.helixToken, channelIds)
+
+    const withLiveStatus = team.channels.map((channel) => ({
+      ...channel,
+      isLive: liveChannels.some((live) => isLiveChannel(channel, live)),
+    }))
+
+    // Show live channels first.
+    setChannels(sort(descend(prop('isLive')), withLiveStatus))
+  } catch {
+    // Network/Helix error: keep the last known channels rather than throwing an
+    // unhandled rejection or leaving the panel stuck on the loader.
+  } finally {
+    setIsLoading(false)
+  }
+}
 
 export const useLiveStatusFetcher = (team: TeamSpecType) => {
-  const [isLoading, toggleIsLoading] = useToggle(true)
+  const [isLoading, setIsLoading] = useState(true)
   const [channels, setChannels] = useState(team.channels)
   const authInfo = useContext(AuthContext)
 
   useEffect(() => {
     if (!authInfo?.helixToken) {
-      return
+      return undefined
     }
-    toggleIsLoading(true)
+    setIsLoading(true)
 
-    refetchLiveChannels({ authInfo, team, setChannels, toggleIsLoading })
-    const intervalId = setInterval(() => refetchLiveChannels({ authInfo, team, setChannels, toggleIsLoading }), 30_000)
+    refetchLiveChannels({ authInfo, team, setChannels, setIsLoading })
+    const intervalId = setInterval(
+      () => refetchLiveChannels({ authInfo, team, setChannels, setIsLoading }),
+      30_000
+    )
 
-    // eslint-disable-next-line consistent-return
-    return () => (clearInterval(intervalId))
-
-  }, [authInfo?.helixToken, team, team.channels, toggleIsLoading])
+    return () => clearInterval(intervalId)
+  }, [authInfo, team])
 
   return { channels, isLoading }
 }
