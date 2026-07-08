@@ -188,14 +188,7 @@
   dependencies:
     "@babel/types" "^7.29.7"
 
-"@babel/runtime@^7.12.5":
-  version "7.17.9"
-  resolved "https://registry.npmjs.org/@babel/runtime/-/runtime-7.17.9.tgz"
-  integrity sha512-lSiBBvodq29uShpWGNbgFdKYNiFDo5/HIYsaCEY9ff4sb10x9jizo2+pRrSyF4jKZCXqgzuqBOQKbUm90gQwJg==
-  dependencies:
-    regenerator-runtime "^0.13.4"
-
-"@babel/runtime@^7.18.3", "@babel/runtime@^7.29.2", "@babel/runtime@^7.5.5", "@babel/runtime@^7.8.7":
+"@babel/runtime@^7.12.5", "@babel/runtime@^7.18.3", "@babel/runtime@^7.29.2", "@babel/runtime@^7.5.5", "@babel/runtime@^7.8.7":
   version "7.29.7"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.29.7.tgz#12022450c45a4da6d8d8287b18a4ff2ddb23f768"
   integrity sha512-Nq8OhGWiZIZGV6hLHoyAKLLcJihP/xFeBMGJoUrxTX2psI8dCifzLhZISFb+VWS3wFMRDmCGw5R+dOySCqPLhw==
@@ -532,10 +525,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@mui/core-downloads-tracker@^9.1.1":
-  version "9.1.1"
-  resolved "https://registry.yarnpkg.com/@mui/core-downloads-tracker/-/core-downloads-tracker-9.1.1.tgz#3458d10b3b3d2b1925a3db44a2950ef418d336f0"
-  integrity sha512-AupmMICbdJHqAh6FfOMaaiiIr7dfEgZJn5DFfiPuGNrbs+ZZy9cD1APwO0TSVBz5j08MJEEY6n7iC76/2wjMEA==
+"@mui/core-downloads-tracker@^9.2.0":
+  version "9.2.0"
+  resolved "https://registry.yarnpkg.com/@mui/core-downloads-tracker/-/core-downloads-tracker-9.2.0.tgz#100cb334d57cab467a6cded6da5c42fd49dcaa41"
+  integrity sha512-+XMav+ZaXkZKUFUgzjrfMEedfyJKxxviAske2q8N8CWDMeqZdDU2lWMkiUPiB388hGaDqhwvOAwkrsc/pUyp8g==
 
 "@mui/icons-material@^9.1.1":
   version "9.1.1"
@@ -544,16 +537,16 @@
   dependencies:
     "@babel/runtime" "^7.29.2"
 
-"@mui/material@^9.1.1":
-  version "9.1.1"
-  resolved "https://registry.yarnpkg.com/@mui/material/-/material-9.1.1.tgz#c999d4499fc3d9700353e34aba010e2e52fa6a02"
-  integrity sha512-Wv+gInjrpf99l1Q0oHe0eOWGTnlbkzs5nowClX65KCT/2fyPMwcbFEEkUsOHdpcHhB5UAbz/d7jlwt5ajWVvlA==
+"@mui/material@^9.2.0":
+  version "9.2.0"
+  resolved "https://registry.yarnpkg.com/@mui/material/-/material-9.2.0.tgz#a77a9c7a5f0c61f8f1cf3dca197a64693d3071cf"
+  integrity sha512-+YTRSgGKGrrRo2XJZXs7JRA6qHoHWvNtxyqxnrRJTBmIuLOUpxxh7m4G9lF4tWberxGFY+EqkkRPgJCl+fSMJg==
   dependencies:
     "@babel/runtime" "^7.29.2"
-    "@mui/core-downloads-tracker" "^9.1.1"
-    "@mui/system" "^9.1.1"
+    "@mui/core-downloads-tracker" "^9.2.0"
+    "@mui/system" "^9.2.0"
     "@mui/types" "^9.1.1"
-    "@mui/utils" "^9.1.1"
+    "@mui/utils" "^9.2.0"
     "@popperjs/core" "^2.11.8"
     "@types/react-transition-group" "^4.4.12"
     clsx "^2.1.1"
@@ -562,13 +555,13 @@
     react-is "^19.2.6"
     react-transition-group "^4.4.5"
 
-"@mui/private-theming@^9.1.1":
-  version "9.1.1"
-  resolved "https://registry.yarnpkg.com/@mui/private-theming/-/private-theming-9.1.1.tgz#bcc6d45d4e7daf1a2637844c64ba692c93ce320a"
-  integrity sha512-oH6c+d6sJ1CZT0Vg2/fHdUQ5zvo9Pn+f+WWk0tlQliHqqIRdN32DZ7UxjalW3LUj4OkHbdWR31biWuLxK9i7Cg==
+"@mui/private-theming@^9.2.0":
+  version "9.2.0"
+  resolved "https://registry.yarnpkg.com/@mui/private-theming/-/private-theming-9.2.0.tgz#ed3549f5d424db383a5a2fdbef4bc63550737acf"
+  integrity sha512-w9wpyDxGPGnAACPB2hKhCDmILJIAvQxrfjUbIAEa0AznX1rOjaz5N+yB1uuw8ixnJcpEh/tPbD9oEe19wcWPHw==
   dependencies:
     "@babel/runtime" "^7.29.2"
-    "@mui/utils" "^9.1.1"
+    "@mui/utils" "^9.2.0"
     prop-types "^15.8.1"
 
 "@mui/styled-engine@^9.1.1":
@@ -583,16 +576,16 @@
     csstype "^3.2.3"
     prop-types "^15.8.1"
 
-"@mui/system@^9.1.1":
-  version "9.1.1"
-  resolved "https://registry.yarnpkg.com/@mui/system/-/system-9.1.1.tgz#43628192fc6a2f9c909bbe2e815b47dcf7519d0e"
-  integrity sha512-q+aqNa58QZUwmmyUvJKKrStrej+4BcWFw4M0Ug+zRylPIQgR64cqvBnE3QTfLZm4OXulydp8Hl3zwKxMayrdsA==
+"@mui/system@^9.2.0":
+  version "9.2.0"
+  resolved "https://registry.yarnpkg.com/@mui/system/-/system-9.2.0.tgz#74032a64632f8fd7ae8da881d2dd43316fca51ac"
+  integrity sha512-YvUJwKoGVtbnOm2PyPi5TvX2d1rOA6sqSpEWVs4WmXNIaFTuYmNUaVdU2o1NKUEe31URnD3E8ZVUMcsLQXwcYg==
   dependencies:
     "@babel/runtime" "^7.29.2"
-    "@mui/private-theming" "^9.1.1"
+    "@mui/private-theming" "^9.2.0"
     "@mui/styled-engine" "^9.1.1"
     "@mui/types" "^9.1.1"
-    "@mui/utils" "^9.1.1"
+    "@mui/utils" "^9.2.0"
     clsx "^2.1.1"
     csstype "^3.2.3"
     prop-types "^15.8.1"
@@ -604,10 +597,10 @@
   dependencies:
     "@babel/runtime" "^7.29.2"
 
-"@mui/utils@^9.1.1":
-  version "9.1.1"
-  resolved "https://registry.yarnpkg.com/@mui/utils/-/utils-9.1.1.tgz#94dbb62dbaadad0d890ca0501838ce578d17da04"
-  integrity sha512-qSNfnkzZMptaaWFFklpDf4NPJztgwsMDVfM/sSDt+wq4ssYSBhLYwwjuB6eS/+p2IUYbeRzHluzXbw0Zn7aI4A==
+"@mui/utils@^9.2.0":
+  version "9.2.0"
+  resolved "https://registry.yarnpkg.com/@mui/utils/-/utils-9.2.0.tgz#1da604f8fcfb6964e20e3a93f4ad3b719f73c843"
+  integrity sha512-OsUH5zhlSOM4xmLl53+agug1M1UyWb4zxFxWQCqwKTKUeQPvTENtg3JhrroBD2qpCLKsX5W/DYGERJ4mBUbc8g==
   dependencies:
     "@babel/runtime" "^7.29.2"
     "@mui/types" "^9.1.1"
@@ -1534,12 +1527,7 @@ css.escape@^1.5.1:
   resolved "https://registry.npmjs.org/css.escape/-/css.escape-1.5.1.tgz"
   integrity sha512-YUifsXXuknHlUsmlgyY0PKzgPOr7/FjCePfHNt0jxm83wHZi44VDMQ7/fGNkjY3/jV1MC+1CmZbaHzugyeRtpg==
 
-csstype@^3.0.2:
-  version "3.1.1"
-  resolved "https://registry.npmjs.org/csstype/-/csstype-3.1.1.tgz"
-  integrity sha512-DJR/VvkAvSZW9bTouZue2sSxDwdTN92uHjqeKVm+0dAqdfNykRzQ95tay8aXMBAAPpUiq4Qcug2L7neoRh2Egw==
-
-csstype@^3.2.2, csstype@^3.2.3:
+csstype@^3.0.2, csstype@^3.2.2, csstype@^3.2.3:
   version "3.2.3"
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.2.3.tgz#ec48c0f3e993e50648c86da559e2610995cf989a"
   integrity sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==
@@ -3426,11 +3414,6 @@ reflect.getprototypeof@^1.0.10, reflect.getprototypeof@^1.0.9:
     get-intrinsic "^1.2.7"
     get-proto "^1.0.1"
     which-builtin-type "^1.2.1"
-
-regenerator-runtime@^0.13.4:
-  version "0.13.11"
-  resolved "https://registry.npmjs.org/regenerator-runtime/-/regenerator-runtime-0.13.11.tgz"
-  integrity sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==
 
 regexp.prototype.flags@^1.4.3:
   version "1.4.3"
