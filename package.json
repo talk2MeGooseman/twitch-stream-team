@@ -9,7 +9,7 @@
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^9.1.1",
     "@mui/material": "^9.1.1",
-    "axios": "^1.18.0",
+    "axios": "^1.18.1",
     "graphql": "^16.14.2",
     "ramda": "^0.32.0",
     "react": "^19.2.7",
